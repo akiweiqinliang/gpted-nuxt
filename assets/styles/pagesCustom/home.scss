@@ -1,0 +1,15 @@
+//首页
+.home1 .topInput{
+  input{
+    height: inherit;
+    font-size: 20px;
+    border-radius: 10px 0 0 10px;
+  }
+  .ivu-input-search{
+    border-radius: 0 10px 10px 0;
+    padding: 20px 38px !important;
+    i{
+      font-size: 26px;
+    }
+  }
+}

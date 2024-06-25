@@ -1,0 +1,28 @@
+@media (max-width: 768px) {
+  .discoverSearchInput{
+    .ivu-input{
+      height: 80px;
+      padding: 6px 100px 6px 20px;
+    }
+    .ivu-input:focus{
+      box-shadow: none;
+      border-radius: 10px 10px 0 0;
+      border: 0;
+      padding: 6px 99px 8px 19px;
+    }
+  }
+}
+@media (max-width: 750px) {
+  .discoverSearchInput{
+    .ivu-input{
+      height: 80px;
+      padding: 6px 100px 6px 20px;
+    }
+    .ivu-input:focus{
+      box-shadow: none;
+      border-radius: 10px 10px 0 0;
+      border: 0;
+      padding: 6px 99px 8px 19px;
+    }
+  }
+}

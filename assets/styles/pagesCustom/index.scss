@@ -1,0 +1,12 @@
+@import "discover";
+@import "home";
+@import "tenderDetail";
+
+// 修复单选框在缩放下核心位置偏移问题
+.ivu-radio-inner:after {
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  // 兼容则用transform
+  border-radius: 50%;
+}

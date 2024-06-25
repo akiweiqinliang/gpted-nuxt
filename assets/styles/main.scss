@@ -1,0 +1,92 @@
+@import "flag-icons/css/flag-icons.min.css";
+:root {
+  --primary-color: #1E6BFF;
+  --primary-light-color: #02B7FF;
+  --primary-bg-color1: #F1F6FF;
+  --primary-bg-color2: #DBE7FF;
+
+  --dark-color: #333333;
+  --text-color1: #333333;
+  --text-color2: #666666;
+  --text-color3: #999999;
+  --text-color4: #FFFFFF;
+
+  --text-bg-color: #EEEEEE;
+  --text-bg-color1: #F5F5F5;
+
+  --light-color: #ffffff;
+  --bg-color: #F6F8FB;
+  --bg-color1: #ffffff;
+
+  --tag-bg-color: #F4F4F4;
+  --tag-hover-bg-color: #E3E5EC;
+
+  --divider-color: #D9D9D9;
+  --divider-color2: #EEEEEE;
+
+  --icon-color: #AAAAAA;
+  --icon-color1: rgba(51,51,51,0.3);
+  --icon-color2: #999999;
+  --icon-color3: #c8c8c9;
+  --icon-color4: #ededed;
+  --inactive-icon-color: #D2E1FF;
+  --collected-color: #FFB960;
+
+  --info-color: #1E6BFF;
+  --success-color: #57C22D;
+  --warn-color: #FFB803;
+  //--error-color: ;
+
+  --bid-call-color: #1E6BFF;
+  --bid-ongo-color: #57C22D;
+  --bid-award-color: #FFB803;
+  --bid-abandoned-color: #273C64;
+  --bid-call-bg-color: #EAF6FF;
+  --bid-ongo-bg-color: #F6FFEE;
+  --bid-award-bg-color: #FFFDEE;
+  --bid-abandoned-bg-color: #ECF0F7;
+
+  //min-width: 1440px;
+  --border-color: #e8eaec;
+  --border-color1: #E5E5E5;
+  --border-color2: #D9D9D9;
+  --border-color3: #EBEBFF;
+  --border-radius-base: 10px;
+  --border-radius-large: 15px;
+}
+body {
+  background-color: var(--bg-color);
+  font-size: 1rem;
+}
+a{
+  color: inherit;
+  &:active, &:hover{
+    color: inherit;
+  }
+}
+li{
+  list-style: none;
+}
+img{
+  width: 100%;
+}
+section{
+  max-width: 1600px;
+  margin: 0 auto !important;
+  min-height: 100vh;
+}
+.fullWidth{
+  width: 100%;
+}
+.highlight{
+  background-color: var(--text-bg-color);
+  color: var(--text-color1);
+  font-weight: bold;
+  border-radius: 3px;
+  padding: 0 2px 2px;
+}
+
+/* 不转换的类名 */
+.ignore {
+  font-size: 16px;
+}
