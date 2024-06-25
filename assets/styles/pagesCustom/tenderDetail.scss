@@ -1,0 +1,43 @@
+#tenderDetailPage{
+  .timelineItem{
+    .ivu-timeline-item-head-custom{
+      left: 20px;
+      background-color: transparent;
+    }
+  }
+  .ivu-timeline-item-tail{
+    left: 40px;
+    top: 30px;
+  }
+  .transLangSelector{
+    .ivu-select-selection{
+      border-radius: var(--border-radius-large);
+      height: inherit;
+    }
+  }
+  .descriptionBox .descriptionRightContent .stateCard {
+    .ivu-progress-inner{
+      border: 1px solid;
+      background-color: var(--bg-color1);
+    }
+  }
+  .descriptionBox .descriptionRightContent {
+    .bidAward .ivu-progress-inner{
+      border-color: var(--bid-award-color);
+    }
+    .bidCall .ivu-progress-inner{
+      border-color: var(--bid-call-color);
+    }
+    .bidOnGo .ivu-progress-inner{
+      border-color: var(--bid-ongo-color);
+    }
+    .bidAbandoned .ivu-progress-inner{
+      border-color: var(--bid-abandoned-color);
+    }
+  }
+  .announcementBox .langChangeBtn {
+    .ivu-dropdown-rel{
+      display: flex;
+    }
+  }
+}

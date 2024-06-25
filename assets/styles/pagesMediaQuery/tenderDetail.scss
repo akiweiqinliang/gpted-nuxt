@@ -1,0 +1,25 @@
+// viewUI 组件样式
+@media screen and (max-width: 768px) {
+  #tenderDetailPage {
+    .timelineItem{
+      .ivu-timeline-item-head-custom{
+        left: 0;
+        margin: 0;
+        width: auto;
+      }
+      .ivu-timeline-item-tail {
+        width: calc(100% - 56px);
+        height: 1px;
+        border: 0;
+        background-color: var(--border-color);
+        left: 40px;
+        top: 0;
+      }
+      .ivu-timeline-item-content {
+        width: 280px;
+        padding: 24px 16px 0 4px;
+      }
+    }
+
+  }
+}
