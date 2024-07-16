@@ -3,8 +3,9 @@
     <Row class-name="header" justify="space-between" align="middle">
       <Row class="title" align="middle">
         <div class="decBox"></div>
-        <slot name="title">
-        </slot>
+<!--        <slot name="title">-->
+        <span>{{ title }}</span>
+<!--        </slot>-->
       </Row>
       <div class="action">
         <slot name="action"></slot>
@@ -18,7 +19,16 @@
 
 <script>
 export default {
-  name: "SingleSetting"
+  name: "SingleSetting",
+  props: {
+    title: {
+      type: String,
+      required: true,
+      default() {
+        return ''
+      }
+    }
+  }
 }
 </script>
 
@@ -42,6 +52,9 @@ export default {
         border-radius: 50%;
       }
     }
+  }
+  .action{
+    cursor: pointer;
   }
   .content{
     width: 100%;

@@ -1,4 +1,6 @@
 export default {
+  en: 'English',
+
   home: 'Home',
   search: 'Search',
   resources: 'Resources',

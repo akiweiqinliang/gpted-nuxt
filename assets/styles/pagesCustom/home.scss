@@ -13,3 +13,32 @@
     }
   }
 }
+.home9{
+  .ivu-collapse{
+    border: 0;
+  }
+  .questionCollapse{
+    background-color: transparent;
+    .ivu-collapse-header{
+      padding: 48px 30px;
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
+      i{
+        //transform: rotate(90deg);
+      }
+
+    }
+    .ivu-collapse-content{
+      background-color: transparent;
+    }
+
+  }
+  .ivu-collapse > .ivu-collapse-item > .ivu-collapse-header > i{
+    transform: rotate(90deg);
+  }
+  .ivu-collapse > .ivu-collapse-item.ivu-collapse-item-active > .ivu-collapse-header > i{
+    transform: rotate(270deg);
+  }
+}

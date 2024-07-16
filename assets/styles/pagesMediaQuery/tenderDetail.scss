@@ -1,6 +1,8 @@
 // viewUI 组件样式
 @media screen and (max-width: 768px) {
   #tenderDetailPage {
+    padding-left: 0;
+    padding-right: 0;
     .timelineItem{
       .ivu-timeline-item-head-custom{
         left: 0;
@@ -20,6 +22,5 @@
         padding: 24px 16px 0 4px;
       }
     }
-
   }
 }

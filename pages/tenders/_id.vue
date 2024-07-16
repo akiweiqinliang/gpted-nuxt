@@ -15,7 +15,16 @@
       </span>
     </Row>
     <Row class-name="navIcons" justify="end" align="middle">
-      <icon type="md-share" class="shareIcon" />
+      <Dropdown trigger="click" placement="bottom-end">
+       <icon type="md-share" class="shareIcon" />
+        <DropdownMenu slot="list">
+          <div class="shareLinks">
+            <a v-for="i in 6" :key="i" class="link" href="#">
+              <img :src="require(`~/assets/imgs/tenderDetail/link${i}@2x.png`)" alt="">
+            </a>
+          </div>
+        </DropdownMenu>
+      </Dropdown>
       <Icon type="md-star" class="collectIcon" :class="bid.hadCollected ? 'active' : '' " @click="handleCollection" />
     </Row>
   </Row>
@@ -169,6 +178,7 @@
                 <DropdownItem
                   v-for="item in langList"
                   :key="item.value"
+                  :selected="item.value === translateLang"
                   @click.native="handleLangChange(item.value, item.label)"
                 >
                   {{ item.label }}
@@ -219,13 +229,62 @@
                 <p>{{ doc.title }}</p>
                 <span>{{ doc.size }}</span><span>{{ doc.date }}</span>
               </Col>
-              <Icon type="md-more" />
+              <Dropdown
+                trigger="click"
+                placement="bottom-end"
+                class="docItemMore"
+                @on-click="handleDropdownSelect"
+                >
+                <Icon type="md-more" />
+                <DropdownMenu slot="list">
+                  <DropdownItem :name="JSON.stringify({ docId: doc.id, type: 'translate', docType: doc.type})">
+                    <Row align="middle">
+                      <img src="~assets/imgs/tenderDetail/translate-icon@2x.png" alt="translate">
+                      <span>translate</span>
+                    </Row>
+                  </DropdownItem>
+                  <DropdownItem :name="JSON.stringify({ docId: doc.id, type: 'download', docType: doc.type})">
+                    <Row align="middle">
+                      <img src="~assets/imgs/tenderDetail/download-icon@2x.png" alt="download">
+                      <span>download</span>
+                    </Row>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </Row>
-            <Row>
-
+            <Row class-name="translatedDocs">
+              <ul>
+                <li
+                  v-for="langItem in selectedTranslateLangList"
+                  v-show="langItem.docId === doc.id && langItem.tenderId === bid.id"
+                  :key="`${langItem.tenderId}-${langItem.docId}-${langItem.lang}-selectedTranslateLang`">
+                  <Row align="middle">
+                    <div class="iconBox">
+                      <img :src="require(`~/assets/imgs/tenderDetail/${doc.type}-icon@2x.png`)" alt="">
+                    </div>
+                    <span>{{ langItem.lang }}</span>
+                  </Row>
+                  <div v-if="langItem.progress < 100" class="progressBox">
+                    <img src="~assets/imgs/tenderDetail/translating-icon@2x.png" alt="">
+                    <el-progress :show-text="false" :stroke-width="3" :width="28" color="var(--primary-color)" type="circle" :percentage="langItem.progress"></el-progress>
+                  </div>
+                  <div v-else>
+                    <Icon type="md-arrow-down" size="18" />
+                  </div>
+                </li>
+              </ul>
             </Row>
           </li>
         </ul>
+<!--        翻译弹窗-->
+        <TenderModal
+          ref="langListModal"
+          :tender-id="bid.id"
+          :doc-id="currentSelectedDocId"
+          :doc-type="currentSelectedDocType"
+          :disable-lang-list="disableLangList"
+          @onSelectLanguage="handleTranslate"
+        ></TenderModal>
       </template>
     </CommonCard>
   </Row>
@@ -234,11 +293,17 @@
 
 <script>
 import CommonCard from "~/components/tenderDetail/CommonCard.vue";
-import {tender} from "~/enums/tender";
+// import {tender} from "~/enums/tender";
 import {langList} from "~/lang/langList";
+// import {tenderList} from "~/enums/tenderList";
 export default {
   name: "TenderDetailPage",
   components: {CommonCard},
+  async asyncData({ $axios, params }) {
+      const res = await $axios.get(`/getTenderById/${params.id}`);
+      const bid = res.data.tender;
+      return { bid };
+  },
   data() {
     return {
       nav: [
@@ -256,9 +321,7 @@ export default {
         },
       ],
       activeItem: 0,
-
-      bid: tender,
-
+      bid: {},
       translateLang: '',
       translateLabel: 'language',
       langList,
@@ -266,13 +329,29 @@ export default {
       showOriginal: true,
       showTranslated: false,
       showLangList: false,
+
+      currentSelectedDocId: 0,
+      currentSelectedDocType: '',
     }
   },
+  computed: {
+    selectedTranslateLangList() {
+      return this.$store.getters["tender/getTranslateList"]
+    },
+    disableLangList() {
+      return this.selectedTranslateLangList
+        .filter(item => item.docId === this.currentSelectedDocId && item.tenderId === this.bid.id)
+        .map(item => item.lang)
+    },
+  },
   mounted() {
+    this.$store.dispatch('tender/nuxtClientInit')
     window.addEventListener('scroll', this.onScroll);
     this.onScroll();
     window.addEventListener('resize', this.calcTimelineMaxHeight)
-    this.calcTimelineMaxHeight()
+    this.$nextTick(() => {
+      this.calcTimelineMaxHeight()
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.calcTimelineMaxHeight)
@@ -317,8 +396,8 @@ export default {
     },
     scrollTo(id) {
       let targetOffsetTop = document.querySelector(id).offsetTop - 56; // 指定元素 offsetTop
-      if (window.innerWidth <= 768) {
-        targetOffsetTop -= 24
+      if (window.innerWidth >= 768) {
+        targetOffsetTop += 24
       }
       const scrollTop = window.scrollY // 当前offsetTop
       if (scrollTop > targetOffsetTop) {
@@ -371,14 +450,57 @@ export default {
       }else {
         this.showTranslated = true
       }
+    },
+
+  //  文档更多 下拉菜单选择
+    handleDropdownSelect(args) {
+      const { docId, type, docType } = JSON.parse(args)
+      this.currentSelectedDocId = docId;
+      this.currentSelectedDocType = docType;
+      if (type === 'translate') {
+        this.$refs.langListModal.showModal = true
+      }else {
+      //   const response = await axios.get('/getDownloadLink', params: {...args});
+        this.downloadFile();
+      }
+    },
+    downloadFile(tenderId, docId, docType) {
+      // 后端接收前端的请求，并返回图片的下载链接（URL）。
+      // 确保返回的HTTP响应头部包含正确的Content-Disposition属性，设置为attachment，这会告诉浏览器这是一个文件下载响应。
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = '#';
+      a.download = 'kitty.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    },
+
+    async handleTranslate(lang) {
+      const translateItem = {
+        tenderId: this.bid.id,
+        docId: this.currentSelectedDocId,
+        lang,
+      }
+      const res = await this.$axios.post('/translate',  translateItem );
+      const taskId = res.data.taskId;
+      const response = await this.$axios.get(`/translate/status/${taskId}`);
+      translateItem.taskId = taskId;
+      translateItem.progress = response.data.progress;
+      this.$store.dispatch('tender/addTranslateList', translateItem)
+      this.$store.dispatch('tender/setProgress', taskId)
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.detailPage{
+#tenderDetailPage{
   position: relative;
+}
+.detailPage{
+  padding-left: 100px;
+  padding-right: 100px;
 }
 .active{
   color: var(--primary-color);
@@ -670,6 +792,51 @@ export default {
         color: var(--text-color3);
         margin-right: 20px;
       }
+      .docItemMore{
+        cursor: pointer;
+      }
+      .translatedDocs{
+        margin-top: 16px;
+        ul{
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 16px;
+          width: 100%;
+          li{
+            padding: 8px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--bg-color2);
+            border-radius: 4px;
+            .iconBox{
+              width: 26px;
+              height: 28px;
+              margin-right: 12px;
+              img{
+                width: 100%;
+              }
+            }
+            span{
+              font-size: 16px;
+              color: var(--text-color2);
+            }
+            .progressBox{
+              position: relative;
+              width: 28px;
+              height: 28px;
+              img{
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 12px;
+                height: 12px;
+              }
+            }
+          }
+        }
+      }
     }
     .docItem:nth-last-child(1)::after{
       content: none;
@@ -792,6 +959,22 @@ export default {
         }
         i{
           font-size: 32px;
+        }
+        .translatedDocs{
+          margin-top: 26px;
+          ul{
+            grid-template-columns: 1fr;
+            li{
+              margin-left: 62px;
+              .iconBox{
+                width: 28px;
+                height: 30px;
+              }
+              span{
+                font-size: 22px;
+              }
+            }
+          }
         }
       }
     }

@@ -1,4 +1,22 @@
 #tenderDetailPage{
+  .navIcons{
+    .ivu-select-dropdown{
+      padding: 0;
+      border-radius: var(--border-radius-base);
+      margin-top: 19px;
+    }
+    .shareLinks{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-gap: 36px;
+      padding: 24px 30px;
+      a{
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
+
   .timelineItem{
     .ivu-timeline-item-head-custom{
       left: 20px;
@@ -39,5 +57,21 @@
     .ivu-dropdown-rel{
       display: flex;
     }
+  }
+  .documentsBox{
+    .docItemMore{
+      .ivu-dropdown-item {
+        img{
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+
+  }
+}
+.langListModal{
+  .ivu-modal-body{
+    padding: 20px;
   }
 }

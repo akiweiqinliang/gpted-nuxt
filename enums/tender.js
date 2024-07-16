@@ -103,14 +103,14 @@ export const tender = {
       date: 'Jul 22, 2023',
     },
     {
-      id: 0,
+      id: 2,
       type: 'pdf',
       title: 'The goods required are for making up of patient\'s clothing for public hospitalsfor.pdf',
       size: '831.5KB',
       date: 'Jul 22, 2023',
     },
     {
-      id: 0,
+      id: 3,
       type: 'xlsx',
       title: 'The goods required are for making up of patient\'s clothing for public hospitalsfor.xlsx',
       size: '12.1MB',

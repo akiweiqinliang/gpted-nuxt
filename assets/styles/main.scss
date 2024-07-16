@@ -13,10 +13,13 @@
 
   --text-bg-color: #EEEEEE;
   --text-bg-color1: #F5F5F5;
+  --text-bg-color2: #F9F9F9;
 
   --light-color: #ffffff;
   --bg-color: #F6F8FB;
   --bg-color1: #ffffff;
+  --bg-color2: #F7F7F7;
+  --hover-bg-color: #EEF3F7;
 
   --tag-bg-color: #F4F4F4;
   --tag-hover-bg-color: #E3E5EC;
@@ -35,7 +38,7 @@
   --info-color: #1E6BFF;
   --success-color: #57C22D;
   --warn-color: #FFB803;
-  //--error-color: ;
+  --error-color: #FD5F62;
 
   --bid-call-color: #1E6BFF;
   --bid-ongo-color: #57C22D;
@@ -53,6 +56,8 @@
   --border-color3: #EBEBFF;
   --border-radius-base: 10px;
   --border-radius-large: 15px;
+  //大屏尺寸 1440？ 1600？全局都有左右padding 100px
+  --max-width: 1440px;
 }
 body {
   background-color: var(--bg-color);
@@ -71,9 +76,10 @@ img{
   width: 100%;
 }
 section{
-  max-width: 1600px;
-  margin: 0 auto !important;
-  min-height: 100vh;
+  //大屏尺寸 1440？ 1600？
+  max-width: var(--max-width);
+  margin: 0 auto;
+  //min-height: 100vh;
 }
 .fullWidth{
   width: 100%;
