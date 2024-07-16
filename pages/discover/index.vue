@@ -1,7 +1,23 @@
 <template>
   <section>
+    <Modal
+      v-model="saveModal"
+      title="New Group"
+      @on-ok="ok"
+      @on-cancel="cancel">
+      <Row :wrap="false" align="middle">
+        <span>Name:</span>
+        <Input placeholder="Please enter"/>
+      </Row>
+      <div class="modalTextBox">
+        <Checkbox v-model="agree">Synchronize changes to push groups</Checkbox>
+        <p>When notification is on, you will receive the latest project information that matches this search.</p>
+      </div>
+    </Modal>
+    <GroupSettingModal ref="commonGroupModal" />
     <Row :gutter="28">
       <Col :xs="24" :sm="24" :md="24" :lg="0">
+<!--        移动端-->
         <Input v-model="searchText" class="discoverSearchInput" @on-focus="showBehindScenes = true" >
           <template slot="suffix">
             <Row>
@@ -43,7 +59,7 @@
                     <Icon type="ios-browsers" size="20"/>
                     <span>{{ item.label }}</span>
                   </div>
-                  <Icon type="ios-create-outline" size="20"/>
+                  <Icon type="ios-create-outline" size="20" @click="editSetting"/>
                 </ListItem>
               </List>
             </div>
@@ -55,9 +71,17 @@
           <span>Filters</span>
           <Icon type="md-refresh" />
         </Row>
+        <Row
+          v-show="showSaveSettingBtn"
+          class="topFilterClearer saveSettingBtn"
+          align="middle"
+          justify="center"
+          @click.native="handleSaveSetting"
+          >
+          <span>Save this search</span>
+        </Row>
         <div class="filterSettingCard">
-          <SingleSetting>
-            <span slot="title">Search scope</span>
+          <SingleSetting title="Search scope">
             <template slot="content">
               <RadioGroup v-model="searchSetting.scope" vertical class="commonRadio fullWidth">
                 <Radio label="global">
@@ -69,8 +93,7 @@
               </RadioGroup>
             </template>
           </SingleSetting>
-          <SingleSetting>
-            <span slot="title">Announcement type</span>
+          <SingleSetting title="Announcement type">
             <template slot="content">
               <CheckboxGroup v-model="searchSetting.announcementType" class="commonCheckBox fullWidth">
                 <Checkbox :label="1">
@@ -80,34 +103,111 @@
                   <span>Tendering</span>
                 </Checkbox>
                 <Checkbox :label="3">
+                  <span>Tender Notice</span>
+                </Checkbox>
+                <Checkbox :label="4">
+                  <span>Closed bidding</span>
+                </Checkbox>
+                <Checkbox :label="5">
                   <span>Abandoned bid</span>
                 </Checkbox>
               </CheckboxGroup>
             </template>
           </SingleSetting>
-          <SingleSetting>
-            <span slot="title">Active state</span>
+          <SingleSetting title="Location">
+            <template slot="action">
+              <Icon type="ios-arrow-down" @click="showLocation = !showLocation"/>
+            </template>
             <template slot="content">
-              <CheckboxGroup v-model="searchSetting.activeState" class="commonCheckBox fullWidth">
+              <tag
+                v-for="(item,idx) in searchSetting.location"
+                :key="idx"
+                closable
+                @on-close="removeLocation(item)">
+                <span>{{item.label}}</span>
+              </tag>
+              <client-only>
+              <CustomTree v-show="showLocation" ref="locationTree" :tree-data="searchSettingData.locations" @on-select="handleLocationSelect" />
+              </client-only>
+            </template>
+          </SingleSetting>
+          <SingleSetting title="Organization">
+            <template slot="action">
+              <Icon type="ios-arrow-down" />
+            </template>
+          </SingleSetting>
+          <SingleSetting title="Industry">
+            <template slot="action">
+              <Icon type="ios-arrow-down" />
+            </template>
+          </SingleSetting>
+          <SingleSetting title="Procurement method">
+            <template slot="content">
+              <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
                 <Checkbox :label="1">
-                  <span>Active</span>
+                  <span>Winning the bid</span>
                 </Checkbox>
                 <Checkbox :label="2">
-                  <span>Inactive</span>
+                  <span>Tendering</span>
+                </Checkbox>
+                <Checkbox :label="3">
+                  <span>Tender Notice</span>
                 </Checkbox>
               </CheckboxGroup>
             </template>
           </SingleSetting>
-          <SingleSetting>
-            <span slot="title">Location</span>
-            <template slot="action">
-
-            </template>
+          <SingleSetting title="Content">
             <template slot="content">
-
+              <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
+                <Checkbox :label="1">
+                  <span>Winning the bid</span>
+                </Checkbox>
+                <Checkbox :label="2">
+                  <span>Tendering</span>
+                </Checkbox>
+                <Checkbox :label="3">
+                  <span>Tender Notice</span>
+                </Checkbox>
+              </CheckboxGroup>
+            </template>
+          </SingleSetting>
+          <SingleSetting title="Price Range">
+            <template slot="content">
+              <Row :wrap="false" class-name="priceContent">
+                <Input></Input>
+                <div class="priceDivider">-</div>
+                <Input></Input>
+              </Row>
+            </template>
+          </SingleSetting>
+          <SingleSetting title="Release time">
+            <template slot="content">
+              <DatePicker
+                v-model="searchSetting.releaseTime"
+                type="daterange"
+                :options="timeOption"
+                class="fullWidth"
+                placeholder="Release time"></DatePicker>
+            </template>
+          </SingleSetting>
+          <SingleSetting title="Deadline time">
+            <template slot="content">
+              <DatePicker
+                v-model="searchSetting.deadlineTime"
+                type="daterange"
+                :options="timeOption"
+                class="fullWidth"
+                placeholder="Deadline time"></DatePicker>
             </template>
           </SingleSetting>
         </div>
+        <Row
+          class="topFilterClearer bottomApplyBtn"
+          align="middle"
+          justify="center"
+          @click.native="handleApply">
+          <span>Apply</span>
+        </Row>
       </Col>
       <Col :xs="24" :sm="24" :md="24" :lg="17">
           <Col :xs="0" :sm="0" :md="0" :lg="24">
@@ -141,7 +241,7 @@
                         <Icon type="ios-browsers" size="20"/>
                         <span>{{ item.label }}</span>
                       </div>
-                      <Icon type="ios-create-outline" size="20"/>
+                      <Icon type="ios-create-outline" size="20" @click="editSetting"/>
                     </ListItem>
                   </List>
                 </div>
@@ -161,6 +261,9 @@
           <li v-for="tender in tenderList" :key="`${tender.id}-card`">
             <BidCard :tender="tender"/>
           </li>
+          <Row justify="center">
+            <Page :total="tenderList.length" />
+          </Row>
         </ul>
       </Col>
     </Row>
@@ -170,20 +273,68 @@
 <script>
 import { tenderList } from "~/enums/tenderList";
 import SingleSetting from "~/components/discover/SingleSetting.vue";
+import CustomTree from "~/components/discover/CustomTree.vue";
+import {searchSettingData} from "~/enums/searchSettingData";
+import GroupSettingModal from "~/components/common/GroupSettingModal.vue";
 
 export default {
   name: "DiscoverPage",
-  components: { SingleSetting},
+  components: {
+    GroupSettingModal,
+    CustomTree,
+    SingleSetting},
   data () {
     return {
+      saveModal: false,
+      agree: false,
+      showSaveSettingBtn: false,
+      showLocation: false,
+      timeOption: {
+        shortcuts: [
+          {
+            text: '1 week',
+            value () {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              return [start, end];
+            }
+          },
+          {
+            text: '1 month',
+            value () {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              return [start, end];
+            }
+          },
+          {
+            text: '3 months',
+            value () {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              return [start, end];
+            }
+          }
+        ]
+      },
       searchSetting: {
-        scope: 'global',
+        scope: 'title',
         announcementType: [1,],
-        activeState: [],
-        location: []
+        location: [],
+        organization: [],
+        industry: [],
+        method: [],
+        content: [],
+        releaseTime: [],
+        deadlineTime: [],
+
       },
       searchText: '',
       showDropdown: false,
+
       history: ['Search1', 'fewdvdfarefdfefdwerfd', 'Search2', 'Search3', 'Key companies and organization sssssss', 'fewdvdfrefdfefdwerfd'],
       previousSetting: [
         {
@@ -220,12 +371,40 @@ export default {
         },
       ],
       tenderList,
+      // 虚拟数据
+      searchSettingData,
 
     //   mobile
       showBehindScenes: false
     }
   },
   methods: {
+    // modal弹窗
+    ok () {
+      this.$Message.info('Clicked ok');
+    },
+    cancel () {
+      this.$Message.info('Clicked cancel');
+    },
+    editSetting() {
+      this.$refs.commonGroupModal.showModal = true
+      this.$refs.commonGroupModal.settings = this.searchSetting
+    },
+    // -- 左侧搜索栏 Location部分
+    handleLocationSelect(val) {
+      this.searchSetting.location = val
+    },
+    removeLocation(val) {
+      this.$refs.locationTree.removeChecked(val)
+    },
+    handleApply() {
+      this.showSaveSettingBtn = true
+    //   apply
+    },
+    handleSaveSetting() {
+      this.saveModal = true
+    },
+    // --- pc端右侧顶部搜索框
     handleClickOutside() {
       this.showDropdown = false
     },
@@ -245,6 +424,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+section{
+  padding-left: 100px;
+  padding-right: 100px;
+}
 .topFilterClearer{
   width: 100%;
   background: linear-gradient(to right, var(--primary-color), var(--primary-light-color));
@@ -256,11 +439,37 @@ export default {
     font-weight: bold;
   }
 }
+.saveSettingBtn{
+  background: var(--light-color);
+  border: 1px solid var(--primary-color);
+  color: var(--text-color1);
+  cursor: pointer;
+  span{
+    font-weight: 400;
+  }
+}
+.bottomApplyBtn{
+  cursor: pointer;
+  border-radius: 40px;
+  margin-bottom: 0;
+  margin-top: 30px;
+}
 .filterSettingCard{
   background-color: var(--bg-color1);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-base);
   padding: 20px 24px 30px;
+  .selectorTree{
+    max-height: 480px;
+    overflow-y: scroll;
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+  .priceContent{
+    .priceDivider{
+      margin: 0 10px;
+    }
+  }
 }
 .discoverSearchInput{
   i{

@@ -1,4 +1,6 @@
 export default {
+  zh: '中文',
+
   // home page
   home: '首页',
   search: '搜索',

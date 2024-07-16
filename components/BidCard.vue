@@ -23,7 +23,7 @@
               name: pageCode.TENDERS_ID,
               params: { id: tender.id },
             }"
-      target="_blank"
+
     >
       <Row class-name="bidContent" align="middle">
         <Col :xs="24" :sm="24" :md="24" :lg="19" class="bidContentLeft">
