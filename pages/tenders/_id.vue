@@ -3,8 +3,8 @@
   <h2 class="topTenderTitle">
     {{bid.title}}
   </h2>
-  <Row class-name="navBox" justify="space-between" align="middle">
-    <Row class-name="navAnchor">
+  <div class="navBox">
+    <Row class-name="navAnchor" :wrap="false">
       <span
         v-for="(item, index) in nav"
         :key="`nav-${item.label}-${index}`"
@@ -14,20 +14,28 @@
         {{ item.label }}
       </span>
     </Row>
-    <Row class-name="navIcons" justify="end" align="middle">
+    <Row class-name="navIcons" justify="end" align="middle" :wrap="false">
+      <Icon type="md-mail" class="emailIcon"/>
       <Dropdown trigger="click" placement="bottom-end">
        <icon type="md-share" class="shareIcon" />
         <DropdownMenu slot="list">
-          <div class="shareLinks">
-            <a v-for="i in 6" :key="i" class="link" href="#">
-              <img :src="require(`~/assets/imgs/tenderDetail/link${i}@2x.png`)" alt="">
-            </a>
-          </div>
+            <ul class="shareLinks">
+              <li><img src="~assets/imgs/tenderDetail/link2@2x.png" alt=""></li>
+              <li><img src="~assets/imgs/tenderDetail/link3@2x.png" alt=""></li>
+              <li><img src="~assets/imgs/tenderDetail/link4@2x.png" alt=""></li>
+              <li
+                v-copy="`https://gpted.com${$route.path}?xxx=hhujjjjjjjjksdhjkssd`"
+                @click="copyMailLink"
+              ><img src="~assets/imgs/tenderDetail/link5@2x.png" alt=""></li>
+              <li
+                @click="$refs.mailPromptModal.showModal = true"
+              ><img src="~assets/imgs/tenderDetail/link6@2x.png" alt=""></li>
+            </ul>
         </DropdownMenu>
       </Dropdown>
       <Icon type="md-star" class="collectIcon" :class="bid.hadCollected ? 'active' : '' " @click="handleCollection" />
     </Row>
-  </Row>
+  </div>
   <Row id="description" :gutter="20" class-name="navScrollContent descriptionBox">
     <Col :xs="24" :sm="24" :md="24" :lg="17" class="descriptionLeftContent">
       <ul>
@@ -100,8 +108,11 @@
             <Icon type="md-pin" />
             <span>Winning bidder:</span>
           </div>
-          <div class="contentDetail">
+          <div v-if="bid.winner !== ''"  class="contentDetail">
             <span>People's Government of Hoboksar Mongol Autonomous County and Shitoluogai TownPeople's Government of Hoboksar Mongol Autonomous County and Shitoluogai Town</span>
+          </div>
+          <div v-else class="contentDetail">
+            <UnlockedMask v-if="showUnlockedMask" :bg-text="false" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
           </div>
         </li>
       </ul>
@@ -116,7 +127,6 @@
           <Progress
             :percent="25"
             hide-info
-            :stroke-width="24"
             :stroke-color="bid.type === 0 ? 'var(--bid-award-color)' : bid.type === 1 ? 'var(--bid-call-color)' : bid.type === 2 ? 'var(--bid-ongo-color)' : 'var(--bid-abandoned-color)'"/>
         </div>
       </div>
@@ -163,7 +173,8 @@
             class="actionBtn" :class="showOriginal ? 'actionBtnActive' : ''" @click="handleOriginalBtnClick">
             original
           </div>
-          <div class="actionBtn langChangeBtn" :class="showTranslated ? 'actionBtnActive' : ''">
+          <div
+            class="actionBtn langChangeBtn" :class="showTranslated ? 'actionBtnActive' : ''">
             <Dropdown
               trigger="custom"
               :visible="showLangList"
@@ -188,25 +199,26 @@
           </div>
         </Row>
       </template>
-      <template slot="content">
-          <Row class-name="fullWidth tenderDetail">
-            <Col v-show="showOriginal" flex="1">
-              <span class="invitation">Invitation for Bids</span>
-              <TenderTable lang="en" :bid-detail-table="bid.table.origin" />
-              <pre>
+      <div slot="content">
+        <Row v-if="!showUnlockedMask"  class-name="fullWidth tenderDetail">
+          <Col v-show="showOriginal" flex="1">
+            <span class="invitation">Invitation for Bids</span>
+            <TenderTable lang="en" :bid-detail-table="bid.table.origin" />
+            <pre>
                 {{ bid.detail.origin }}
               </pre>
-            </Col>
-            <Divider v-show="showOriginal && showTranslated" type="vertical" class="contentDivider"/>
-            <Col v-show="showTranslated" flex="1">
-              <span class="invitation">招标公告</span>
-              <TenderTable lang="zh" :bid-detail-table="bid.table[translateLang]" />
-              <pre>
+          </Col>
+          <Divider v-show="showOriginal && showTranslated" type="vertical" class="contentDivider"/>
+          <Col v-show="showTranslated" flex="1">
+            <span class="invitation">招标公告</span>
+            <TenderTable lang="zh" :bid-detail-table="bid?.table[translateLang]" />
+            <pre>
                 {{ bid.detail[translateLang] }}
               </pre>
-            </Col>
-          </Row>
-      </template>
+          </Col>
+        </Row>
+        <UnlockedMask v-if="showUnlockedMask" :bg-text="true" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
+      </div>
     </CommonCard>
   </Row>
   <Row id="document" class-name="navScrollContent documentsBox">
@@ -216,13 +228,13 @@
       </template>
       <template slot="action">
         <Row>
-          <div class="actionBtn">translate all</div>
+          <div class="actionBtn" @click="openTranslateAllModal">translate all</div>
           <div class="actionBtn">download all</div>
         </Row>
       </template>
       <template slot="content">
         <ul class="docList">
-          <li v-for="doc in bid.docs" :key="`doc-${doc.id}-${doc.title}`" class="docItem" >
+          <li v-for="doc in bid.docs" :key="`doc-${doc.id}-${doc.title}`" class="docItem" @click="toTranslateFile(bid.id, doc.id)">
             <Row align="top">
               <img :src="require(`~/assets/imgs/tenderDetail/${doc.type}-icon@2x.png`)" alt="" />
               <Col flex="1">
@@ -233,17 +245,16 @@
                 trigger="click"
                 placement="bottom-end"
                 class="docItemMore"
-                @on-click="handleDropdownSelect"
                 >
                 <Icon type="md-more" />
                 <DropdownMenu slot="list">
-                  <DropdownItem :name="JSON.stringify({ docId: doc.id, type: 'translate', docType: doc.type})">
+                  <DropdownItem @click.native="translateFile(doc.id)">
                     <Row align="middle">
                       <img src="~assets/imgs/tenderDetail/translate-icon@2x.png" alt="translate">
                       <span>translate</span>
                     </Row>
                   </DropdownItem>
-                  <DropdownItem :name="JSON.stringify({ docId: doc.id, type: 'download', docType: doc.type})">
+                  <DropdownItem @click.native="downloadFile(doc.id)">
                     <Row align="middle">
                       <img src="~assets/imgs/tenderDetail/download-icon@2x.png" alt="download">
                       <span>download</span>
@@ -257,7 +268,8 @@
                 <li
                   v-for="langItem in selectedTranslateLangList"
                   v-show="langItem.docId === doc.id && langItem.tenderId === bid.id"
-                  :key="`${langItem.tenderId}-${langItem.docId}-${langItem.lang}-selectedTranslateLang`">
+                  :key="`${langItem.tenderId}-${langItem.docId}-${langItem.lang}-selectedTranslateLang`"
+                 >
                   <Row align="middle">
                     <div class="iconBox">
                       <img :src="require(`~/assets/imgs/tenderDetail/${doc.type}-icon@2x.png`)" alt="">
@@ -266,7 +278,8 @@
                   </Row>
                   <div v-if="langItem.progress < 100" class="progressBox">
                     <img src="~assets/imgs/tenderDetail/translating-icon@2x.png" alt="">
-                    <el-progress :show-text="false" :stroke-width="3" :width="28" color="var(--primary-color)" type="circle" :percentage="langItem.progress"></el-progress>
+                    <i-circle :percent="langItem.progress" :size="28" :stroke-width="10" stroke-color="var(--primary-color)">
+                    </i-circle>
                   </div>
                   <div v-else>
                     <Icon type="md-arrow-down" size="18" />
@@ -276,15 +289,98 @@
             </Row>
           </li>
         </ul>
-<!--        翻译弹窗-->
-        <TenderModal
+<!--        全部翻译弹窗-->
+        <LanguageModal
+          ref="translateAllModal"
+          :tender-id="bid.id"
+          :disable-lang-list="disableAllLanguageList"
+          @onSelectLanguage="handleTranslateAll"
+        ></LanguageModal>
+<!--        单个翻译弹窗-->
+        <LanguageModal
           ref="langListModal"
           :tender-id="bid.id"
           :doc-id="currentSelectedDocId"
-          :doc-type="currentSelectedDocType"
           :disable-lang-list="disableLangList"
           @onSelectLanguage="handleTranslate"
-        ></TenderModal>
+        ></LanguageModal>
+<!--        提示登录弹窗-->
+        <CommonPromptModal ref="loginPromptModal" title="No logged in" class="loginPromptModal">
+          <template #content>
+            <p>Log in to unlock more detailed information, as well as translation and download of attachments</p>
+            <Row justify="center">
+              <Button type="primary" class="loginPromptBtn" @click="toLogin">Go to login</Button>
+            </Row>
+          </template>
+        </CommonPromptModal>
+<!--        邮件转发弹窗-->
+        <CommonPromptModal ref="mailPromptModal" :mask-closeable="false" width="778" title="New forwarding" class="mailPromptModal">
+          <template #content>
+            <Form
+              class="formCard"
+              :label-width="100"
+              label-position="left"
+            >
+              <FormItem prop="mail" class="formItem recipient">
+                <span slot="label">Recipient:<span class="required">*</span></span>
+                <tag v-for="item in selectedMails" :key="item" :closable="true" @on-close="removeMailSelect(item)">{{ item }}</tag>
+                <Dropdown
+                  trigger="custom"
+                  :visible="showEmailHistory"
+                  class="mailModalDropdown"
+                  @on-click="handleMailSelect"
+                  @on-clickoutside="showEmailHistory = false"
+                >
+                  <div class="mailInput">
+                    <Input
+                      v-model="mail"
+                      placeholder="Enter your e-mail"
+                      @on-focus="showEmailHistory = true"
+                    >
+                      <Icon
+                        v-show="mail !== ''"
+                        slot="suffix"
+                        class="mailIcon"
+                        type="md-checkmark"
+                        color="var(--primary-color)"
+                        @click="handleMailSelect(mail)"/>
+                    </Input>
+                    <div v-show="!validateMail" class="validateText">Please enter a valid email address</div>
+                  </div>
+                  <DropdownMenu slot="list">
+                    <DropdownItem v-show="mail" :name="mail">{{ mail }}</DropdownItem>
+                    <DropdownItem
+                      v-for="item in filteredMailHistory"
+                      :key="item"
+                      :name="item"
+                      :class="{'selected': selectedMails.includes(item)}"
+                      >
+                      <Row justify="space-between">
+                        <span>{{ item }}</span>
+                        <Icon type="md-close-circle" @click.stop="removeMailHistory(item)"/>
+                      </Row>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              </FormItem>
+              <FormItem prop="remark" class="formItem remark">
+                <span slot="label">Remark:</span>
+                <Input
+                  v-model="remark"
+                  type="textarea"
+                  maxlength="200"
+                  show-word-limit
+                  :autosize="{minRows: 5,maxRows: 5}"
+                  placeholder="Enter something...">
+                </Input>
+              </FormItem>
+            </Form>
+            <Row justify="center">
+              <Button class="loginPromptBtn" @click="handleMailModalCancel">Cancel</Button>
+              <Button type="primary" class="loginPromptBtn" @click="handleMailModalConfirm">Confirm</Button>
+            </Row>
+          </template>
+        </CommonPromptModal>
       </template>
     </CommonCard>
   </Row>
@@ -293,14 +389,22 @@
 
 <script>
 import CommonCard from "~/components/tenderDetail/CommonCard.vue";
-// import {tender} from "~/enums/tender";
 import {langList} from "~/lang/langList";
-// import {tenderList} from "~/enums/tenderList";
+import UnlockedMask from "~/components/tenderDetail/UnlockedMask.vue";
+import CommonPromptModal from "~/components/tenderDetail/CommonPromptModal.vue";
+import LanguageModal from "~/components/tenderDetail/LanguageModal.vue";
+import pageCode from "~/enums/pageCodes";
+
 export default {
   name: "TenderDetailPage",
-  components: {CommonCard},
+  components: {CommonPromptModal, LanguageModal, UnlockedMask, CommonCard},
   async asyncData({ $axios, params }) {
-      const res = await $axios.get(`/getTenderById/${params.id}`);
+    // 获取其他 seo
+    const res = await $axios.get(`/getTenderById`, {
+      params: {
+        tenderId: params.id,
+      }
+    });
       const bid = res.data.tender;
       return { bid };
   },
@@ -308,7 +412,7 @@ export default {
     return {
       nav: [
         {
-          label: 'Description',
+          label: 'Notice',
           id: '#description',
         },
         {
@@ -321,7 +425,7 @@ export default {
         },
       ],
       activeItem: 0,
-      bid: {},
+      bid: {}, // 当前标讯
       translateLang: '',
       translateLabel: 'language',
       langList,
@@ -331,11 +435,47 @@ export default {
       showLangList: false,
 
       currentSelectedDocId: 0,
-      currentSelectedDocType: '',
+      // 邮件转发
+      mail: '',
+      remark: '',
+      showEmailHistory: false,
+      selectedMails: [],
+      mailHistory: [
+        'aa@qq.com',
+        'aba@qq.com',
+        'bb@qq.com',
+        'aac@qq.com',
+        'cbad@qq.com',
+        'dbb@qq.com',
+      ],
     }
   },
   computed: {
+    filteredMailHistory() {
+      const value = this.mail;
+      if (value) {
+        return this.mailHistory
+          .filter(item => item.includes(value))
+          .sort((a, b) => a.indexOf(value) - b.indexOf(value));
+      } else {
+        return this.mailHistory
+      }
+    },
+    validateMail() {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (this.mail) {
+        return re.test(String(this.mail).toLowerCase());
+      }
+      return true
+    },
+    showUnlockedMask() {
+      return this.bid.detail === '';
+    },
+
     selectedTranslateLangList() {
+      if (this.bid.detail === '') {
+        return []
+      }
       return this.$store.getters["tender/getTranslateList"]
     },
     disableLangList() {
@@ -343,21 +483,54 @@ export default {
         .filter(item => item.docId === this.currentSelectedDocId && item.tenderId === this.bid.id)
         .map(item => item.lang)
     },
+    disableAllLanguageList() {
+      return this.$store.getters["tender/getTranslateAllLanguages"]
+        .filter(item => item.tenderId === this.bid.id)
+        .map(item => item.lang)
+    },
+
   },
   mounted() {
-    this.$store.dispatch('tender/nuxtClientInit')
+    // 避免普通用户在解锁文章后刷新页面时文章内容丢失
+    if (this.$store.getters["user/getToken"] !== null) {
+      this.getTenderById();
+    // todo  get user's email history
+    }
+    this.$store.dispatch('tender/nuxtClientInit');
     window.addEventListener('scroll', this.onScroll);
     this.onScroll();
-    window.addEventListener('resize', this.calcTimelineMaxHeight)
+    window.addEventListener('resize', this.calcTimelineMaxHeight);
     this.$nextTick(() => {
       this.calcTimelineMaxHeight()
     })
+
+    // this.checkUnlock()
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.calcTimelineMaxHeight)
     window.removeEventListener('scroll', this.onScroll);
   },
   methods: {
+    toTranslateFile(tenderId, docId) {
+      const url = this.$router.resolve({
+        name: pageCode.TRANSLATE,
+        query: { tenderId, docId }
+      }).href;
+      window.open(url, '_blank');
+      // this.$router.push({
+      //   name: pageCode.TRANSLATE,
+      //   query: { tenderId, docId }
+      // })
+    },
+    async getTenderById() {
+      const res = await this.$axios.get(`/getTenderById`, {
+        params: {
+          tenderId: this.$route.params.id,
+        }
+      });
+      this.bid = res.data.tender;
+    },
+
     calcTimelineMaxHeight() {
       const leftBox = document.querySelector('.descriptionLeftContent ul');
       const stateCard = document.querySelector('.stateCard');
@@ -415,10 +588,18 @@ export default {
       }
     },
 
+    copyMailLink() {
+      this.$Message.success('Copy link successfully');
+    },
     handleCollection() {
+      this.checkIsLogin()
       this.bid.hadCollected = !this.bid.hadCollected
     },
     handleLangChange(lang, label) {
+      this.checkIsLogin()
+      if(!this.allowPermission()) {
+        return
+      }
       this.translateLang = lang;
       this.translateLabel = label;
 
@@ -428,6 +609,10 @@ export default {
 
     },
     handleOriginalBtnClick() {
+      this.checkIsLogin()
+      if(!this.allowPermission()) {
+        return
+      }
       if (!this.translateLang) {
         this.showOriginal = true
         return 0
@@ -452,19 +637,22 @@ export default {
       }
     },
 
+
   //  文档更多 下拉菜单选择
-    handleDropdownSelect(args) {
-      const { docId, type, docType } = JSON.parse(args)
-      this.currentSelectedDocId = docId;
-      this.currentSelectedDocType = docType;
-      if (type === 'translate') {
-        this.$refs.langListModal.showModal = true
-      }else {
-      //   const response = await axios.get('/getDownloadLink', params: {...args});
-        this.downloadFile();
+    translateFile(docId) {
+      this.checkIsLogin()
+      if(!this.allowPermission()) {
+        return
       }
+      this.currentSelectedDocId = docId;
+      this.$refs.langListModal.showModal = true;
     },
-    downloadFile(tenderId, docId, docType) {
+    downloadFile(docId, lang) {
+      this.checkIsLogin()
+      if(!this.allowPermission()) {
+        return
+      }
+      this.currentSelectedDocId = docId;
       // 后端接收前端的请求，并返回图片的下载链接（URL）。
       // 确保返回的HTTP响应头部包含正确的Content-Disposition属性，设置为attachment，这会告诉浏览器这是一个文件下载响应。
       const a = document.createElement('a');
@@ -476,19 +664,110 @@ export default {
       document.body.removeChild(a);
     },
 
+    // 单个翻译
     async handleTranslate(lang) {
       const translateItem = {
         tenderId: this.bid.id,
         docId: this.currentSelectedDocId,
         lang,
       }
-      const res = await this.$axios.post('/translate',  translateItem );
+      await this.translateDoc(translateItem)
+    },
+    async translateDoc(translateItem) {
+      const res = await this.$axios.post('/translate', translateItem);
       const taskId = res.data.taskId;
       const response = await this.$axios.get(`/translate/status/${taskId}`);
       translateItem.taskId = taskId;
       translateItem.progress = response.data.progress;
-      this.$store.dispatch('tender/addTranslateList', translateItem)
-      this.$store.dispatch('tender/setProgress', taskId)
+      this.$store.dispatch('tender/addTranslateList', translateItem);
+      this.$store.dispatch('tender/setProgress', taskId);
+    },
+    // 翻译全部
+    openTranslateAllModal() {
+      this.checkIsLogin()
+      if(!this.allowPermission()) {
+        return
+      }
+      this.$refs.translateAllModal.showModal = true;
+    },
+    async handleTranslateAll(lang) {
+      this.$store.dispatch("tender/addTranslateAllLanguages", {tenderId: this.bid.id, lang})
+
+      const translateList = this.$store.getters["tender/getTranslateList"];
+      const untranslatedDocs = this.bid.docs.filter(doc =>
+        !translateList.some(item => item.tenderId === this.bid.id && item.docId === doc.id && item.lang === lang)
+      );
+      for (const doc of untranslatedDocs) {
+        const newTranslation = {
+          tenderId: this.bid.id,
+          docId: doc.id,
+          lang,
+        };
+        await this.translateDoc(newTranslation);
+      }
+    },
+    //   检查用户登录状态
+    checkIsLogin() {
+      // token
+      if (this.$store.getters["user/getToken"] === null) {
+        this.$refs.loginPromptModal.showModal = true
+      }
+    },
+    toLogin() {
+      this.$router.push({ name: 'login' })
+    },
+  //  解锁权限
+    allowPermission() {
+      if (this.bid.detail === '' && this.$store.getters["user/getToken"]) {
+        this.$Message.info('Please unlock the tender')
+      }
+      return this.bid.detail !== '';
+    },
+  //   解锁标讯 更新标讯
+    handleUpdateTender(tender) {
+      this.bid = tender;
+    },
+  //   邮件转发
+    handleMailSelect(value) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!re.test(String(value).toLowerCase())) {
+        this.$Message.warning('Please input the correct email address')
+        return
+      }
+      if (!this.mailHistory.includes(value)) {
+        this.mailHistory.push(value)
+      }
+      if (!this.selectedMails.includes(value)){
+        this.selectedMails.push(value)
+      }else {
+        this.selectedMails = this.selectedMails.filter(item => item !== value)
+      }
+      this.mail = ''
+    },
+    removeMailSelect(value) {
+      if (!this.selectedMails.includes(value)){
+        this.selectedMails.push(value)
+      }else {
+        this.selectedMails = this.selectedMails.filter(item => item !== value)
+      }
+    },
+    removeMailHistory(value) {
+      this.showEmailHistory = true
+      this.mailHistory = this.mailHistory.filter(item => item !== value)
+    },
+    handleMailModalConfirm () {
+      if (this.selectedMails.length === 0) {
+        this.$Message.warning('At least input one email address')
+        return
+      }
+      // axios + user auth
+      this.$refs.mailPromptModal.showModal = false
+      this.selectedMails = []
+      this.mail = ''
+      this.$Message.success('Email forwarded successfully')
+    },
+    handleMailModalCancel () {
+      this.$refs.mailPromptModal.showModal = false
     }
   }
 }
@@ -501,6 +780,7 @@ export default {
 .detailPage{
   padding-left: 100px;
   padding-right: 100px;
+  position: relative;
 }
 .active{
   color: var(--primary-color);
@@ -511,6 +791,9 @@ export default {
 }
 .navBox{
   position: sticky;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
   top: 96px;
   z-index: 10;
   background-color: var(--bg-color1);
@@ -528,7 +811,18 @@ export default {
   }
   .navIcons{
     color: var(--inactive-icon-color);
-    .shareIcon {
+    .shareLinks{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      grid-gap: 36px;
+      padding: 24px 30px;
+      li{
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+      }
+    }
+    .emailIcon, .shareIcon {
       margin-right: 30px;
       font-size: 20px;
       height: 20px;
@@ -689,6 +983,7 @@ export default {
 }
 .announcementBox, .documentsBox{
   .actionBtn{
+    font-size: 16px;
     padding: 0 16px;
     height: 30px;
     line-height: 30px;
@@ -704,6 +999,11 @@ export default {
     i{
       color: var(--text-color3);
     }
+  }
+  button[disabled="disabled"]{
+    border-color: var(--border-color2);
+    color: var(--text-color3);
+    cursor: not-allowed;
   }
 }
 .announcementBox{
@@ -844,37 +1144,132 @@ export default {
   }
 }
 
+// modal
+.commonPromptModal{
+  p{
+    margin-bottom: 35px;
+  }
+  .loginPromptBtn{
+    padding: 12px 65px;
+    height: auto;
+    margin: 0 5px;
+  }
+  //.mailPromptModal
+  .formCard{
+    background: var(--bg-color3);
+    border-radius: 6px;
+    padding: 30px;
+    .formItem{
+      position: relative;
+      padding-left: 10px;
+      &::before{
+        position: absolute;
+        content: '';
+        width: 4px;
+        height: 16px;
+        background: var(--primary-color);
+        left: 0;
+        top: 10px;
+      }
+      span{
+        font-weight: bold;
+      }
+    }
+    .recipient{
+      margin-bottom: 30px;
+      .required{
+        color: var(--error-color);
+        margin-left: 4px;
+      }
+      .mailModalDropdown{
+        width: 100%;
+        position: relative;
+        .selected{
+          color: var(--primary-color);
+        }
+        .ivu-dropdown-menu{
+          max-height: 150px;
+          overflow-y: scroll;
+          .ivu-dropdown-item{
+            padding: 7px 10px;
+          }
+        }
+        span{
+          font-weight: initial;
+        }
+        i{
+          color: var(--icon-color);
+        }
+        .mailInput{
+          position: relative;
+          .mailIcon{
+            cursor: pointer;
+          }
+          .validateText{
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: 38px;
+            display: inline;
+            line-height: 13px;
+            font-size: 13px;
+            left: 0;
+            color: var(--error-color);
+          }
+        }
+      }
+    }
+  }
+
+}
+
 // 移动端 样式
 @media screen and (max-width: 768px){
   .topTenderTitle{
-    font-size: 30px;
-    line-height: 45px;
-    margin-bottom: 40px;
+    font-size: 15px;
+    line-height: 1.5;
+    margin-bottom: 20px;
   }
   .navBox{
-    top: 126px;
-    padding: 16px 30px;
+    top: 63px;
+    padding: 8px 15px;
     .navAnchor span{
-      font-size: 22px;
-      margin-right: 40px;
+      font-size: 11px;
+      margin-right: 20px;
+    }
+    .navIcons{
+      .emailIcon, .shareIcon {
+        margin-right: 15px;
+        font-size: 10px;
+        height: 10px;
+      }
+      .collectIcon {
+        font-size: 13px;
+        height: 13px;
+      }
     }
   }
   .descriptionBox, .announcementBox, .documentsBox{
-    margin-top: 30px;
-  }
-  .announcementBox, .documentsBox{
+    margin-top: 15px;
     .actionBtn{
-      font-size: 22px;
-      padding: 0 18px;
+      margin-left: 10px;
+      height: 20px;
+      line-height: 20px;
+      font-size: 11px;
+    }
+    .langChangeBtn .arrowBtn{
+      height: 20px;
+      line-height: 20px;
     }
   }
 
   .descriptionBox{
     .descriptionLeftContent{
       ul{
-        padding: 40px 30px;
+        padding: 20px 15px;
         li{
-          font-size: 22px;
+          font-size: 11px;
+          padding: 12px 5px;
           .contentLabel{
             width: 44%;
           }
@@ -883,18 +1278,18 @@ export default {
     }
     .descriptionRightContent{
       .stateCard{
-        margin-top: 30px;
-        margin-bottom: 30px;
+        margin-top: 15px;
+        margin-bottom: 15px;
         .topTextBox, .bottomProgressBox{
-          font-size: 22px;
+          font-size: 11px;
         }
         .topTextBox{
-          padding: 18px;
+          padding: 9px;
         }
         .bottomProgressBox{
-          padding: 26px 40px;
+          padding: 13px 20px;
           span{
-            margin-bottom: 16px;
+            margin-bottom: 8px;
           }
         }
       }
@@ -903,23 +1298,23 @@ export default {
           display: flex;
           overflow-y: hidden;
           overflow-x: scroll;
-          padding: 30px;
+          padding: 15px;
           .timelineItem {
             padding: 0;
             .timelineDot{
-              width: 24px;
-              height: 24px;
+              width: 12px;
+              height: 12px;
               &::after{
-                width: 10px;
-                height: 10px;
+                width: 5px;
+                height: 5px;
               }
             }
             .content{
-              font-size: 24px;
-              margin-bottom: 6px;
+              font-size: 12px;
+              margin-bottom: 3px;
             }
             .time{
-              font-size: 22px;
+              font-size: 11px;
             }
           }
           .timelineItem:nth-last-child(1) {
@@ -934,44 +1329,44 @@ export default {
       padding: 0;
     }
     .tenderDetail{
-      padding: 40px;
+      padding: 20px;
       .invitation, .bidTableStyle, pre{
-        font-size: 22px;
+        font-size: 11px;
       }
     }
   }
   .documentsBox{
     .docList{
-      padding: 0 30px 30px;
+      padding: 0 15px 15px;
       .docItem{
-        padding: 40px 10px;
+        padding: 20px 5px;
         img{
-          width: 46px;
-          margin-right: 16px;
+          width: 23px;
+          margin-right: 8px;
         }
         p{
-          font-size: 24px;
-          margin-bottom: 8px;
-          margin-right: 30px;
+          font-size: 12px;
+          margin-bottom: 4px;
+          margin-right: 15px;
         }
         span{
-          font-size: 22px;
+          font-size: 11px;
         }
         i{
-          font-size: 32px;
+          font-size: 16px;
         }
         .translatedDocs{
-          margin-top: 26px;
+          margin-top: 13px;
           ul{
             grid-template-columns: 1fr;
             li{
-              margin-left: 62px;
+              margin-left: 31px;
               .iconBox{
-                width: 28px;
-                height: 30px;
+                width: 14px;
+                height: 15px;
               }
               span{
-                font-size: 22px;
+                font-size: 11px;
               }
             }
           }
@@ -980,4 +1375,5 @@ export default {
     }
   }
 }
+
 </style>

@@ -20,27 +20,13 @@ export default {
       lang: 'en',
     },
     __dangerouslyDisableSanitizers: ['script'],
-    script: [
-      {
-        hid: 'tawk',
-        innerHtml: `
-        <!--Start of Tawk.to Script-->
-<script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/668763dfeaf3bd8d4d18412e/1i20ds92o';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script>
-<!--End of Tawk.to Script-->
-        `,
-        defer: true
-      },
-    ],
+    // script: [
+    //   {
+    //     hid: 'tawk',
+    //     src: '/tawk.js',
+    //     defer: true
+    //   }
+    // ],
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no' },
@@ -61,10 +47,14 @@ s0.parentNode.insertBefore(s1,s0);
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    {
+      src: '@/plugins/axios',
+      ssr: true, // 默认为true，会同时在服务端（asyncData（{$axios}））和客户端（this.$axios）同时拦截axios请求，设为false就只会拦截客户端
+    },
     '@/plugins/view-ui',
     '@/plugins/element-ui',
     '@/plugins/vue-dompurify-html',
-    '@/plugins/click-outside',
+    '@/plugins/vue-directives',
     '@/plugins/persistedState.client.js',
   ],
 
@@ -127,16 +117,24 @@ s0.parentNode.insertBefore(s1,s0);
           ],
           grid: false
         },
-        // 'postcss-pxtorem': {
-        //   // rootValue: 16,
-        //   unitPrecision: 5,
-        //   propList: ['*', '!border*', '!max-width*'],
-        //   selectorBlackList: ['.ignore', /^\.no-rem/],
-        //   replace: true,
-        //   mediaQuery: false,
-        //   minPixelValue: 0,
-        //   exclude: [/node_modules/]
+        // 'postcss-px-to-viewport': {
+        //   viewportWidth: 1440, // PC端设计稿宽度
+        //   // viewportHeight: 1080, // 可选，根据设计稿高度设置
+        //   unitPrecision: 5, // px转换后保留的小数位数
+        //   viewportUnit: 'vw', // 转换为视窗单位
+        //   selectorBlackList: ['.ignore', '.hairlines'], // 不转换的类
+        //   minPixelValue: 1, // 小于或等于 1px 不转换为视窗单位
+        //   mediaQuery: false, // 允许在媒体查询中转换px
         // },
+        'postcss-pxtorem': {
+          // rootValue: 16,
+          unitPrecision: 5,
+          propList: ['*', '!border*', '!max-width*'],
+          selectorBlackList: ['.ignore', /^\.no-rem/],
+          replace: true,
+          mediaQuery: false,
+          minPixelValue: 0,
+        },
 
       }
     },

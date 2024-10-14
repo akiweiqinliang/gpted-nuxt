@@ -1,8 +1,16 @@
 @import "./pagesCustom/index";
 @import "./pagesMediaQuery/index";
+html{
+  font-size: 16px;
+}
 
 /* 设置最大字体大小 */
-@media screen and (min-width: 1920px) {
+@media screen and (min-width: 1920px){
+  html {
+    font-size: 20px;
+  }
+}
+@media screen and (min-width: 1600px) {
   html {
     font-size: 20px;
   }
@@ -13,45 +21,58 @@
   }
 }
 
-/* 设置最小字体大小 */
 @media screen and (max-width: 1440px) {
   html {
     font-size: 16px;
   }
+  body{
+    min-width: 1440px;
+    //zoom: 1;
+  }
 }
 @media screen and (max-width: 768px) {
+  body{
+    min-width: auto;
+  }
   html {
-    font-size: 16px;
+    //font-size: 16px;
+    //font-size: 32px;
+    font-size: 2rem;
   }
 }
-@media screen and (max-width: 750px) {
-  html {
-    font-size: 16px;
-  }
-}
+//@media screen and (max-width: 750px) {
+//  html {
+//    font-size: 16px;
+//  }
+//}
 @media screen and (max-width: 700px) {
   html {
-    font-size: 15px;
+    //font-size: 15px;
+    font-size: 30px;
   }
 }
 @media screen and (max-width: 650px) {
   html {
-    font-size: 14px;
+    //font-size: 14px;
+    font-size: 28px;
   }
 }
 @media screen and (max-width: 600px) {
   html {
-    font-size: 12px;
+    //font-size: 12px;
+    font-size: 24px;
   }
 }
 @media screen and (max-width: 576px) {
   html {
-    font-size: 9px;
+    //font-size: 9px;
+    font-size: 18px;
   }
 }
 @media screen and (max-width: 450px) {
   html {
-    font-size: 9px;
+    //font-size: 14px;
+    font-size: 1rem;
   }
 }
 

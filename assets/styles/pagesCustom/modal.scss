@@ -1,7 +1,27 @@
 .groupSettingModal{
+  .footerBtn{
+    height: 42px;
+    line-height: 42px;
+    width: 110px;
+  }
+  .ivu-modal-body{
+    padding: 30px;
+  }
   .nameBox{
     .ivu-input{
-      padding: 8px 12px;
+      height: 30px;
+      line-height: 30px;
+      padding: 0 12px;
+    }
+  }
+  .ivu-input{
+    height: 30px;
+    line-height: 30px;
+    padding: 0 12px;
+  }
+  .contentContainer{
+    .ivu-checkbox{
+      margin-right: 4px;
     }
   }
 }

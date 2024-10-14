@@ -1,7 +1,4 @@
-// plugins/click-outside.js
-import Vue from "vue";
-
-Vue.directive('click-outside', {
+export default {
   bind(el, binding) {
     el.clickOutsideEvent = function(event) {
       // Check if click was outside the element and its children
@@ -17,4 +14,4 @@ Vue.directive('click-outside', {
   unbind(el) {
     document.body.removeEventListener('click', el.clickOutsideEvent);
   },
-});
+}

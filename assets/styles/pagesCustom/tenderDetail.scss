@@ -5,18 +5,12 @@
       border-radius: var(--border-radius-base);
       margin-top: 19px;
     }
-    .shareLinks{
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-      grid-gap: 36px;
-      padding: 24px 30px;
-      a{
-        width: 30px;
-        height: 30px;
-      }
+  }
+  .bottomProgressBox{
+    .ivu-progress-bg{
+      height: 12px !important;
     }
   }
-
   .timelineItem{
     .ivu-timeline-item-head-custom{
       left: 20px;
@@ -74,4 +68,18 @@
   .ivu-modal-body{
     padding: 20px;
   }
+}
+.commonPromptModal{
+  .ivu-modal-body{
+    padding: 30px;
+  }
+  .ivu-form-item-label{
+    position: relative;
+    padding-right: 22px;
+  }
+  .ivu-form-item-required .ivu-form-item-label:before{
+    position: absolute;
+    right: 12px;
+  }
+
 }

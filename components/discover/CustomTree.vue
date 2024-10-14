@@ -54,41 +54,34 @@ export default {
               children:  [
                 {
                   id: 1,
-
                   label: 'Albania1',
                   ISO: 'af'
                 },
                 {
                   id: 2,
-
                   label: 'Albania2',
                   ISO: 'ax'
                 },
                 {
                   id: 3,
-
                   label: 'Albania3',
                   ISO: 'al'
                 },
                 {
                   id: 4,
-
                   label: 'Albania4',
                   ISO: 'as'
                 },
                 {
                   id: 5,
-
                   label: 'Albania5',
                   ISO: 'ad'
                 },
                 {
                   id: 6,
-
                   label: 'Albania6',
                   ISO: 'eh'
                 },
-
               ]
             },
             {
@@ -151,40 +144,44 @@ export default {
   methods: {
     filterNode(value, data) {
       if (!value) return true;
-      return data.label.includes(value);
+      value = value.toLowerCase();
+      return data.label.toLowerCase().includes(value);
     },
     removeChecked(data){
       this.$refs.tree.setChecked(data.id,false, true);
       this.checkedList = this.checkedList.filter(item => item.id !== data.id);
       this.$emit('on-select', this.checkedList);
     },
+    findTopLevelKeys(list) {
+      const tree = this.$refs.tree;
+      const res = list.reduce((acc, item) => {
+        if (list.some(x => x.key === item.parentKey)) {
+          acc.add(item.parentKey);
+        }else {
+          acc.add(item.key);
+        }
+        return acc;
+      }, new Set());
+      const keys = Array.from(res).map(item => ({key: item, parentKey: tree.getNode(item).parent.key}));
+
+      const childKeys = keys.map(item => item.key);
+      const parentKeys = keys.map(item => item.parentKey);
+
+      if (childKeys.some(key => parentKeys.includes(key))){
+        return this.findTopLevelKeys(keys);
+      }else {
+        return res;
+      }
+    },
     handleCheck(cur, data){
       const tree = this.$refs.tree;
-      this.checkedList = tree.getCheckedNodes();
-      const findTopLevel = (list) => {
-        if (list.length === 0){
-          return 1
-        }
-        let top = tree.getNode(list[0].id).level;
-        for (let i = 1; i < list.length; i++) {
-          const curNodeLevel = tree.getNode(list[i].id).level
-          if (curNodeLevel < top){
-            top = curNodeLevel
-          }
-        }
-        return top;
-      }
-      const topLevel = findTopLevel(tree.getCheckedNodes());
-      const topList =this.checkedList.filter(item => tree.getNode(item.id).level === topLevel)
-      this.checkedList = this.checkedList.filter(item =>
-        tree.getNode(item.id).level === topLevel // 保留上级节点（一级/二级）
-        || !topList.includes(tree.getNode(item.id).parent.data) // 保留父节点不在topList中的三级
-      );
-      if(topLevel === 1) {
-        // 一级节点
-        this.checkedList = [];
-        this.checkedList.push(cur)
-      }
+      const allKeys = tree.getCheckedKeys();
+      const list = allKeys.map(item => ({key: item, parentKey: tree.getNode(item).parent.key}))
+      // 找到所有顶级节点的key值
+      const topLevelKeys = this.findTopLevelKeys(list)
+      // 将Set转换为数组
+      const topLevelKeysArray = Array.from(topLevelKeys);
+      this.checkedList = topLevelKeysArray.map(item => tree.getNode(item)).map(item => item.data)
       this.$emit('on-select', this.checkedList);
       },
     renderContent(h, { node, data, store }) {
@@ -207,6 +204,9 @@ export default {
 </script>
 
 <style scoped>
+.filter-tree{
+  margin-top: 10px;
+}
 .filter-tree .active{
   color: var(--primary-color);
 }

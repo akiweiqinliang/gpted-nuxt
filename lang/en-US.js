@@ -6,7 +6,8 @@ export default {
   resources: 'Resources',
   dashboard: 'Dashboard',
   member: 'Member',
-  signIn: 'Sign in',
+  signIn: 'Sign In',
+  signOut: 'Exit Login',
   forwardNews: 'Forward news',
   pushSettings: 'Push settings',
 

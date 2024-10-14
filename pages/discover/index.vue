@@ -16,9 +16,9 @@
     </Modal>
     <GroupSettingModal ref="commonGroupModal" />
     <Row :gutter="28">
-      <Col :xs="24" :sm="24" :md="24" :lg="0">
-<!--        移动端-->
-        <Input v-model="searchText" class="discoverSearchInput" @on-focus="showBehindScenes = true" >
+<!--      移动端搜索框-->
+      <Col :xs="24" :sm="24" :md="0" :lg="0">
+        <Input v-model.trim="searchText" class="discoverSearchInput" @on-focus="showBehindScenes = true" >
           <template slot="suffix">
             <Row>
               <Icon v-show="searchText !== ''" class="closeIcon" type="md-close" @click="searchText = ''"/>
@@ -29,8 +29,8 @@
         <Drawer v-model="showBehindScenes" class-name="searchInputDrawer" height="100%" placement="top" :closable="false">
           <div class="drawerInnerBox">
             <Row :wrap="false" align="middle" justify="space-between" class-name="searchBox">
-              <Icon type="ios-arrow-back" @click="showBehindScenes = false"/>
-              <Input v-model="searchText" class="discoverSearchInput drawerInput" :class="showDropdown ? 'inputWithDropdownEffect' : ''" >
+              <Icon type="ios-arrow-back" class="backIcon" @click="showBehindScenes = false"/>
+              <Input v-model.trim="searchText" class="discoverSearchInput drawerInput" :class="showDropdown ? 'inputWithDropdownEffect' : ''" >
                 <template slot="suffix">
                   <Row>
                     <Icon v-show="searchText !== ''" class="closeIcon" type="md-close" @click="searchText = ''"/>
@@ -42,11 +42,11 @@
             <div v-show="history.length !== 0" class="searchHistory">
               <Row justify="space-between" align="middle">
                 <h4>History</h4>
-                <Icon type="ios-trash-outline" color="var(--icon-color)" size="20" @click="clearHistory"/>
+                <Icon type="ios-trash-outline" color="var(--icon-color)" @click="clearHistory"/>
               </Row>
               <ul>
                 <li v-for="(item, index) in history" :key="`${item}-${index}`" @click="selectHistoryItem(item)">
-                  <Icon type="ios-close-circle" size="18" @click="clearHistoryItem(item, $event)" />
+                  <Icon type="ios-close-circle" @click.stop="clearHistoryItem(item)" />
                   {{ item }}
                 </li>
               </ul>
@@ -56,163 +56,179 @@
               <List :split="false">
                 <ListItem v-for="item in previousSetting" :key="`${item}-${item.id}`" class="classificationItem">
                   <div class="labelBox">
-                    <Icon type="ios-browsers" size="20"/>
+                    <Icon type="ios-browsers" />
                     <span>{{ item.label }}</span>
                   </div>
-                  <Icon type="ios-create-outline" size="20" @click="editSetting"/>
+                  <Icon type="ios-create-outline" @click="editSetting"/>
                 </ListItem>
               </List>
             </div>
           </div>
         </Drawer>
       </Col>
-      <Col :xs="24" :sm="24" :md="24" :lg="7">
-        <Row class="topFilterClearer" align="middle" justify="space-between">
-          <span>Filters</span>
-          <Icon type="md-refresh" />
-        </Row>
-        <Row
-          v-show="showSaveSettingBtn"
-          class="topFilterClearer saveSettingBtn"
-          align="middle"
-          justify="center"
-          @click.native="handleSaveSetting"
+<!--      左侧搜索栏-->
+      <Col :xs="24" :sm="24" :md="7" :lg="7">
+          <Row class="topFilterClearer" align="middle" justify="space-between">
+            <Row align="middle" :justify="isPC? 'space-between': 'center'" :class="{'fullWidth' : isPC}">
+              <span>Filters</span>
+              <Icon type="md-refresh" />
+            </Row>
+            <Icon v-if="!isPC" type="ios-arrow-down" @click="handleShowFilter"/>
+          </Row>
+          <Row
+            v-show="showSaveSettingBtn"
+            class="topFilterClearer saveSettingBtn"
+            align="middle"
+            justify="center"
+            @click.native="handleSaveSetting"
           >
-          <span>Save this search</span>
-        </Row>
-        <div class="filterSettingCard">
-          <SingleSetting title="Search scope">
-            <template slot="content">
-              <RadioGroup v-model="searchSetting.scope" vertical class="commonRadio fullWidth">
-                <Radio label="global">
-                  <span>Global</span>
-                </Radio>
-                <Radio label="title">
-                  <span>Title</span>
-                </Radio>
-              </RadioGroup>
-            </template>
-          </SingleSetting>
-          <SingleSetting title="Announcement type">
-            <template slot="content">
-              <CheckboxGroup v-model="searchSetting.announcementType" class="commonCheckBox fullWidth">
-                <Checkbox :label="1">
-                  <span>Winning the bid</span>
-                </Checkbox>
-                <Checkbox :label="2">
-                  <span>Tendering</span>
-                </Checkbox>
-                <Checkbox :label="3">
-                  <span>Tender Notice</span>
-                </Checkbox>
-                <Checkbox :label="4">
-                  <span>Closed bidding</span>
-                </Checkbox>
-                <Checkbox :label="5">
-                  <span>Abandoned bid</span>
-                </Checkbox>
-              </CheckboxGroup>
-            </template>
-          </SingleSetting>
-          <SingleSetting title="Location">
-            <template slot="action">
-              <Icon type="ios-arrow-down" @click="showLocation = !showLocation"/>
-            </template>
-            <template slot="content">
-              <tag
-                v-for="(item,idx) in searchSetting.location"
-                :key="idx"
-                closable
-                @on-close="removeLocation(item)">
-                <span>{{item.label}}</span>
-              </tag>
-              <client-only>
-              <CustomTree v-show="showLocation" ref="locationTree" :tree-data="searchSettingData.locations" @on-select="handleLocationSelect" />
-              </client-only>
-            </template>
-          </SingleSetting>
-          <SingleSetting title="Organization">
-            <template slot="action">
-              <Icon type="ios-arrow-down" />
-            </template>
-          </SingleSetting>
-          <SingleSetting title="Industry">
-            <template slot="action">
-              <Icon type="ios-arrow-down" />
-            </template>
-          </SingleSetting>
-          <SingleSetting title="Procurement method">
-            <template slot="content">
-              <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
-                <Checkbox :label="1">
-                  <span>Winning the bid</span>
-                </Checkbox>
-                <Checkbox :label="2">
-                  <span>Tendering</span>
-                </Checkbox>
-                <Checkbox :label="3">
-                  <span>Tender Notice</span>
-                </Checkbox>
-              </CheckboxGroup>
-            </template>
-          </SingleSetting>
-          <SingleSetting title="Content">
-            <template slot="content">
-              <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
-                <Checkbox :label="1">
-                  <span>Winning the bid</span>
-                </Checkbox>
-                <Checkbox :label="2">
-                  <span>Tendering</span>
-                </Checkbox>
-                <Checkbox :label="3">
-                  <span>Tender Notice</span>
-                </Checkbox>
-              </CheckboxGroup>
-            </template>
-          </SingleSetting>
-          <SingleSetting title="Price Range">
-            <template slot="content">
-              <Row :wrap="false" class-name="priceContent">
-                <Input></Input>
-                <div class="priceDivider">-</div>
-                <Input></Input>
-              </Row>
-            </template>
-          </SingleSetting>
-          <SingleSetting title="Release time">
-            <template slot="content">
-              <DatePicker
-                v-model="searchSetting.releaseTime"
-                type="daterange"
-                :options="timeOption"
-                class="fullWidth"
-                placeholder="Release time"></DatePicker>
-            </template>
-          </SingleSetting>
-          <SingleSetting title="Deadline time">
-            <template slot="content">
-              <DatePicker
-                v-model="searchSetting.deadlineTime"
-                type="daterange"
-                :options="timeOption"
-                class="fullWidth"
-                placeholder="Deadline time"></DatePicker>
-            </template>
-          </SingleSetting>
-        </div>
-        <Row
-          class="topFilterClearer bottomApplyBtn"
-          align="middle"
-          justify="center"
-          @click.native="handleApply">
-          <span>Apply</span>
-        </Row>
-      </Col>
-      <Col :xs="24" :sm="24" :md="24" :lg="17">
-          <Col :xs="0" :sm="0" :md="0" :lg="24">
+            <span>Save this search</span>
+          </Row>
+          <div v-show="showFilter" class="filterSettingCard">
+            <SingleSetting title="Search scope">
+              <template slot="content">
+                <RadioGroup v-model="searchSetting.scope" vertical class="commonRadio fullWidth">
+                  <Radio label="global">
+                    <span>Global</span>
+                  </Radio>
+                  <Radio label="title">
+                    <span>Title</span>
+                  </Radio>
+                </RadioGroup>
+              </template>
+            </SingleSetting>
+            <SingleSetting title="Announcement type">
+              <template slot="content">
+                <CheckboxGroup v-model="searchSetting.announcementType" class="commonCheckBox fullWidth">
+                  <Checkbox :label="1">
+                    <span>Winning the bid</span>
+                  </Checkbox>
+                  <Checkbox :label="2">
+                    <span>Tendering</span>
+                  </Checkbox>
+                  <Checkbox :label="3">
+                    <span>Tender Notice</span>
+                  </Checkbox>
+                  <Checkbox :label="4">
+                    <span>Closed bidding</span>
+                  </Checkbox>
+                  <Checkbox :label="5">
+                    <span>Abandoned bid</span>
+                  </Checkbox>
+                </CheckboxGroup>
+              </template>
+            </SingleSetting>
+            <SingleSetting title="Location" class="LocationSetting">
+              <template slot="action">
+                <Icon type="ios-arrow-down" @click="showLocation = !showLocation"/>
+              </template>
+              <template slot="content">
+                <div class="selectedTags">
+                  <tag
+                    v-for="(item,idx) in searchSetting.location"
+                    :key="idx"
+                    class="selectedTag"
+                    closable
+                    @on-close="removeLocation(item)">
+                <span>
+                  <span v-show="item.ISO" :class="['fi', `fi-${item.ISO}`, 'flag']"></span>
+                  {{item.label}}</span>
+                  </tag>
+                </div>
+                <client-only>
+                  <CustomTree
+                    v-show="showLocation"
+                    ref="locationTree"
+                    :class="{ 'locationTree': searchSetting.location.length > 0}"
+                    :tree-data="searchSettingData.locations"
+                    @on-select="handleLocationSelect" />
+                </client-only>
+              </template>
+            </SingleSetting>
+            <SingleSetting title="Organization">
+              <template slot="action">
+                <Icon type="ios-arrow-down" />
+              </template>
+            </SingleSetting>
+            <SingleSetting title="Industry">
+              <template slot="action">
+                <Icon type="ios-arrow-down" />
+              </template>
+            </SingleSetting>
+            <SingleSetting title="Procurement method">
+              <template slot="content">
+                <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
+                  <Checkbox :label="1">
+                    <span>Winning the bid</span>
+                  </Checkbox>
+                  <Checkbox :label="2">
+                    <span>Tendering</span>
+                  </Checkbox>
+                  <Checkbox :label="3">
+                    <span>Tender Notice</span>
+                  </Checkbox>
+                </CheckboxGroup>
+              </template>
+            </SingleSetting>
+            <SingleSetting title="Content">
+              <template slot="content">
+                <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
+                  <Checkbox :label="1">
+                    <span>Winning the bid</span>
+                  </Checkbox>
+                  <Checkbox :label="2">
+                    <span>Tendering</span>
+                  </Checkbox>
+                  <Checkbox :label="3">
+                    <span>Tender Notice</span>
+                  </Checkbox>
+                </CheckboxGroup>
+              </template>
+            </SingleSetting>
+            <SingleSetting title="Price Range">
+              <template slot="content">
+                <Row :wrap="false" class-name="priceContent">
+                  <Input></Input>
+                  <div class="priceDivider">-</div>
+                  <Input></Input>
+                </Row>
+              </template>
+            </SingleSetting>
+            <SingleSetting title="Release time">
+              <template slot="content">
+                <DatePicker
+                  v-model="searchSetting.releaseTime"
+                  type="daterange"
+                  :options="timeOption"
+                  class="fullWidth"
+                  placeholder="Release time"></DatePicker>
+              </template>
+            </SingleSetting>
+            <SingleSetting title="Deadline time">
+              <template slot="content">
+                <DatePicker
+                  v-model="searchSetting.deadlineTime"
+                  type="daterange"
+                  :options="timeOption"
+                  class="fullWidth"
+                  placeholder="Deadline time"></DatePicker>
+              </template>
+            </SingleSetting>
+          </div>
+          <Row
+            v-show="showFilter"
+            class="topFilterClearer bottomApplyBtn"
+            align="middle"
+            justify="center"
+            @click.native="handleApply">
+            <span>Apply</span>
+          </Row>
+        </Col>
+<!--      tender列表-->
+      <Col :xs="24" :sm="24" :md="17" :lg="17">
+          <Col :xs="0" :sm="0" :md="24" :lg="24">
             <div v-click-outside="handleClickOutside" class="topInputBox">
-              <Input v-model="searchText" class="discoverSearchInput" :class="showDropdown ? 'inputWithDropdownEffect' : ''" @on-focus="showDropdown = true">
+              <Input v-model.trim="searchText" class="discoverSearchInput" :class="showDropdown ? 'inputWithDropdownEffect' : ''" @on-focus="showDropdown = true">
                 <template slot="suffix">
                   <Row>
                     <Icon v-show="searchText !== ''" class="closeIcon" type="md-close" @click="searchText = ''"/>
@@ -224,11 +240,11 @@
                 <div v-show="history.length !== 0" class="searchHistory">
                   <Row justify="space-between" align="middle">
                     <h4>History</h4>
-                    <Icon type="ios-trash-outline" color="var(--icon-color)" size="20" @click="clearHistory"/>
+                    <Icon type="ios-trash-outline" color="var(--icon-color)" @click="clearHistory"/>
                   </Row>
                   <ul>
                     <li v-for="(item, index) in history" :key="`${item}-${index}`" @click="selectHistoryItem(item)">
-                      <Icon type="ios-close-circle" size="18" @click="clearHistoryItem(item, $event)" />
+                      <Icon type="ios-close-circle" @click.stop="clearHistoryItem(item)" />
                       {{ item }}
                     </li>
                   </ul>
@@ -238,10 +254,10 @@
                   <List :split="false">
                     <ListItem v-for="item in previousSetting" :key="`${item}-${item.id}`" class="classificationItem">
                       <div class="labelBox">
-                        <Icon type="ios-browsers" size="20"/>
+                        <Icon type="ios-browsers" />
                         <span>{{ item.label }}</span>
                       </div>
-                      <Icon type="ios-create-outline" size="20" @click="editSetting"/>
+                      <Icon type="ios-create-outline" @click="editSetting"/>
                     </ListItem>
                   </List>
                 </div>
@@ -251,11 +267,16 @@
               </div>
             </div>
           </Col>
-        <Row class="suggestionBox">
-          <Poptip word-wrap width="200" content="Steven Paul Jobs was an American entrepreneur and business magnate. He was the chairman, chief executive officer, and a co-founder of Apple Inc.">
+        <Row class="suggestionBox" justify="space-between">
+          <Poptip v-if="isPC" word-wrap width="200" content="Steven Paul Jobs was an American entrepreneur and business magnate. He was the chairman, chief executive officer, and a co-founder of Apple Inc.">
             <Icon type="ios-alert-outline" />
             <span>Search suggestions</span>
           </Poptip>
+          <h4 v-else>345461 Results</h4>
+          <Row class-name="filterActions">
+            <span>Release</span>
+            <span>Deadline</span>
+          </Row>
         </Row>
         <ul>
           <li v-for="tender in tenderList" :key="`${tender.id}-card`">
@@ -285,6 +306,8 @@ export default {
     SingleSetting},
   data () {
     return {
+      isPC: true,
+      showFilter: false,
       saveModal: false,
       agree: false,
       showSaveSettingBtn: false,
@@ -378,7 +401,18 @@ export default {
       showBehindScenes: false
     }
   },
+  mounted() {
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+  },
   methods: {
+    handleResize() {
+      this.showFilter = window.innerWidth > 768;
+      this.isPC = window.innerWidth > 768;
+    },
     // modal弹窗
     ok () {
       this.$Message.info('Clicked ok');
@@ -394,15 +428,26 @@ export default {
     handleLocationSelect(val) {
       this.searchSetting.location = val
     },
+    removeLocation1(val) {
+      this.$refs.locationTree1.removeChecked(val)
+
+    },
     removeLocation(val) {
       this.$refs.locationTree.removeChecked(val)
+
+    },
+    // 手机端控制筛选列表的显示
+    handleShowFilter() {
+      this.showFilter = !this.showFilter;
     },
     handleApply() {
-      this.showSaveSettingBtn = true
+      this.showSaveSettingBtn = true;
+      this.showFilter = false;
     //   apply
     },
     handleSaveSetting() {
-      this.saveModal = true
+      this.saveModal = true;
+      this.showSaveSettingBtn = false;
     },
     // --- pc端右侧顶部搜索框
     handleClickOutside() {
@@ -414,9 +459,8 @@ export default {
     clearHistory() {
       this.history = [];
     },
-    clearHistoryItem(item, event) {
+    clearHistoryItem(item) {
       //  axios
-      event.stopPropagation();
       this.history = this.history.filter(el => el !== item)
     }
   }
@@ -450,7 +494,7 @@ section{
 }
 .bottomApplyBtn{
   cursor: pointer;
-  border-radius: 40px;
+  border-radius: 100px;
   margin-bottom: 0;
   margin-top: 30px;
 }
@@ -470,6 +514,33 @@ section{
       margin: 0 10px;
     }
   }
+
+  .LocationSetting{
+    .locationTree{
+      margin-top: 16px;
+    }
+    .selectedTags{
+      .selectedTag{
+        height: auto;
+        line-height: normal;
+        margin: 3px 6px 3px 0;
+        padding: 7px 12px;
+        border: 1px solid var(--primary-color);
+        border-radius: 3px;
+        background: white;
+        vertical-align: middle;
+        opacity: 1;
+        overflow: hidden;
+        font-size: 14px;
+        .ivu-icon-ios-close {
+          top: 0;
+        }
+        .flag{
+          margin-right: 10px;
+        }
+      }
+    }
+  }
 }
 .discoverSearchInput{
   i{
@@ -483,16 +554,16 @@ section{
   .searchIcon{
     margin-right: 6px;
   }
-  .searchIcon:before{
+  .searchIcon::before{
     padding: 8px 16px;
     border-radius: 8px;
   }
 }
-.inputWithDropdownEffect i:nth-last-child(1):before{
+.inputWithDropdownEffect i:nth-last-child(1)::before{
   background: var(--primary-color);
   color: var(--light-color);
 }
-.inputHasText:before{
+.inputHasText::before{
   background: var(--primary-color);
   color: var(--light-color);
 }
@@ -605,20 +676,59 @@ section{
 
 .suggestionBox{
   margin: 14px 0 16px;
+  font-size: 12px;
+  color: var(--text-color3);
+  .filterActions{
+    span{
+      display: inline-block;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  }
 }
 // mobile -------------
 @media screen and (max-width: 768px){
-  .searchInputDrawer{
-    .drawerInnerBox{
-      .searchBox{
-        margin-top: 150px;
-        padding-left: 25px;
-        padding-right: 50px;
-      }
-      i{
-        font-size: 50px;
+  section{
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .discoverSearchInput{
+    .searchIcon{
+      margin-right: 4px;
+      &::before{
+        padding: 4px 8px;
       }
     }
+  }
+  .searchInputDrawer{
+    .drawerInnerBox{
+      i{
+        font-size: 20px;
+      }
+      .searchBox{
+        margin-top: 75px;
+        padding-left: 15px;
+        padding-right: 25px;
+        .searchIcon,.backIcon{
+          font-size: 25px;
+        }
+        .backIcon{
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+  .topFilterClearer{
+    margin: 20px 0 15px;
+  }
+  .suggestionBox{
+    margin: 0 0 15px;
+  }
+  .bottomApplyBtn{
+    position: sticky;
+    bottom: 80px;
+    z-index: 10;
+    width: 100%;
   }
 }
 

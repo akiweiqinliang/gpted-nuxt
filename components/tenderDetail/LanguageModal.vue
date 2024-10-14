@@ -34,7 +34,7 @@
 <script>
 import {langList} from "~/lang/langList";
 export default {
-  name: "TenderModal",
+  name: "LanguageModal",
   props: {
     tenderId: {
       type: Number,
@@ -45,16 +45,9 @@ export default {
     },
     docId: {
       type: Number,
-      required: true,
+      required: false,
       default() {
         return 0;
-      }
-    },
-    docType: {
-      type: String,
-      required: true,
-      default() {
-        return ''
       }
     },
     title: {

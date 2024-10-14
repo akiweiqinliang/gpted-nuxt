@@ -42,5 +42,18 @@ export const langList = [
   {
     value: 'it',
     label: 'Italiano'
+  },
+  {
+    value: 'Chengdu',
+    label: '成都'
+  }, {
+    value: 'Shenzhen',
+    label: '深圳'
+  }, {
+    value: 'Guangzhou',
+    label: '广州'
+  }, {
+    value: 'Dalian',
+    label: '大连'
   }
 ]
