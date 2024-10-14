@@ -1,21 +1,17 @@
 <template>
   <Row>
-    <Row justify="space-between" class-name="headerContainer fullWidth">
+    <Row justify="space-between" align="middle" class-name="headerContainer fullWidth">
       <div class="headerBox">
         <div class="decBox"></div>
         <span>{{ headerTitle }}<span class="keywordNum">{{ newTags.length }}</span></span>
       </div>
-      <Icon type="md-refresh" @click="resetKeywords" />
+      <Icon type="md-refresh" size="20" @click="resetKeywords" />
     </Row>
-<!--    <Divider />-->
-    <Row>
-      <Button
-        v-show="!showTagInput"
-        icon="ios-add"
-        type="dashed"
-        size="large"
-        @click="openTagInput"
-      >add</Button>
+    <Row align="middle" class-name="contentContainer">
+      <div v-show="!showTagInput" class="addBtn" @click="openTagInput">
+        <Icon type="ios-add" />
+        <span>Add</span>
+      </div>
       <Input
         v-show="showTagInput"
         ref="tagInput"
@@ -23,17 +19,18 @@
         clearable
         placeholder="按回车保存"
         class="addInput"
-        size="large"
         @on-blur="handleAddTag"
         @keyup.native.enter="handleAddTag"
       />
       <tag
         v-for="(tag, index) in newTags"
         :key="`${tag}-${index}`"
+        class="selectedTag"
         :name="tag"
         closable
         @on-close="handleCloseTag"
       >
+        <span v-if="showTagFlag" :class="['fi', `fi-cn`, 'countryFlag']"></span>
         {{ tag }}
       </tag>
     </Row>
@@ -50,6 +47,13 @@ export default {
       type: String,
       default() {
         return ''
+      }
+    },
+    showTagFlag: {
+      required: false,
+      type: Boolean,
+      default() {
+        return false
       }
     },
     tags: {
@@ -148,6 +152,43 @@ export default {
       margin-left: 10px;
       color: var(--primary-color);
     }
+  }
+}
+.contentContainer{
+  padding: 0 20px;
+}
+.addBtn{
+  margin-right: 10px;
+  border: 1px solid var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 20px;
+  border-radius: 3px;
+  color: var(--primary-color);
+  background: var(--primary-bg-color1);
+  cursor: pointer;
+  span{
+    margin-left: 4px;
+  }
+}
+.addInput{
+  width: 300px;
+  margin-right: 10px;
+}
+.selectedTag{
+  margin: 3px 10px 3px 0;
+  padding: 0 12px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid var(--primary-color);
+  border-radius: 3px;
+  background: var(--bg-color1);
+  font-size: 14px;
+  .flag{
+    margin-right: 10px;
   }
 }
 </style>

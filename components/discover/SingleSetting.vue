@@ -3,9 +3,7 @@
     <Row class-name="header" justify="space-between" align="middle">
       <Row class="title" align="middle">
         <div class="decBox"></div>
-<!--        <slot name="title">-->
         <span>{{ title }}</span>
-<!--        </slot>-->
       </Row>
       <div class="action">
         <slot name="action"></slot>
@@ -36,8 +34,6 @@ export default {
 .singleSetting{
   width: 100%;
   background-color: var(--bg-color1);
-  //border-radius: var(--border-radius-base);
-  //border: 1px solid var(--border-color1);
   position: relative;
   .header{
     margin-bottom: 10px;
@@ -61,5 +57,18 @@ export default {
     margin-bottom: 26px;
   }
 }
-
+@media screen and (max-width: 768px){
+  .singleSetting{
+    .header{
+      .title{
+        font-size: 14px;
+        .decBox{
+          width: 8px;
+          height: 8px;
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+}
 </style>

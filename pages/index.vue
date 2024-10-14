@@ -604,7 +604,7 @@ section:not(.home1){
   .playStop{
     .countryScrollFlags, .organizationScrollFlags{
       .imgList1, .imgList2{
-        animation-fill-mode: forwards;
+        animation-play-state: paused;
       }
     }
   }
@@ -861,10 +861,10 @@ section:not(.home1){
   }
   .play{
     .banner1{
-      animation: scrollBanner 10s linear infinite;
+      animation: scrollBanner3 20s linear infinite;
     }
     .banner2{
-      animation: scrollBanner2 10s linear infinite;
+      animation: scrollBanner4 20s linear infinite;
     }
   }
 }

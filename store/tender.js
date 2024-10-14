@@ -1,11 +1,14 @@
 export const state = () => ({
-  tender: null,
   translateList: [],
+  translateAllLanguages: [],
 })
 
 export const mutations = {
   addTranslateList(state, val) {
     state.translateList.push(val)
+  },
+  addTranslateAllLanguages(state, val) {
+    state.translateAllLanguages.push(val)
   },
   setProgress( state, {taskId, progress}) {
     state.translateList.find(item => item.taskId === taskId).progress = progress;
@@ -14,6 +17,13 @@ export const mutations = {
 export const actions = {
   addTranslateList({ commit, state }, val) {
     commit('addTranslateList', val)
+  },
+  addTranslateAllLanguages({ commit }, {tenderId, lang}) {
+    const val = {
+      tenderId,
+      lang
+    }
+    commit('addTranslateAllLanguages', val)
   },
   startProgressTimer({ commit }, taskId) {
     const timer = setInterval(async () => {
@@ -44,6 +54,9 @@ export const getters = {
   getTranslateList(state) {
     return state.translateList;
   },
+  getTranslateAllLanguages(state) {
+    return state.translateAllLanguages
+  }
 }
 
 // const translate

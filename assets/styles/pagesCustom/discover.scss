@@ -29,11 +29,14 @@
   }
 }
 // 移动端
-.searchInputDrawer{
-  .ivu-drawer-body{
-    padding: 0;
+@media screen and (max-width: 768px){
+  .searchInputDrawer{
+    .ivu-drawer-body{
+      padding: 0;
+    }
   }
 }
+
 
 //侧边栏
 .commonRadio{
@@ -43,6 +46,10 @@
     align-items: center;
     flex-direction: row-reverse;
     margin: 0;
+    margin-bottom: 20px;
+    &:nth-last-child(1){
+      margin: 0;
+    }
   }
 }
 .commonCheckBox{
@@ -52,6 +59,10 @@
     align-items: center;
     flex-direction: row-reverse;
     margin: 0;
+    margin-bottom: 20px;
+    &:nth-last-child(1){
+      margin: 0;
+    }
   }
 }
 .dropSelector{
@@ -138,7 +149,9 @@
   }
   div[tabindex="-1"]{
     div[role="group"]{
-      padding-left: 18px !important;
+      padding-left: 12px !important;
+      margin-left: 6px;
+      border-left: 1px solid var(--border-color2);
     }
   }
 }

@@ -1,4 +1,5 @@
 import Vue from "vue";
-import { Tree, Progress } from 'element-ui';
-Vue.use(Tree)
-Vue.use(Progress)
+import { Tree, Skeleton, SkeletonItem } from 'element-ui';
+Vue.use(Tree);
+Vue.use(Skeleton);
+Vue.use(SkeletonItem)

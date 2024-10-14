@@ -1,11 +1,11 @@
 <template>
 <div class="card">
-  <Row class-name="header" justify="space-between" align="middle">
-    <Row class="title" align="middle">
+  <Row class-name="header" justify="space-between" align="middle" :wrap="false">
+    <div class="title" align="middle">
       <div class="decBox"></div>
       <slot name="title">
       </slot>
-    </Row>
+    </div>
     <div class="action">
       <slot name="action"></slot>
     </div>
@@ -34,13 +34,18 @@ export default {
     padding: 15px 30px 15px 0;
     border-bottom: 1px solid var(--border-color3);
     .title{
+      display: flex;
       font-weight: bold;
       font-size: 18px;
+      position: relative;
+      padding-left: 26px;
       .decBox{
+        position: absolute;
+        left: 0;
+        top: -4px;
         width: 6px;
-        height: 37px;
+        height: 36px;
         background-color: var(--primary-color);
-        margin-right: 26px;
       }
     }
   }
@@ -50,8 +55,23 @@ export default {
 }
 
 @media screen and (max-width: 768px){
-  .card .header .title{
-    font-size: 22px;
+  .card .header {
+    padding: 10px 15px 10px 0;
+    .title{
+      font-size: 11px;
+      //padding: 0 15px 0 0;
+      padding-left: 15px;
+      .decBox{
+        width: 3px;
+        height: 18px;
+        margin-right: 13px;
+        top: 0;
+      }
+    }
+    .action{
+      display: flex;
+      flex-wrap: nowrap;
+    }
   }
 }
 </style>

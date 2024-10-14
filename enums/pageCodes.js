@@ -7,6 +7,8 @@ const pageCode = {
   LOGIN: 'login',
   SIGNUP: 'signup',
 
+  TRANSLATE: 'translate',
+
   DASHBOARD_SUBSCRIBE: 'dashboard-subscribe',
   DASHBOARD_RECOMMEND: 'dashboard-recommend',
   DASHBOARD_COLLECTION: 'dashboard-collection',
@@ -18,6 +20,6 @@ const pageCode = {
   DASHBOARD_ACCOUNT: 'dashboard-account',
 
   DETAIL_BID: 'detail-bidId',
-  TENDERS_ID: 'tenders-id'
+  TENDERS_ID: 'tenders-id',
 };
 export default pageCode;

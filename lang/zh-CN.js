@@ -8,6 +8,7 @@ export default {
   dashboard: '工作台',
   member: '会员',
   signIn: '登录',
+  signOut: '登出',
   // dashboard-subscribe page
   forwardNews: ' 订阅推送',
   pushSettings: '推送设置',

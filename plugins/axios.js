@@ -3,7 +3,7 @@ import pageCode from '~/enums/pageCodes';
 export default function ({ $axios, redirect, store }) {
   // 请求拦截
   $axios.onRequest((config) => {
-    const token = store.getters.getToken;
+    const token = store.getters["user/getToken"];
     if (token) {
       config.headers.Authorization = token;
     }

@@ -10,16 +10,16 @@
         width: auto;
       }
       .ivu-timeline-item-tail {
-        width: calc(100% - 56px);
+        width: calc(100% - 28px);
         height: 1px;
         border: 0;
         background-color: var(--border-color);
-        left: 40px;
+        left: 20px;
         top: 0;
       }
       .ivu-timeline-item-content {
-        width: 280px;
-        padding: 24px 16px 0 4px;
+        width: 140px;
+        padding: 12px 8px 0 2px;
       }
     }
   }

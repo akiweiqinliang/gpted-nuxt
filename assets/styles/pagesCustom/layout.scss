@@ -1,0 +1,72 @@
+//$--font-size-base: 24px;
+.mobileDrawer{
+  overflow: initial;
+  .ivu-drawer-body{
+    padding: 75px 20px 20px;
+    .langSelector{
+      width:50%;
+      .ivu-select-selection{
+        border: 0;
+      }
+    }
+    .signBtn{
+      //padding: 6px 20px;
+      //height: auto;
+    }
+    .avatarBox{
+      //width: 42px;
+      //height: 42px;
+      border-radius: 50%;
+      background: var(--primary-color);
+    }
+
+    .userBasicText{
+      background: var(--bg-color2);
+      padding: 20px 30px;
+      border-bottom: 1px solid var(--border-color);
+      .avatarBox{
+        margin-right: 16px;
+      }
+      span{
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+    .userHoverBox{
+      padding: 20px 30px;
+      position: relative;
+      &::after{
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: calc(100% - 20px);
+        margin: 0 auto;
+        height: 1px;
+        background: var(--border-color);
+      }
+      svg{
+        margin-right: 12px;
+        path{
+          fill: var(--text-color3);
+        }
+      }
+      p{
+        color: var(--text-color3);
+        font-size: 14px;
+      }
+      &:hover{
+        svg path{
+          fill: var(--primary-color);
+        }
+        p{
+          color: var(--primary-color);
+        }
+      }
+    }
+    .userHoverBox:nth-last-child(1)::after{
+      content: none;
+    }
+  }
+}
