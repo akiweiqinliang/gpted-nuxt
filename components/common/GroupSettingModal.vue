@@ -11,7 +11,7 @@
         <Row align="middle">
           <span>Name:</span><Input v-model="groupName" class="nameBox" />
         </Row>
-        <div class="deleteNameBtn" @click="groupName = ''"><Icon type="ios-close-circle-outline" />delete</div>
+        <Button type="error" ghost @click="deleteGroup"><Icon type="ios-close-circle-outline" />delete</Button>
       </Row>
       <div class="setting">
         <TagList header-title="Subscription keywords" :tags.sync="keywords" :origin-tags="originKeywords" />
@@ -117,6 +117,11 @@ export default {
     }
   },
   methods: {
+    deleteGroup() {
+      this.$emit('delete')
+      this.showModal = false
+      this.$Message.success(this.$t('deleteSuccess'))
+    }
   }
 }
 </script>
@@ -125,6 +130,12 @@ export default {
 
 .setting{
   margin-bottom: 46px;
+}
+.footerBtn{
+  padding: 12px;
+  width: 120px;
+  height: auto;
+  margin: 0 5px;
 }
 .settingHead{
   padding: 6px 14px 14px 8px;

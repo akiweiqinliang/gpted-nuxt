@@ -29,7 +29,8 @@
     "vue-dompurify-html": "^2.5.2",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",
-    "vuex-persistedstate": "^3.2.1"
+    "vuex-persistedstate": "^3.2.1",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",

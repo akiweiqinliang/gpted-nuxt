@@ -1,6 +1,6 @@
 <template>
   <div class="backTopArrowContainer" @click="back">
-        <Icon type="ios-arrow-up" size="24" color="var(--icon-color)"/>
+        <Icon type="ios-arrow-up" color="var(--icon-color)"/>
   </div>
 </template>
 
@@ -102,5 +102,13 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
+  i{
+    font-size: 24px;
+  }
+}
+@media screen and (max-width: 768px){
+  .backTopArrowContainer i{
+    font-size: 15px;
+  }
 }
 </style>

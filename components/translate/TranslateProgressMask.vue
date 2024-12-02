@@ -44,9 +44,9 @@ export default {
 .content{
   width: 50%;
   position: absolute;
-  top: 50%;
+  top: 100px;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -5,23 +5,24 @@
     :title="title"
     :closable="false"
     width="666"
+    :mask-closable="maskClose"
     @on-ok="ok"
     @on-cancel="cancel"
   >
-      <ul>
-        <Button
-          v-for="lang in langList()"
-          :key="lang.value"
-          :disabled="disableLangList.includes(lang.value)"
-          class="langBtn"
-          :class="[
+    <ul>
+      <Button
+        v-for="lang in langList()"
+        :key="lang.value"
+        :disabled="disableLangList.includes(lang.value)"
+        class="langBtn"
+        :class="[
             { 'active' : lang.value === selectedLang && !disableLangList.includes(lang.value) },
             { 'selected': disableLangList.includes(lang.value) }
             ]"
-          @click="selectedLang = lang.value">
-          {{ lang.label }}
-        </Button>
-      </ul>
+        @click="selectedLang = lang.value">
+        {{ lang.label }}
+      </Button>
+    </ul>
     <div slot="footer">
       <Row :wrap="false" justify="center">
         <Button class="modalBtn" @click="cancel">cancel</Button>
@@ -36,25 +37,18 @@ import {langList} from "~/lang/langList";
 export default {
   name: "LanguageModal",
   props: {
-    tenderId: {
-      type: Number,
-      required: true,
-      default() {
-        return 0;
-      }
-    },
-    docId: {
-      type: Number,
-      required: false,
-      default() {
-        return 0;
-      }
-    },
     title: {
       type: String,
       required: false,
       default() {
         return ''
+      }
+    },
+    maskClose: {
+      type: Boolean,
+      required: false,
+      default() {
+        return true
       }
     },
     disableLangList: {
@@ -80,9 +74,11 @@ export default {
       this.showModal = false
       this.$emit('onSelectLanguage', this.selectedLang)
     },
+    open() {
+      this.showModal = true;
+    },
     cancel () {
-      this.$Message.info('Clicked cancel');
-      this.showModal = false
+      this.showModal = false;
     }
   }
 }
@@ -119,5 +115,9 @@ export default {
     height: auto;
   }
 }
-
+@media screen and (max-width: 768px){
+  .langListModal ul{
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
 </style>

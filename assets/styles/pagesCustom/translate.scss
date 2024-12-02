@@ -6,4 +6,16 @@
       box-shadow: none;
     }
   }
+  .chat-container{
+    .input-container .input{
+      .ivu-input{
+        background: transparent;
+        border: none;
+        resize: none;
+      }
+      .ivu-input:focus{
+        box-shadow: none;
+      }
+    }
+  }
 }

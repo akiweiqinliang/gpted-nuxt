@@ -21,10 +21,15 @@
     left: 40px;
     top: 30px;
   }
-  .transLangSelector{
+  .languageSelector .selector{
     .ivu-select-selection{
       border-radius: var(--border-radius-large);
       height: inherit;
+      .ivu-select-placeholder, span{
+        height: inherit;
+        line-height: initial;
+        font-size: 11px;
+      }
     }
   }
   .descriptionBox .descriptionRightContent .stateCard {

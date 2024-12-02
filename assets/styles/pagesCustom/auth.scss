@@ -1,0 +1,16 @@
+.verificationCodeBox{
+  .ivu-input-with-suffix{
+    padding-right: 70px;
+  }
+  .ivu-input-suffix{
+    width: 70px;
+    color: var(--primary-color);
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span{
+      cursor: pointer;
+    }
+  }
+}

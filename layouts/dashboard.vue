@@ -5,9 +5,6 @@
       <Content>
         <Nuxt />
       </Content>
-<!--      <Footer>-->
-        <LayoutFooter />
-<!--      </Footer>-->
     </Layout>
   </div>
 </template>
@@ -16,11 +13,10 @@
 import pageCode from "~/enums/pageCodes";
 import {langList} from "~/lang/langList";
 import LayoutMenu from "~/components/common/LayoutMenu.vue";
-import LayoutFooter from "~/components/common/LayoutFooter.vue";
 
 export default {
-  name: "Default",
-  components: {LayoutFooter, LayoutMenu},
+  name: "Dashboard",
+  components: {LayoutMenu},
   data() {
     return {
       activeRouterName: this.$route.name !== 'index' ? this.$route.name : 'home',
@@ -36,9 +32,9 @@ export default {
       return pageCode
     },
     // isLoggedIn() {
-      // this.$store.dispatch("user/checkToken")
-      // return this.$store.getters["user/isLoggedIn"]
-      // return false
+    // this.$store.dispatch("user/checkToken")
+    // return this.$store.getters["user/isLoggedIn"]
+    // return false
     // }
   },
   watch: {

@@ -1,11 +1,13 @@
 import pageCode from '~/enums/pageCodes';
 
-export default function ({ $axios, redirect, store }) {
+export default function ({ $axios, redirect, store, $i18n }) {
   // 请求拦截
   $axios.onRequest((config) => {
     const token = store.getters["user/getToken"];
     if (token) {
       config.headers.Authorization = token;
+      // 请求头中添加当前页面语言类型
+      // config.headers.lang = $i18n.lang;
     }
     return config;
   });

@@ -4,6 +4,7 @@
 @import "modal";
 @import "layout";
 @import "translate";
+@import "auth";
 
 // 修复单选框在缩放下核心位置偏移问题
 .ivu-radio-inner:after {
@@ -16,4 +17,18 @@
 
 .ivu-select-dropdown{
   padding: 0;
+}
+
+#homePage, #discoverPage, #tenderDetailPage{
+  margin-top: 44px;
+  //margin-bottom: 40px;
+}
+//统一通知提示样式
+.ivu-message-custom-content{
+  padding: 20px;
+  max-width: 300px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: var(--text-color1);
+  word-break: break-word;
 }

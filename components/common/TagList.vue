@@ -1,19 +1,23 @@
 <template>
   <Row>
-    <Row justify="space-between" align="middle" class-name="headerContainer fullWidth">
-      <div class="headerBox">
-        <div class="decBox"></div>
-        <span>{{ headerTitle }}<span class="keywordNum">{{ newTags.length }}</span></span>
-      </div>
-      <Icon type="md-refresh" size="20" @click="resetKeywords" />
-    </Row>
+    <SettingHead :title="headerTitle" :tag-num="newTags.length" @on-refresh="resetKeywords" />
     <Row align="middle" class-name="contentContainer">
-      <div v-show="!showTagInput" class="addBtn" @click="openTagInput">
+      <Button v-show="!showTagInput" class="addBtn" @click="openTagInput">
         <Icon type="ios-add" />
-        <span>Add</span>
-      </div>
+        <span>{{$t('add')}}</span>
+      </Button>
+      <TimePicker
+        v-show="showTagInput && useTimePeriod"
+        v-model="newTagText"
+        confirm
+        :steps="[1, 15, 15]"
+        placeholder="Select time"
+        class="timePeriodPicker"
+        @on-ok="handleAddTag"
+        @on-open-change="handleTimePickerChange"
+      ></TimePicker>
       <Input
-        v-show="showTagInput"
+        v-show="showTagInput && !useTimePeriod"
         ref="tagInput"
         v-model.trim="newTagText"
         clearable
@@ -39,9 +43,19 @@
 </template>
 
 <script>
+import SettingHead from "~/components/common/SettingHead.vue";
+
 export default {
   name: "TagList",
+  components: {SettingHead},
   props: {
+    useTimePeriod: {
+      required: false,
+      type: Boolean,
+      default() {
+        return false
+      }
+    },
     headerTitle: {
       required: true,
       type: String,
@@ -122,38 +136,15 @@ export default {
       this.$emit('update:tags', this.newTags)
       this.$Message.success('该内容已从订阅范围删除');
     },
+    // 选择时间 弹出浮层和关闭浮层时触发
+    handleTimePickerChange(pickerModalStatus) {
+      if (!pickerModalStatus) this.showTagInput = false
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.headerContainer{
-  padding: 6px 14px 14px 8px;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--border-color3);
-  .headerBox{
-    position: relative;
-    .decBox{
-      width: 18px;
-      height: 18px;
-      background: linear-gradient( 135deg, rgba(30,107,255,0.5) 0%, rgba(30,107,255,0) 86%);
-      border-radius: 50%;
-      border: 0 solid;
-      border-image: linear-gradient(135deg, rgba(172, 172, 172, 1), rgba(102, 102, 102, 0)) 0 0;
-      position: absolute;
-      left: 8px;
-    }
-    span{
-      margin: 0 20px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-    .keywordNum{
-      margin-left: 10px;
-      color: var(--primary-color);
-    }
-  }
-}
 .contentContainer{
   padding: 0 20px;
 }
@@ -191,4 +182,10 @@ export default {
     margin-right: 10px;
   }
 }
+// 时间段 taglist
+.timePeriodPicker{
+  width: 300px;
+  margin-right: 10px;
+}
+
 </style>

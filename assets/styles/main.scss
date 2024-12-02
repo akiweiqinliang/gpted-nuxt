@@ -10,6 +10,8 @@
   --text-color2: #666666;
   --text-color3: #999999;
   --text-color4: #FFFFFF;
+  --text-color5: #4E4E4E;
+  --text-color6: #273C64;
 
   --text-bg-color: #EEEEEE;
   --text-bg-color1: #F5F5F5;
@@ -21,6 +23,7 @@
   --bg-color2: #F7F7F7;
   --bg-color3: #F5F5F5;
   --hover-bg-color: #EEF3F7;
+  --hover-bg-color1: #F5F5F5;
 
   --tag-bg-color: #F4F4F4;
   --tag-hover-bg-color: #E3E5EC;
@@ -85,6 +88,18 @@ section{
 }
 .fullWidth{
   width: 100%;
+}
+.wrapper-micro{
+  margin-top: 10px;
+}
+.wrapper-mini{
+  margin-top: 20px;
+}
+.wrapper-default{
+  margin-top: 30px;
+}
+.wrapper-large{
+  margin-top: 40px;
 }
 .highlight{
   background-color: var(--text-bg-color);
