@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div id="homePage">
     <section class="home1">
     <Row>
       <Col :span="14" class="textBox">
           <h1>
             <span>GPTED</span>
-            Global Tendering
+            {{$t('首页大标题_home1')}}
           </h1>
         <div class="textInputBox">
           <p>
-            Gpted helps you obtain bidding information and relevant legal documents from various countries around the world,Gpted helps you obtain bidding information and relevant legal.
+            {{$t('首页_home1_content')}}
           </p>
           <Input class="topInput" search enter-button placeholder="Please enter keywords" />
         </div>
@@ -36,8 +36,8 @@
   </section>
     <section ref="homePage2" class="home2">
       <div class="headerBox">
-        <h1>Countries covering the world</h1>
-        <p>GPTED gathers relevant bidding information from countries, institutions, and organizations around the world, and delves into the huge business opportunities that exist in overseas markets!</p>
+        <h1>{{$t('首页大标题_home2')}}</h1>
+        <p>{{$t('首页_home2_content')}}</p>
       </div>
     <Row justify="center" class-name="map">
       <img class="map" src="~assets/imgs/home/coreImg2@2x.png" alt="">
@@ -71,8 +71,8 @@
   </section>
     <section class="home3">
       <div class="headerBox">
-        <h1>One click translation for efficient</h1>
-        <p>GPTED uses AI machine learning and post editing to accurately translate relevant terminology in the bidding industry!</p>
+        <h1>{{$t('首页大标题_home3')}}</h1>
+        <p>{{$t('首页_home3_content')}}</p>
       </div>
       <Row align="middle">
         <Col :span="15">
@@ -99,8 +99,8 @@
     </section>
     <section class="home4">
       <div class="headerBox">
-        <h1>7x24h global monitoring</h1>
-        <p>GPTED provides real-time updates on new procurement opportunities, helping you stay at the forefront of project information and seize absolute market opportunities!</p>
+        <h1>{{$t('首页大标题_home4')}}</h1>
+        <p>{{$t('首页_home4_content')}}</p>
       </div>
       <Row align="middle">
         <Col :span="10" class="textContent">
@@ -130,8 +130,8 @@
     </section>
     <section class="home5">
       <div class="headerBox">
-        <h1>Intelligent project matching</h1>
-        <p>GPTED is based on AI data analysis and provides intelligent information services to achieve one-stop tracking of global procurement opportunities!</p>
+        <h1>{{$t('首页大标题_home5')}}</h1>
+        <p>{{$t('首页_home5_content')}}</p>
       </div>
       <Row align="middle">
         <Col :span="15">
@@ -160,8 +160,8 @@
     <section class="home6">
       <div class="contentBox">
         <div class="headerBox">
-          <h1>Numerous powerful features</h1>
-          <p>GPTED has the most comprehensive functional modules for users to experience, making your bidding process easy and enjoyable</p>
+          <h1>{{$t('首页大标题_home6')}}</h1>
+          <p>{{$t('首页_home6_content')}}</p>
         </div>
         <ul>
           <li v-for="(item, idx) in features" :key="`features-${item.label}-${idx}`">
@@ -188,8 +188,8 @@
     </section>
     <section class="home7">
       <div class="headerBox">
-        <h1>Industry distribution</h1>
-        <p>GPTED provides real-time updates on new procurement opportunities, helping you stay at the forefront of project information and seize absolute market opportunities!</p>
+        <h1>{{$t('首页大标题_home7')}}</h1>
+        <p>{{$t('首页_home7_content')}}</p>
       </div>
       <ul>
         <li v-for="(item, idx) in industry" :key="`features-${item.label}-${idx}`">
@@ -219,8 +219,8 @@
     </section>
     <section ref="homePage8" class="home8">
       <div class="headerBox">
-        <h1>Serving a massive global customer base</h1>
-        <p>More than 13000 companies worldwide are using GPTED<span>View more</span><Icon type="md-arrow-forward" /></p>
+        <h1>{{$t('首页大标题_home8')}}</h1>
+        <p>{{$t('首页_home8_content')}}</p>
       </div>
       <ul>
         <li>
@@ -286,7 +286,7 @@
     </section>
     <section class="home9">
       <div class="headerBox">
-        <h1>Frequently asked questions</h1>
+        <h1>{{$t('首页大标题_home9')}}</h1>
       </div>
       <Collapse
         :accordion="true"
@@ -303,8 +303,9 @@
         <Row :gutter="72">
           <Col :span="12" class="leftBox">
             <Row>
-            <span>
-              Try <span class="active">GPTED</span> for free. No credit card required, no software to install.
+            <span v-dompurify-html="$t('首页大标题_home10')">
+<!--              {{// $t('首页大标题_home10', {title: 'GPTED'})}}-->
+<!--              Try <span class="active">GPTED</span> for free. No credit card required, no software to install.-->
             </span>
               <Row>
                 <Button type="primary" class="tryBtn">Start free trial</Button>

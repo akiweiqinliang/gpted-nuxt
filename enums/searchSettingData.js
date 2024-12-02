@@ -11,7 +11,7 @@ export const searchSettingData = {
           {
             id: 1,
 
-            label: 'Albania1',
+            label: 'Albania1中文',
             ISO: 'af'
           },
           {

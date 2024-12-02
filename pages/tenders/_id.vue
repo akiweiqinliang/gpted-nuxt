@@ -169,49 +169,44 @@
         </span>
       <template slot="action">
         <Row>
-          <div
-            class="actionBtn" :class="showOriginal ? 'actionBtnActive' : ''" @click="handleOriginalBtnClick">
-            original
-          </div>
-          <div
-            class="actionBtn langChangeBtn" :class="showTranslated ? 'actionBtnActive' : ''">
-            <Dropdown
-              trigger="custom"
-              :visible="showLangList"
-              placement="bottom-end"
-              @on-clickoutside="showLangList = false"
-            >
-              <div class="textBtn" :class="showTranslated ? 'actionBtnActive' : ''" @click="handleLangTextClick">{{ translateLabel }}</div>
-              <div class="arrowBtn" @click="showLangList = true">
-                <Icon type="ios-arrow-down"></Icon>
-              </div>
-              <DropdownMenu slot="list">
-                <DropdownItem
-                  v-for="item in langList"
-                  :key="item.value"
-                  :selected="item.value === translateLang"
-                  @click.native="handleLangChange(item.value, item.label)"
-                >
-                  {{ item.label }}
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
+          <Row align="middle">
+            <Row class="TABtnGroup" :wrap="false">
+              <div class="A" :class="{'active' : translateStatus === 'A' }" @click="changeTranslateStatus('A')">A</div>
+              <div class="T" :class="{'active' : translateStatus === 'T' }" @click="changeTranslateStatus('T')">T</div>
+              <div class="TA" :class="{'active' : translateStatus === 'TA' }" @click="changeTranslateStatus('TA')">T | A</div>
+            </Row>
+            <Row class="languageSelector" align="middle" :wrap="false">
+<!--              <img :src="targetLanguageIcon" alt="Target language">-->
+              <Select v-model="translateLang" class="selector" @on-change="handleLangChange">
+                <span slot="prefix" class="imgBox">
+                <img :src="targetLanguageIcon" alt="Target language">
+                </span>
+                <Option v-for="item in langList" :key="item.value" :value="item.value">{{ item.label }}</Option>
+              </Select>
+            </Row>
+          </Row>
+
         </Row>
       </template>
       <div slot="content">
-        <Row v-if="!showUnlockedMask"  class-name="fullWidth tenderDetail">
-          <Col v-show="showOriginal" flex="1">
+        <Row v-if="!showUnlockedMask"  class-name="fullWidth tenderDetail" :class="{'swap': swap}">
+          <Col v-show="translateStatus === 'A' || translateStatus === 'TA'" flex="1">
             <span class="invitation">Invitation for Bids</span>
-            <TenderTable lang="en" :bid-detail-table="bid.table.origin" />
+<!--            <TenderTable lang="en" :bid-detail-table="bid.table.origin" />-->
             <pre>
                 {{ bid.detail.origin }}
               </pre>
           </Col>
-          <Divider v-show="showOriginal && showTranslated" type="vertical" class="contentDivider"/>
-          <Col v-show="showTranslated" flex="1">
+          <div v-show="translateStatus === 'TA'" class="gap">
+            <div class="swapPlaceBtn" @click="swap = !swap">
+              <Icon type="ios-swap" />
+            </div>
+            <Divider v-show="translateStatus === 'TA'" type="vertical" class="contentDivider"/>
+          </div>
+<!--          <Divider v-show="showOriginal && showTranslated" type="vertical" class="contentDivider"/>-->
+          <Col v-show="translateStatus === 'T' || translateStatus === 'TA'" flex="1">
             <span class="invitation">招标公告</span>
-            <TenderTable lang="zh" :bid-detail-table="bid?.table[translateLang]" />
+<!--            <TenderTable lang="zh" :bid-detail-table="bid?.table[translateLang]" />-->
             <pre>
                 {{ bid.detail[translateLang] }}
               </pre>
@@ -228,40 +223,47 @@
       </template>
       <template slot="action">
         <Row>
-          <div class="actionBtn" @click="openTranslateAllModal">translate all</div>
-          <div class="actionBtn">download all</div>
+<!--          <div class="actionBtn" @click="openTranslateAllModal">translate all</div>-->
+<!--          <div class="actionBtn">download all</div>-->
+          <div v-show="!selectDownload" class="actionBtn" @click="selectDownload = !selectDownload">Select Download</div>
+          <Row v-show="selectDownload" align="middle">
+            <checkbox v-model="selectAllDocs">Select All</checkbox>
+            <div class="actionBtn" @click="selectDownload = !selectDownload">Deselect</div>
+          </Row>
         </Row>
       </template>
       <template slot="content">
         <ul class="docList">
-          <li v-for="doc in bid.docs" :key="`doc-${doc.id}-${doc.title}`" class="docItem" @click="toTranslateFile(bid.id, doc.id)">
+          <li v-for="doc in bid.docs" :key="`doc-${doc.id}-${doc.title}`" class="docItem">
             <Row align="top">
               <img :src="require(`~/assets/imgs/tenderDetail/${doc.type}-icon@2x.png`)" alt="" />
-              <Col flex="1">
+              <Col flex="1" @click.native="toTranslateFile(bid.id, doc.id)">
                 <p>{{ doc.title }}</p>
                 <span>{{ doc.size }}</span><span>{{ doc.date }}</span>
               </Col>
-              <Dropdown
-                trigger="click"
-                placement="bottom-end"
-                class="docItemMore"
-                >
-                <Icon type="md-more" />
-                <DropdownMenu slot="list">
-                  <DropdownItem @click.native="translateFile(doc.id)">
-                    <Row align="middle">
-                      <img src="~assets/imgs/tenderDetail/translate-icon@2x.png" alt="translate">
-                      <span>translate</span>
-                    </Row>
-                  </DropdownItem>
-                  <DropdownItem @click.native="downloadFile(doc.id)">
-                    <Row align="middle">
-                      <img src="~assets/imgs/tenderDetail/download-icon@2x.png" alt="download">
-                      <span>download</span>
-                    </Row>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <Radio v-show="selectDownload"></Radio>
+              <checkbox v-show="selectDownload" @on-change="selectDocById(doc.id)"></checkbox>
+<!--              <Dropdown-->
+<!--                trigger="click"-->
+<!--                placement="bottom-end"-->
+<!--                class="docItemMore"-->
+<!--                >-->
+<!--                <Icon type="md-more" />-->
+<!--                <DropdownMenu slot="list">-->
+<!--                  <DropdownItem @click.native="translateFile(doc.id)">-->
+<!--                    <Row align="middle">-->
+<!--                      <img src="~assets/imgs/tenderDetail/translate-icon@2x.png" alt="translate">-->
+<!--                      <span>translate</span>-->
+<!--                    </Row>-->
+<!--                  </DropdownItem>-->
+<!--                  <DropdownItem @click.native="downloadFile(doc.id)">-->
+<!--                    <Row align="middle">-->
+<!--                      <img src="~assets/imgs/tenderDetail/download-icon@2x.png" alt="download">-->
+<!--                      <span>download</span>-->
+<!--                    </Row>-->
+<!--                  </DropdownItem>-->
+<!--                </DropdownMenu>-->
+<!--              </Dropdown>-->
             </Row>
             <Row class-name="translatedDocs">
               <ul>
@@ -289,6 +291,10 @@
             </Row>
           </li>
         </ul>
+        <Row v-show="selectDownload" class="fullWidth documentsBoxBtns" justify="end">
+          <Button class="cancelBtn">Cancel</Button>
+          <Button type="primary">Download</Button>
+        </Row>
 <!--        全部翻译弹窗-->
         <LanguageModal
           ref="translateAllModal"
@@ -392,9 +398,10 @@ import CommonCard from "~/components/tenderDetail/CommonCard.vue";
 import {langList} from "~/lang/langList";
 import UnlockedMask from "~/components/tenderDetail/UnlockedMask.vue";
 import CommonPromptModal from "~/components/tenderDetail/CommonPromptModal.vue";
-import LanguageModal from "~/components/tenderDetail/LanguageModal.vue";
+import LanguageModal from "~/components/common/LanguageModal.vue";
 import pageCode from "~/enums/pageCodes";
 
+import targetLanguageIcon from '~/assets/imgs/svg/targetLanguage.svg';
 export default {
   name: "TenderDetailPage",
   components: {CommonPromptModal, LanguageModal, UnlockedMask, CommonCard},
@@ -410,6 +417,12 @@ export default {
   },
   data() {
     return {
+      translateStatus: 'A',
+      swap: false,
+      selectDownload: false,
+      selectAllDocs: false,
+
+      targetLanguageIcon,
       nav: [
         {
           label: 'Notice',
@@ -511,6 +524,16 @@ export default {
     window.removeEventListener('scroll', this.onScroll);
   },
   methods: {
+    // 单选框选择文档 下载
+    selectDocById(docId) {
+
+    },
+    // 修改文档语言显示状态 A/T/TA
+    changeTranslateStatus(newStatus) {
+      if (newStatus !== 'A' && this.targetLang === '') this.$refs.languageModal.open();
+      this.translateStatus = newStatus
+    },
+    // --------------------
     toTranslateFile(tenderId, docId) {
       const url = this.$router.resolve({
         name: pageCode.TRANSLATE,
@@ -1031,10 +1054,10 @@ export default {
       background-color: var(--tag-bg-color);
     }
   }
-  .transLangSelector{
-    width: 138px;
-    height: 30px;
-  }
+  //.transLangSelector{
+  //  width: 138px;
+  //  height: 30px;
+  //}
   .tenderDetail{
     padding: 30px 56px;
     .invitation{
@@ -1223,6 +1246,100 @@ export default {
 
 }
 
+</style>
+<style scoped lang="scss">
+.TABtnGroup{
+  border: 1px solid var(--border-color1);
+  border-radius: var(--border-radius-large);
+  height: 30px;
+  overflow: hidden;
+  .A, .T, .TA{
+    //background: var(--text-bg-color2);
+    color: var(--text-color3);
+    padding: 0 18px;
+    //height: 40px;
+    cursor: pointer;
+    transition: all .3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .A{
+    border-radius: 4px 0 0 4px;
+  }
+  .T{
+    position: relative;
+    &::after, &::before{
+      content: '';
+      width: 1px;
+      height: 60%;
+      position: absolute;
+      background: var(--border-color);
+      top: 20%;
+    }
+    &::before{
+      left: 0;
+    }
+    &::after{
+      right: 0;
+    }
+  }
+  .TA{
+    border-radius: 0 4px 4px 0;
+  }
+  .active{
+    background: var(--primary-bg-color2);
+    color: var(--primary-color);
+    transition: all .3s;
+  }
+}
+.languageSelector{
+  .selector{
+    margin-left: 14px;
+    width: 180px;
+    .imgBox{
+      display: flex;
+      img{
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+        margin-left: 8px;
+      }
+    }
+  }
+}
+.gap{
+  margin: 0 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .swapPlaceBtn{
+    background: var(--text-bg-color2);
+    padding: 4px 18px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 40px;
+  }
+  .contentDivider{
+    margin-top: 10px;
+    flex-grow: 1;
+    height: auto;
+    background-color: var(--border-color);
+  }
+}
+.swap{
+  flex-direction: row-reverse;
+}
+.documentsBoxBtns{
+  margin: 0 70px 40px;
+  .cancelBtn{
+    margin-right: 10px;
+  }
+}
+</style>
+<style scoped lang="scss">
+
 // 移动端 样式
 @media screen and (max-width: 768px){
   .topTenderTitle{
@@ -1334,6 +1451,29 @@ export default {
         font-size: 11px;
       }
     }
+    .TABtnGroup{
+      height: 21px;
+      font-size: 11px;
+      .A, .T, .TA{
+        padding: 0 7px;
+      }
+    }
+    .languageSelector{
+      .selector{
+        margin-left: 5px;
+        width: 116px;
+        height: 21px;
+        .imgBox{
+          display: flex;
+          img{
+            width: 12px;
+            height: 12px;
+            margin-right: 2px;
+            margin-left: 2px;
+          }
+        }
+      }
+    }
   }
   .documentsBox{
     .docList{
@@ -1375,5 +1515,4 @@ export default {
     }
   }
 }
-
 </style>

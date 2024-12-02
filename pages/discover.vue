@@ -1,10 +1,14 @@
 <template>
-  <section>
+  <div>
+  <section id="discoverPage">
     <Modal
       v-model="saveModal"
-      title="New Group"
+      :title="$t('新建分组对话窗_modalTitle')"
+      :cancel-text="$t('cancel')"
+      :ok-text="$t('confirm')"
       @on-ok="ok"
-      @on-cancel="cancel">
+      @on-cancel="cancel"
+    >
       <Row :wrap="false" align="middle">
         <span>Name:</span>
         <Input placeholder="Please enter"/>
@@ -14,9 +18,9 @@
         <p>When notification is on, you will receive the latest project information that matches this search.</p>
       </div>
     </Modal>
-    <GroupSettingModal ref="commonGroupModal" />
+    <GroupSettingModal ref="commonGroupModal" @delete="deletePreviousSetting"/>
     <Row :gutter="28">
-<!--      移动端搜索框-->
+      <!--      移动端搜索框-->
       <Col :xs="24" :sm="24" :md="0" :lg="0">
         <Input v-model.trim="searchText" class="discoverSearchInput" @on-focus="showBehindScenes = true" >
           <template slot="suffix">
@@ -41,7 +45,7 @@
             </Row>
             <div v-show="history.length !== 0" class="searchHistory">
               <Row justify="space-between" align="middle">
-                <h4>History</h4>
+                <h4>{{$t('搜索框弹窗_history')}}</h4>
                 <Icon type="ios-trash-outline" color="var(--icon-color)" @click="clearHistory"/>
               </Row>
               <ul>
@@ -52,230 +56,210 @@
               </ul>
             </div>
             <div class="classification">
-              <h4>Collection classification</h4>
+              <h4>{{$t('搜索框弹窗_filterGrouping')}}</h4>
               <List :split="false">
                 <ListItem v-for="item in previousSetting" :key="`${item}-${item.id}`" class="classificationItem">
                   <div class="labelBox">
                     <Icon type="ios-browsers" />
                     <span>{{ item.label }}</span>
                   </div>
-                  <Icon type="ios-create-outline" @click="editSetting"/>
+                  <Icon type="ios-create-outline" @click="editSetting(item.id)"/>
                 </ListItem>
               </List>
             </div>
           </div>
         </Drawer>
       </Col>
-<!--      左侧搜索栏-->
+      <!--      左侧筛选栏-->
       <Col :xs="24" :sm="24" :md="7" :lg="7">
-          <Row class="topFilterClearer" align="middle" justify="space-between">
-            <Row align="middle" :justify="isPC? 'space-between': 'center'" :class="{'fullWidth' : isPC}">
-              <span>Filters</span>
-              <Icon type="md-refresh" />
-            </Row>
-            <Icon v-if="!isPC" type="ios-arrow-down" @click="handleShowFilter"/>
+        <Row class="topFilterClearer" align="middle" justify="space-between">
+          <Row align="middle" :justify="isPC? 'space-between': 'center'" :class="{'fullWidth' : isPC}">
+            <span>{{$t('filters')}}</span>
+            <Icon type="md-refresh" />
           </Row>
-          <Row
-            v-show="showSaveSettingBtn"
-            class="topFilterClearer saveSettingBtn"
-            align="middle"
-            justify="center"
-            @click.native="handleSaveSetting"
-          >
-            <span>Save this search</span>
-          </Row>
-          <div v-show="showFilter" class="filterSettingCard">
-            <SingleSetting title="Search scope">
-              <template slot="content">
-                <RadioGroup v-model="searchSetting.scope" vertical class="commonRadio fullWidth">
-                  <Radio label="global">
-                    <span>Global</span>
-                  </Radio>
-                  <Radio label="title">
-                    <span>Title</span>
-                  </Radio>
-                </RadioGroup>
-              </template>
-            </SingleSetting>
-            <SingleSetting title="Announcement type">
-              <template slot="content">
-                <CheckboxGroup v-model="searchSetting.announcementType" class="commonCheckBox fullWidth">
-                  <Checkbox :label="1">
-                    <span>Winning the bid</span>
-                  </Checkbox>
-                  <Checkbox :label="2">
-                    <span>Tendering</span>
-                  </Checkbox>
-                  <Checkbox :label="3">
-                    <span>Tender Notice</span>
-                  </Checkbox>
-                  <Checkbox :label="4">
-                    <span>Closed bidding</span>
-                  </Checkbox>
-                  <Checkbox :label="5">
-                    <span>Abandoned bid</span>
-                  </Checkbox>
-                </CheckboxGroup>
-              </template>
-            </SingleSetting>
-            <SingleSetting title="Location" class="LocationSetting">
-              <template slot="action">
-                <Icon type="ios-arrow-down" @click="showLocation = !showLocation"/>
-              </template>
-              <template slot="content">
-                <div class="selectedTags">
-                  <tag
-                    v-for="(item,idx) in searchSetting.location"
-                    :key="idx"
-                    class="selectedTag"
-                    closable
-                    @on-close="removeLocation(item)">
+          <Icon v-if="!isPC" type="ios-arrow-down" @click="handleShowFilter"/>
+        </Row>
+        <Row
+          v-show="showSaveSettingBtn"
+          class="topFilterClearer saveSettingBtn"
+          align="middle"
+          justify="center"
+          @click.native="handleSaveSetting"
+        >
+          <span>{{$t('保留搜索设置提示_SaveMsg')}}</span>
+        </Row>
+        <div v-show="showFilter" class="filterSettingCard">
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_scope')">
+            <template slot="content">
+              <RadioGroup v-model="searchSetting.scope" vertical class="commonRadio fullWidth">
+                <Radio v-for="(item, idx) in $t('搜索页左侧筛选栏内容列表_searchScope')" :key="`scope-${idx}`" :label="idx">
+                  {{item}}
+                </Radio>
+              </RadioGroup>
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_announcementType')">
+            <template slot="content">
+              <CheckboxGroup v-model="searchSetting.announcementType" class="commonCheckBox fullWidth">
+                <Checkbox v-for="(item, idx) in $t('搜索页左侧筛选栏内容列表_announcementType')" :key="`announcement-type-${idx}`" :label="idx">
+                  {{item}}
+                </Checkbox>
+              </CheckboxGroup>
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_location')" class="LocationSetting">
+            <template slot="action">
+              <Icon type="ios-arrow-down" @click="showLocation = !showLocation"/>
+            </template>
+            <template slot="content">
+              <div class="selectedTags">
+                <tag
+                  v-for="(item,idx) in searchSetting.location"
+                  :key="idx"
+                  class="selectedTag"
+                  closable
+                  @on-close="removeLocation(item)">
                 <span>
                   <span v-show="item.ISO" :class="['fi', `fi-${item.ISO}`, 'flag']"></span>
                   {{item.label}}</span>
-                  </tag>
-                </div>
-                <client-only>
-                  <CustomTree
-                    v-show="showLocation"
-                    ref="locationTree"
-                    :class="{ 'locationTree': searchSetting.location.length > 0}"
-                    :tree-data="searchSettingData.locations"
-                    @on-select="handleLocationSelect" />
-                </client-only>
-              </template>
-            </SingleSetting>
-            <SingleSetting title="Organization">
-              <template slot="action">
-                <Icon type="ios-arrow-down" />
-              </template>
-            </SingleSetting>
-            <SingleSetting title="Industry">
-              <template slot="action">
-                <Icon type="ios-arrow-down" />
-              </template>
-            </SingleSetting>
-            <SingleSetting title="Procurement method">
-              <template slot="content">
-                <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
-                  <Checkbox :label="1">
-                    <span>Winning the bid</span>
-                  </Checkbox>
-                  <Checkbox :label="2">
-                    <span>Tendering</span>
-                  </Checkbox>
-                  <Checkbox :label="3">
-                    <span>Tender Notice</span>
-                  </Checkbox>
-                </CheckboxGroup>
-              </template>
-            </SingleSetting>
-            <SingleSetting title="Content">
-              <template slot="content">
-                <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
-                  <Checkbox :label="1">
-                    <span>Winning the bid</span>
-                  </Checkbox>
-                  <Checkbox :label="2">
-                    <span>Tendering</span>
-                  </Checkbox>
-                  <Checkbox :label="3">
-                    <span>Tender Notice</span>
-                  </Checkbox>
-                </CheckboxGroup>
-              </template>
-            </SingleSetting>
-            <SingleSetting title="Price Range">
-              <template slot="content">
-                <Row :wrap="false" class-name="priceContent">
-                  <Input></Input>
-                  <div class="priceDivider">-</div>
-                  <Input></Input>
-                </Row>
-              </template>
-            </SingleSetting>
-            <SingleSetting title="Release time">
-              <template slot="content">
-                <DatePicker
-                  v-model="searchSetting.releaseTime"
-                  type="daterange"
-                  :options="timeOption"
-                  class="fullWidth"
-                  placeholder="Release time"></DatePicker>
-              </template>
-            </SingleSetting>
-            <SingleSetting title="Deadline time">
-              <template slot="content">
-                <DatePicker
-                  v-model="searchSetting.deadlineTime"
-                  type="daterange"
-                  :options="timeOption"
-                  class="fullWidth"
-                  placeholder="Deadline time"></DatePicker>
-              </template>
-            </SingleSetting>
-          </div>
-          <Row
-            v-show="showFilter"
-            class="topFilterClearer bottomApplyBtn"
-            align="middle"
-            justify="center"
-            @click.native="handleApply">
-            <span>Apply</span>
-          </Row>
-        </Col>
-<!--      tender列表-->
-      <Col :xs="24" :sm="24" :md="17" :lg="17">
-          <Col :xs="0" :sm="0" :md="24" :lg="24">
-            <div v-click-outside="handleClickOutside" class="topInputBox">
-              <Input v-model.trim="searchText" class="discoverSearchInput" :class="showDropdown ? 'inputWithDropdownEffect' : ''" @on-focus="showDropdown = true">
-                <template slot="suffix">
-                  <Row>
-                    <Icon v-show="searchText !== ''" class="closeIcon" type="md-close" @click="searchText = ''"/>
-                    <Icon class="searchIcon" :class="searchText !== '' ? 'inputHasText' : ''" type="ios-search" />
-                  </Row>
-                </template>
-              </Input>
-              <div v-if="showDropdown" class="dropdownMenu">
-                <div v-show="history.length !== 0" class="searchHistory">
-                  <Row justify="space-between" align="middle">
-                    <h4>History</h4>
-                    <Icon type="ios-trash-outline" color="var(--icon-color)" @click="clearHistory"/>
-                  </Row>
-                  <ul>
-                    <li v-for="(item, index) in history" :key="`${item}-${index}`" @click="selectHistoryItem(item)">
-                      <Icon type="ios-close-circle" @click.stop="clearHistoryItem(item)" />
-                      {{ item }}
-                    </li>
-                  </ul>
-                </div>
-                <div class="classification">
-                  <h4>Collection classification</h4>
-                  <List :split="false">
-                    <ListItem v-for="item in previousSetting" :key="`${item}-${item.id}`" class="classificationItem">
-                      <div class="labelBox">
-                        <Icon type="ios-browsers" />
-                        <span>{{ item.label }}</span>
-                      </div>
-                      <Icon type="ios-create-outline" @click="editSetting"/>
-                    </ListItem>
-                  </List>
-                </div>
-                <Row v-show="previousSetting.length > 6" class-name="classificatoryPagination" justify="center">
-                  <Page :current="1" :total="8" :page-size="6" simple />
-                </Row>
+                </tag>
               </div>
+              <client-only>
+                <CustomTree
+                  v-show="showLocation"
+                  ref="locationTree"
+                  :class="{ 'locationTree': searchSetting.location.length > 0}"
+                  :tree-data="searchSettingData.locations"
+                  @on-select="handleLocationSelect" />
+              </client-only>
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_organization')">
+            <template slot="action">
+              <Icon type="ios-arrow-down" />
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_Industry')">
+            <template slot="action">
+              <Icon type="ios-arrow-down" />
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_procurementMethod')">
+            <template slot="content">
+              <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
+                <Checkbox :label="1">
+                  <span>text-text</span>
+                </Checkbox>
+                <Checkbox :label="2">
+                  <span>text-text</span>
+                </Checkbox>
+                <Checkbox :label="3">
+                  <span>text-text</span>
+                </Checkbox>
+              </CheckboxGroup>
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_content')">
+            <template slot="content">
+              <CheckboxGroup v-model="searchSetting.content" class="commonCheckBox fullWidth">
+                <Checkbox v-for="(item, idx) in $t('搜索页左侧筛选栏内容列表_content')" :key="`content-${idx}`" :label="idx">
+                  {{item}}
+                </Checkbox>
+              </CheckboxGroup>
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_priceRange')">
+            <template slot="content">
+              <Row :wrap="false" class-name="priceContent">
+                <Input></Input>
+                <div class="priceDivider">-</div>
+                <Input></Input>
+              </Row>
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_releaseTime')">
+            <template slot="content">
+              <DatePicker
+                v-model="searchSetting.releaseTime"
+                type="daterange"
+                :options="timeOption"
+                class="fullWidth"
+                placeholder="Release time"></DatePicker>
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_deadlineTime')">
+            <template slot="content">
+              <DatePicker
+                v-model="searchSetting.deadlineTime"
+                type="daterange"
+                :options="timeOption"
+                class="fullWidth"
+                placeholder="Deadline time"></DatePicker>
+            </template>
+          </SingleSetting>
+        </div>
+        <Row
+          v-show="showFilter"
+          class="topFilterClearer bottomApplyBtn"
+          align="middle"
+          justify="center"
+          @click.native="handleApply">
+          <span>{{$t('apply')}}</span>
+        </Row>
+      </Col>
+      <!--      tender列表-->
+      <Col :xs="24" :sm="24" :md="17" :lg="17">
+        <Col :xs="0" :sm="0" :md="24" :lg="24">
+<!--          pc端搜索框-->
+          <div v-click-outside="handleClickOutside" class="topInputBox">
+            <Input v-model.trim="searchText" class="discoverSearchInput" :class="showDropdown ? 'inputWithDropdownEffect' : ''" @on-focus="showDropdown = true">
+              <template slot="suffix">
+                <Row>
+                  <Icon v-show="searchText !== ''" class="closeIcon" type="md-close" @click="searchText = ''"/>
+                  <Icon class="searchIcon" :class="searchText !== '' ? 'inputHasText' : ''" type="ios-search" />
+                </Row>
+              </template>
+            </Input>
+            <div v-if="showDropdown" class="dropdownMenu">
+              <div v-show="history.length !== 0" class="searchHistory">
+                <Row justify="space-between" align="middle">
+                  <h4>{{$t('搜索框弹窗_history')}}</h4>
+                  <Icon type="ios-trash-outline" color="var(--icon-color)" @click="clearHistory"/>
+                </Row>
+                <ul>
+                  <li v-for="(item, index) in history" :key="`${item}-${index}`" @click="selectHistoryItem(item)">
+                    <Icon type="ios-close-circle" @click.stop="clearHistoryItem(item)" />
+                    {{ item }}
+                  </li>
+                </ul>
+              </div>
+              <div class="classification">
+                <h4>{{$t('搜索框弹窗_filterGrouping')}}</h4>
+                <List :split="false">
+                  <ListItem v-for="item in previousSetting" :key="`${item}-${item.id}`" class="classificationItem">
+                    <div class="labelBox">
+                      <Icon type="ios-browsers" />
+                      <span>{{ item.label }}</span>
+                    </div>
+                    <Icon type="ios-create-outline" @click="editSetting(item.id)"/>
+                  </ListItem>
+                </List>
+              </div>
+              <Row v-show="previousSetting.length > 6" class-name="classificatoryPagination" justify="center">
+                <Page :current="1" :total="8" :page-size="6" simple />
+              </Row>
             </div>
-          </Col>
+          </div>
+        </Col>
         <Row class="suggestionBox" justify="space-between">
-          <Poptip v-if="isPC" word-wrap width="200" content="Steven Paul Jobs was an American entrepreneur and business magnate. He was the chairman, chief executive officer, and a co-founder of Apple Inc.">
+          <Poptip v-if="isPC" word-wrap width="200" :content="$t('搜索建议内容_searchSuggestionsContent')">
             <Icon type="ios-alert-outline" />
-            <span>Search suggestions</span>
+            <span>{{$t('搜索建议_searchSuggestions')}}</span>
           </Poptip>
-          <h4 v-else>345461 Results</h4>
+          <h4 v-else>345461 {{$t('result')}}</h4>
           <Row class-name="filterActions">
-            <span>Release</span>
-            <span>Deadline</span>
+            <span>{{$t('发布_release')}}</span>
+            <span>{{$t('最后期限_deadline')}}</span>
           </Row>
         </Row>
         <ul>
@@ -289,6 +273,7 @@
       </Col>
     </Row>
   </section>
+  </div>
 </template>
 
 <script>
@@ -344,7 +329,7 @@ export default {
         ]
       },
       searchSetting: {
-        scope: 'title',
+        scope: 1,
         announcementType: [1,],
         location: [],
         organization: [],
@@ -356,6 +341,7 @@ export default {
 
       },
       searchText: '',
+      selectPreviousSettingID: '',
       showDropdown: false,
 
       history: ['Search1', 'fewdvdfarefdfefdwerfd', 'Search2', 'Search3', 'Key companies and organization sssssss', 'fewdvdfrefdfefdwerfd'],
@@ -397,7 +383,7 @@ export default {
       // 虚拟数据
       searchSettingData,
 
-    //   mobile
+      //   mobile
       showBehindScenes: false
     }
   },
@@ -415,14 +401,20 @@ export default {
     },
     // modal弹窗
     ok () {
+      this.showSaveSettingBtn = false;
       this.$Message.info('Clicked ok');
     },
     cancel () {
       this.$Message.info('Clicked cancel');
     },
-    editSetting() {
+    editSetting(id) {
+      this.selectPreviousSettingID = id;
       this.$refs.commonGroupModal.showModal = true
       this.$refs.commonGroupModal.settings = this.searchSetting
+    },
+    deletePreviousSetting() {
+      this.previousSetting = this.previousSetting.filter(item => item.id !== this.selectPreviousSettingID)
+      this.selectPreviousSettingID = ''
     },
     // -- 左侧搜索栏 Location部分
     handleLocationSelect(val) {
@@ -442,12 +434,12 @@ export default {
     },
     handleApply() {
       this.showSaveSettingBtn = true;
-      this.showFilter = false;
-    //   apply
+      if(!this.isPC) this.showFilter = false;
+      //   apply
     },
     handleSaveSetting() {
       this.saveModal = true;
-      this.showSaveSettingBtn = false;
+      // this.showSaveSettingBtn = false;
     },
     // --- pc端右侧顶部搜索框
     handleClickOutside() {
