@@ -11,7 +11,7 @@
           <p>
             {{$t('首页_home1_content')}}
           </p>
-          <Input class="topInput" search enter-button placeholder="Please enter keywords" />
+          <Input v-model.trim="searchText" class="topInput" search enter-button placeholder="Please enter keywords" @on-search="toSearchPage"/>
         </div>
       </Col>
       <Col :span="10">
@@ -42,32 +42,7 @@
     <Row justify="center" class-name="map">
       <img class="map" src="~assets/imgs/home/coreImg2@2x.png" alt="">
     </Row>
-    <div class="scrollBox" :class="playFlagScroll ? 'play' : 'playStop'">
-      <Row class-name="countryScrollFlags" :wrap="false">
-        <div class="imgList1" style="display: flex">
-          <div v-for="(item,idx) in flagList" :key="`${item}-${idx}`">
-            <span :class="['fi', `fi-${item}`, 'countryFlag']"></span>
-          </div>
-        </div>
-        <div class="imgList2" style="display: flex;">
-          <div v-for="(item,idx) in flagList" :key="`${item}-${idx}`">
-            <span :class="['fi', `fi-${item}`, 'countryFlag']"></span>
-          </div>
-        </div>
-      </Row>
-      <Row class-name="organizationScrollFlags" :wrap="false">
-        <div class="imgList1" style="display: flex">
-          <div v-for="(item,idx) in flagList2" :key="`${item}-${idx}`">
-            <span :class="['fi', `fi-${item}`, 'countryFlag']"></span>
-          </div>
-        </div>
-        <div class="imgList2" style="display: flex;">
-          <div v-for="(item,idx) in flagList2" :key="`${item}-${idx}`">
-            <span :class="['fi', `fi-${item}`, 'countryFlag']"></span>
-          </div>
-        </div>
-      </Row>
-    </div>
+      <ScrollFlag :play-flag-scroll="playFlagScroll" />
   </section>
     <section class="home3">
       <div class="headerBox">
@@ -76,7 +51,8 @@
       </div>
       <Row align="middle">
         <Col :span="15">
-          <img src="~assets/imgs/home/coreImg3@2x.png" alt="">
+<!--          <img src="~assets/imgs/home/coreImg3@2x.png" alt="">-->
+          <div ref="lottieContainer_push1" style="width: 100%;"></div>
         </Col>
         <Col :span="9" class="textContent">
           <h2>Four reading modes</h2>
@@ -124,7 +100,9 @@
           </ul>
         </Col>
         <Col :span="14">
-        <img src="~assets/imgs/home/coreImg4@2x.png" alt="">
+<!--        <img src="~assets/imgs/home/coreImg4@2x.png" alt="">-->
+
+          <div ref="lottieContainer_push2" style="width: 100%;"></div>
       </Col>
       </Row>
     </section>
@@ -135,7 +113,8 @@
       </div>
       <Row align="middle">
         <Col :span="15">
-          <img src="~assets/imgs/home/coreImg5@2x.png" alt="">
+<!--          <img src="~assets/imgs/home/coreImg5@2x.png" alt="">-->
+          <div ref="lottieContainer_search" style="width: 100%;"></div>
         </Col>
         <Col :span="9" class="textContent">
           <h2>Four reading modes</h2>
@@ -271,18 +250,7 @@
           </Row>
         </li>
       </ul>
-      <Row class-name="scrollBanners" :class="{ 'play': playBannerScroll }" :wrap="false">
-        <div class="banner1">
-          <div v-for="(item,idx) in bannerList" :key="`${item}-${idx}`" class="bannerImg">
-            <img :src="require(`~/assets/imgs/home/coreImg7-${item}@2x.png`)" alt="">
-          </div>
-        </div>
-        <div class="banner2">
-          <div v-for="(item,idx) in bannerList" :key="`${item}-${idx}`" class="bannerImg">
-            <img :src="require(`~/assets/imgs/home/coreImg7-${item}@2x.png`)" alt="">
-          </div>
-        </div>
-      </Row>
+      <ScrollBanner :play-banner-scroll="playBannerScroll" />
     </section>
     <section class="home9">
       <div class="headerBox">
@@ -325,17 +293,19 @@
 </template>
 
 <script>
+import lottie from 'lottie-web';
 import pageCode from "~/enums/pageCodes";
-
+import ScrollFlag from "~/components/home/ScrollFlag.vue";
+import ScrollBanner from "~/components/home/ScrollBanner.vue";
+// import animationData1 from '~/assets/animations/push1.json';
 export default {
   name: 'IndexPage',
+  components: {ScrollBanner, ScrollFlag},
   data() {
     return {
+      searchText: '',
       playFlagScroll: false,
       playBannerScroll: false,
-      flagList: ['af', 'ax', 'al', 'dz', 'as', 'ad', 'ag', 'am', 'af', 'ax', 'al', 'dz', 'as', 'ad', 'ag', 'am'],
-      flagList2: ['sh-ac', 'es-pv', 'ic', 'es-ct', 'eu', 'cp', 'arab', 'un', 'sh-ac', 'es-pv', 'ic', 'es-ct', 'eu', 'cp', 'arab', 'un'],
-
       features: [
         {
           label: 'Real time updates',
@@ -420,8 +390,6 @@ export default {
           detail: 'Business services: law, marketing, consulting, recruitment, printing and security'
         },
       ],
-
-      bannerList: [1,2,3,4,5,6,1,2,3,4,5,6]
     }
   },
   computed: {
@@ -431,11 +399,44 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScrollPlay);
+    this.initLottie();
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScrollPlay);
   },
   methods: {
+    toSearchPage() {
+      if (this.searchText) {
+        this.$router.push({
+          name: this.pageCode.DISCOVER,
+          query: {
+            keywords: this.searchText
+          }
+        })
+      } else {
+        this.$router.push({
+          name: this.pageCode.DISCOVER,
+        })
+      }
+    },
+    initLottie() {
+      const animations = [
+        { name: 'lottieContainer_push1', path: '/animations/push1.json'},
+        { name: 'lottieContainer_push2', path: '/animations/push2.json'},
+        { name: 'lottieContainer_search', path: '/animations/search.json'},
+        // { name: 'lottieContainer_translate1', path: '/animations/translate1.json'},
+        // { name: 'lottieContainer_translate2', path: '/animations/translate2.json'},
+      ];
+      animations.forEach((aim) => {
+        lottie.loadAnimation({
+          container: this.$refs[aim.name],
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: aim.path
+        })
+      })
+    },
     handleScrollPlay() {
       const checkVisibility = (ref) => {
         const element = this.$refs[ref];
@@ -545,71 +546,6 @@ section:not(.home1){
   .map{
     padding: 0 70px;
   }
-  .scrollBox{
-    margin-top: 66px;
-    position: relative;
-    &::before{
-      position: absolute;
-      content: '';
-      height: 100%;
-      width: 100px;
-      background: linear-gradient( 270deg, rgba(246,248,251,0) 0%, var(--bg-color) 100%);
-      left: 0;
-      top: 0;
-      z-index: 10;
-    }
-    &::after{
-      position: absolute;
-      content: '';
-      height: 100%;
-      width: 100px;
-      background: linear-gradient( -270deg, rgba(246,248,251,0) 0%, var(--bg-color) 100%);
-      top: 0;
-      right: 0;
-      z-index: 10;
-    }
-  }
-  //旗帜滚动效果
-  .countryScrollFlags, .organizationScrollFlags{
-    overflow: hidden;
-  }
-  .countryFlag{
-    width: 84px;
-    height: 60px;
-    margin-right: 32px;
-  }
-  .imgList1, .imgList2{
-    display: flex;
-  }
-  .countryScrollFlags{
-    margin-bottom: 64px;
-  }
-  .play{
-    .countryScrollFlags{
-      .imgList1{
-        animation: scrollBanner 10s linear infinite;
-      }
-      .imgList2{
-        animation: scrollBanner2 10s linear infinite;
-      }
-    }
-    .organizationScrollFlags{
-      .imgList1{
-        animation: scrollBanner3 20s linear infinite;
-      }
-      .imgList2{
-        animation: scrollBanner4 20s linear infinite;
-      }
-    }
-  }
-  .playStop{
-    .countryScrollFlags, .organizationScrollFlags{
-      .imgList1, .imgList2{
-        animation-play-state: paused;
-      }
-    }
-  }
-
 }
 .home3, .home5{
   margin-bottom: 200px;
@@ -825,49 +761,6 @@ section:not(.home1){
       }
     }
   }
-  .scrollBanners{
-    overflow: hidden;
-    margin-top: 80px;
-    position: relative;
-    &::before{
-      position: absolute;
-      content: '';
-      height: 100%;
-      width: 100px;
-      background: linear-gradient( 270deg, rgba(246,248,251,0) 0%, var(--bg-color) 100%);
-      left: 0;
-      top: 0;
-      z-index: 10;
-    }
-    &::after{
-      position: absolute;
-      content: '';
-      height: 100%;
-      width: 100px;
-      background: linear-gradient( -270deg, rgba(246,248,251,0) 0%, var(--bg-color) 100%);
-      top: 0;
-      right: 0;
-      z-index: 10;
-    }
-    .bannerImg{
-      width: 150px;
-      height: 50px;
-      background: white;
-      margin-right: 20px;
-    }
-    .banner1, .banner2{
-      display: flex;
-      animation-fill-mode: forwards;
-    }
-  }
-  .play{
-    .banner1{
-      animation: scrollBanner3 20s linear infinite;
-    }
-    .banner2{
-      animation: scrollBanner4 20s linear infinite;
-    }
-  }
 }
 .home9{
   margin-bottom: 120px;
@@ -932,39 +825,6 @@ section:not(.home1){
     .tryBtn{
       margin-right: 30px;
     }
-  }
-}
-
-@keyframes scrollBanner {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-@keyframes scrollBanner2 {
-  0% {
-    transform: translateX(-50%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-@keyframes scrollBanner3 {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-@keyframes scrollBanner4 {
-  0% {
-    transform: translateX(-200%);
-  }
-  100% {
-    transform: translateX(-100%);
   }
 }
 </style>

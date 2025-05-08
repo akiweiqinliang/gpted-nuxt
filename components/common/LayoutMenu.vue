@@ -12,7 +12,13 @@
       <MenuItem :name="pageCode.DISCOVER" :to="{ name: pageCode.DISCOVER }">
         {{ $t('search') }}
       </MenuItem>
-      <MenuItem :name="pageCode.PROMOTE" :to="{ name: pageCode.PROMOTE }">
+      <MenuItem
+        :name="pageCode.RESOURCE"
+        :to="{ name: pageCode.RESOURCE_BLOG }"
+        class="resourcesItem"
+        @mouseenter.native="showResources = true"
+        @mouseleave.native="showResources = false"
+      >
         {{ $t('resources') }}
       </MenuItem>
       <MenuItem
@@ -23,6 +29,9 @@
       </MenuItem>
       <MenuItem :name="pageCode.MEMBER" :to="{ name: pageCode.MEMBER }">
         {{ $t('member') }}
+      </MenuItem>
+      <MenuItem :name="pageCode.ACTIVITY" :to="{ name: pageCode.ACTIVITY }">
+        {{ $t('activity') }}
       </MenuItem>
     </Row>
     <div class="divider"></div>
@@ -44,7 +53,7 @@
               </div>
             </Row>
           </DropdownItem>
-          <DropdownItem class="userHoverBox">
+          <DropdownItem class="userHoverBox" @click.native="jumpRoutingByName(pageCode.USERCENTER)">
             <Row align="middle">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="Frame">
@@ -79,6 +88,27 @@
     </Row>
   </Menu>
   <MobileMenu />
+  <div
+    class="resourceSelections"
+    :class="{'resourceActive': showResources }"
+    @mouseenter="showResources = true"
+    @mouseleave="showResources = false"
+  >
+    <ul>
+      <li @click="jumpRoutingByName(pageCode.RESOURCE_POLICY)">
+        <span>{{$t('policy')}}</span>
+        <p>{{$t('policy_desc')}}</p>
+      </li>
+      <li @click="jumpRoutingByName(pageCode.RESOURCE_BLOG)">
+        <span>{{$t('blog')}}</span>
+        <p>{{$t('blog_desc')}}</p>
+      </li>
+      <li  @click="jumpRoutingByName(pageCode.RESOURCE_HELPCENTER)">
+        <span>{{$t('helpCenter')}}</span>
+        <p>{{$t('helpCenter_desc')}}</p>
+      </li>
+    </ul>
+  </div>
 </div>
 </template>
 
@@ -92,10 +122,18 @@ export default {
   components: {MobileMenu},
   data() {
     return {
-      activeRouterName: this.$route.name !== 'index' ? (this.$route.name.includes('dashboard') ? 'dashboard' : this.$route.name) : 'home',
+      activeRouterName: this.$route.name === 'index'
+        ? 'home'
+        : this.$route.name.includes('dashboard')
+          ? 'dashboard'
+          : this.$route.name.includes('resource')
+            ? 'resource'
+            : this.$route.name,
       lang: this.$i18n.defaultLocale,
       langList,
       isLoggedIn: false,
+
+      showResources: false
     }
   },
   computed: {
@@ -105,15 +143,33 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.activeRouterName = to.name !== 'index' ? (to.name.includes('dashboard') ? 'dashboard' : to.name) : 'home';
+      this.activeRouterName = to.name === 'index'
+        ? 'home'
+        : to.name.includes('dashboard') ?
+          'dashboard'
+          : to.name.includes('resource') ?
+            'resource'
+            : to.name;
     },
   },
+  mounted() {
+    this.fetchLoginToken();
+  },
   methods: {
+    fetchLoginToken() {
+      // todo 记得修改
+      this.isLoggedIn = localStorage.getItem('token') === 'a'
+    },
     changeLanguage() {
       this.$i18n.setLocale(this.lang)
     },
+    jumpRoutingByName(routerName) {
+      this.$router.push({ name: routerName })
+    },
     signIn() {
-      this.$router.push({ name: 'login' })
+      // todo
+      // this.$router.push({ name: 'login' })
+      this.isLoggedIn = !this.isLoggedIn
     },
     signOut() {
       this.$Message.info({
@@ -228,6 +284,45 @@ export default {
 }
 .ivu-menu-horizontal.ivu-menu-light:after{
   display: none;
+}
+.resourcesItem{
+  position: relative;
+}
+.resourceSelections{
+  position: fixed;
+  top: 76px;
+  width: 100%;
+  background: white;
+  padding: 30px 144px;
+  transform: translateY(-100%);
+  transition: all .3s ease-out;
+  z-index: 19;
+  box-shadow: 0 1px 10px 0 rgba(0,0,0,0.08);
+  ul{
+    display: flex;
+    li{
+      flex: 1;
+      padding: 22px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      span{
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: var(--text-color1);
+      }
+      p{
+        font-size: 13px;
+        color: var(--text-color2);
+      }
+    }
+    li:hover{
+      background: var(--hover-bg-color1);
+    }
+  }
+}
+.resourceActive{
+  transform: translateY(0%);
+  transition: all .3s ease-out;
 }
 @media screen and (max-width: 768px){
   .floatMainMenu{

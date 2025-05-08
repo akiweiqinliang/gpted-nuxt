@@ -1,5 +1,17 @@
+import country from '~/lang/country/en-US';
+import organization from '~/lang/organization/en-US';
+import homeEn from "~/lang/page/en/home-en";
+import loginEn from "~/lang/page/en/login-en";
+import discoverEn from "~/lang/page/en/discover-en";
+import dashboardEn from "~/lang/page/en/dashboard-en";
+import memberEn from "~/lang/page/en/member-en";
+import resourceEn from "~/lang/page/en/resource-en";
+import activityEn from "~/lang/page/en/activity-en";
+import billingEn from "~/lang/page/en/billing-en";
 export default {
   en: 'English',
+  ...country,
+  ...organization,
 
   // common 操作
   add: 'Add',
@@ -11,6 +23,9 @@ export default {
   cancel: 'Cancel',
   confirm: 'Confirm',
   resend: 'Resend',
+  ok: 'Ok',
+  yes: 'Yes',
+  no: 'No',
 
   // common 提示
   and: 'and',
@@ -30,158 +45,13 @@ export default {
   placeholder_newPassword: 'New password',
   placeholder_verificationCode: 'Verification code',
   placeholder_signUpCode: 'Please enter sign up code',
-  // login 登录
-  login: 'Login',
-  login_error_msg: 'We couldn’t find an account matching the username and password you entered. Please check your username and password and try again.\n',
-  login_imgText: 'Try <span style="color: var(--primary-color); font-weight: bold;">GPTED</span> for free.<br/>No credit card required,<br/>no software to install.',
-  login_welcomeMsg: 'Welcome to use <span style="color: var(--primary-color); font-weight: bold;">GPTED</span>',
-  login_layout_newMsg: 'New to GPTED?',
-  login_layout_signUpFree: 'Sign Up Free',
-  login_agree_msg: 'By using Gpted, you agree to the',
-  login_termsOfService: 'Terms of Service',
-  login_privacyPolicy: 'Privacy Policy',
-  login_staySignedIn: 'Stay signed in',
-  login_forgotPwd: 'Forgot your password?',
-  login_orSignInWith: 'Or sign in with',
-  login_forgotPwdTips: 'Enter your GPTED account email to receive a verification code to reset your password.',
-  login_sendCode: 'Send verification code',
-  login_resetPwd: 'Reset password',
-  register_startMsg: 'Lets Get Started',
-  register_error_msg: 'error',
-  register_layout_newMsg: 'Already have an account?',
-  register_newUserTitle: 'Quickly understand the rights of <span style="color: var(--primary-color)">new users</span>',
 
-  // home page 主页
-  home: 'Home',
-  resources: 'Resources',
-  dashboard: 'Dashboard',
-  member: 'Member',
-  signIn: 'Sign In',
-  signOut: 'Exit Login',
-  globalTender: 'Global Tender',
-  weChat: 'WeChat public account',
-  '首页大标题_home1': 'Global Tendering',
-  '首页_home1_content': 'Gpted helps you obtain bidding information and relevant legal documents from various countries around the world,Gpted helps you obtain bidding information and relevant legal.',
-  '首页大标题_home2': 'Countries covering the world',
-  '首页_home2_content': 'GPTED gathers relevant bidding information from countries, institutions, and organizations around the world, and delves into the huge business opportunities that exist in overseas markets!',
-  '首页大标题_home3': 'One click translation for efficient',
-  '首页_home3_content': 'GPTED uses AI machine learning and post editing to accurately translate relevant terminology in the bidding industry!',
-  '首页大标题_home4': '7x24h global monitoring',
-  '首页_home4_content': 'GPTED provides real-time updates on new procurement opportunities, helping you stay at the forefront of project information and seize absolute market opportunities!',
-  '首页大标题_home5': 'Intelligent project matching',
-  '首页_home5_content': 'GPTED is based on AI data analysis and provides intelligent information services to achieve one-stop tracking of global procurement opportunities!',
-  '首页大标题_home6': 'Numerous powerful features',
-  '首页_home6_content': 'GPTED has the most comprehensive functional modules for users to experience, making your bidding process easy and enjoyable',
-  '首页大标题_home7': 'Industry distribution',
-  '首页_home7_content': 'GPTED provides real-time updates on new procurement opportunities, helping you stay at the forefront of project information and seize absolute market opportunities!',
-  '首页大标题_home8': 'Serving a massive global customer base',
-  '首页_home8_content': 'More than 13000 companies worldwide are using GPTED',
-  '首页大标题_home9': 'Frequently asked questions',
-  '首页大标题_home10': 'Try <span style="color: var(--primary-color); font-weight: bold;">GPTED</span> for free. No credit card required, no software to install.',
-
-  // discover page 搜索页
-  filters: 'Filters',
-  '保留搜索设置提示_SaveMsg': 'Save this search',
-  '搜索框弹窗_history': 'History',
-  '搜索框弹窗_filterGrouping': 'Filter grouping',
-  '搜索建议_searchSuggestions': 'Search suggestions',
-  '搜索建议内容_searchSuggestionsContent': 'Search suggestions content',
-  '发布_release': 'Release',
-  '最后期限_deadline': 'Deadline',
-  '新建分组对话窗_modalTitle': 'New Group',
-
-  '搜索页左侧筛选栏标题_scope': 'Search scope',
-  '搜索页左侧筛选栏标题_announcementType': 'Announcement type',
-  '搜索页左侧筛选栏标题_location': 'Location',
-  '搜索页左侧筛选栏标题_organization': 'Organization',
-  '搜索页左侧筛选栏标题_Industry': 'Industry',
-  '搜索页左侧筛选栏标题_procurementMethod': 'Procurement method',
-  '搜索页左侧筛选栏标题_content': 'Content',
-  '搜索页左侧筛选栏标题_priceRange': 'Price range',
-  '搜索页左侧筛选栏标题_releaseTime': 'Release time',
-  '搜索页左侧筛选栏标题_deadlineTime': 'Deadline time',
-
-  '搜索页左侧筛选栏内容列表_searchScope': ['Global', 'Title'],
-  '搜索页左侧筛选栏内容列表_announcementType': ['Winning the bid', 'Tendering', 'Tender Notice', 'Closed bidding', 'Abandoned bid'],
-  '搜索页左侧筛选栏内容列表_content': ['All', 'Ongoing tenders', 'Award notice', 'Forecast notice'],
-
-  // dashboard page 控制台
-  overview: 'Overview',
-  subscriptions: 'Subscriptions',
-  favorites: 'Favorites',
-  project: 'Project',
-  resource: 'Resource',
-  message: 'Message',
-  userCenter: 'User Center',
-
-  subscribe: 'My subscribe',
-  recommend: 'Item recommendation',
-  collection: 'My collections',
-  follow: 'My tracking',
-  // message: 'My message',
-  reward: 'Promotional rewards',
-  memberCenter: 'Member Center',
-  historyRecord: 'History record',
-  personalCenter: 'Personal Center',
-
-  '普通用户推送 缺省title': 'DO YOU NEED MORE NEW FEATURES?',
-  '普通用户推送 缺省desc': 'Automatically schedule push of relevant information based on grouping settings',
-  upgradeAccount: 'Upgrade account',
-  '会员用户推送 缺省title': 'NO PUSH',
-  '会员用户推送 缺省desc': 'You haven\'t set up push',
-  goToSettings: 'Go To Settings',
-
-  // member page 会员页
-  member_salesPricing: 'Sales Pricing',
-  member_salesDesc: 'Real time updates of bidding information for various countries every day',
-  member_viewDetailBtnText: 'View feature details',
-  member_price: '$ {price}',
-  member_freeToUse: 'Free To Use',
-  member_buyNow: 'Buy Now',
-
-  regular_title: 'Regular users',
-  vip_title: 'VIP users',
-  svip_title: 'SVIP users',
-  regular_desc: 'Suitable for individual users',
-  vip_desc: 'Suitable for small businesses',
-  svip_desc: 'Suitable for large enterprises',
-  member_benefit1: 'member_benefit1',
-  member_benefit2: 'member_benefit2',
-  member_benefit3: 'member_benefit3',
-  member_benefit4: 'member_benefit4',
-  member_benefit5: 'member_benefit5',
-  member_benefit6: 'member_benefit6',
-  member_benefit7: 'member_benefit7',
-  member_benefit8: 'member_benefit8',
-  member_benefit9: 'member_benefit9',
-  member_benefit10: 'member_benefit10',
-
-  member_expandBtnText: 'Expand full list of features',
-  member_closeBtnText: 'Close full list of features',
-  member_functionalComparison: 'Functional comparison',
-  member_freeVersion: 'Free version',
-  member_standardVersion: 'Standard version',
-  member_professionalVersion: 'Professional version',
-  member_frequentlyAskedQuestions: 'Frequently asked questions',
-  member_question1: 'How to register?',
-  member_question2: 'How to contact us?',
-  member_question3: 'Where does our data come from?',
-  member_question4: 'Is the account universal on the platform used?',
-  member_question5: 'Do I have any other questions?',
-
-  // dashboard-subscribe-push page
-  forwardNews: 'Forward news',
-  pushSettings: 'Push settings',
-  relatedSettings: 'Related Settings',
-  result: 'Results',
-  subset: 'Subset',
-  screen: 'Screen',
-  infoFound: 'Found <span style="color: var(--primary-color); font-weight: bold;">{count}</span> pieces of information',
-
-  // dashboard-subscribe-settings page
-  subscriptionSettings:'Subscription Settings',
-  emailPushSettings: 'Email push settings',
-  addGroup: 'Add Group',
-  otherGroups: 'Other Groups',
-  goToBind: 'Go To Bind',
+  ...loginEn, // 登录
+  ...homeEn, // 首页
+  ...discoverEn, // 发现页
+  ...dashboardEn, // 控制台
+  ...memberEn, // 充值 会员页
+  ...activityEn, // 活动页
+  ...resourceEn, // 资源页
+  ...billingEn, // 个人中心-账单页
 };

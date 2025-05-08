@@ -58,11 +58,12 @@
 
 <script>
 import SpinLoad from "~/components/common/SpinLoad.vue";
+import {dashboardMessageList} from "~/enums/mockData";
 
 export default {
   name: 'MessagePage',
   components: {SpinLoad},
-  layout: 'GatherLayout',
+  layout: 'dashboard',
   asyncData({ $axios }) {
     //   axios获取消息列表
     return{
@@ -79,85 +80,7 @@ export default {
       // 列表加载样式
       msgLoading: false,
       viewOnlyUnread: false,
-      msgList: [
-        // 0 => 产品更新 ；1 => 会员福利
-        {
-          id: 0,
-          msgTitle: '产品更新 V 1.2.0 通知',
-          msgContent:
-            '版本更新啦，本次更新，解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。',
-          msgType: 0,
-          msgState: false, // 未读
-        },
-        {
-          id: 1,
-          msgTitle:
-            '尊敬的用户：为您申请的会员福利还未领取！尊敬的用户：为您申请的会员福利还未领取！',
-          msgContent:
-            '超级订阅限时8折特惠，为企业投标高效赋能，速抢...超级订阅限时8折特惠，为企业投标高效赋能，速抢...超级订阅限时8.....',
-          msgType: 1,
-          msgState: true, // 已读
-        },
-        {
-          id: 2,
-          msgTitle: '产品更新 V 1.2.0 通知',
-          msgContent:
-            '版版本更新啦，本次更新，解决了一些已知问题。解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。本更新啦，本次更新，解决了一些已知问题。解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。',
-          msgType: 0,
-          msgState: true, // 已读
-        },
-        {
-          id: 3,
-          msgTitle: '产品更新 V 1.2.0 通知',
-          msgContent:
-            '版本更新啦，本次更新，解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。',
-          msgType: 0,
-          msgState: false, // 未读
-        },
-        {
-          id: 4,
-          msgTitle:
-            '尊敬的用户：为您申请的会员福利还未领取！尊敬的用户：为您申请的会员福利还未领取！',
-          msgContent:
-            '超级订阅限时8折特惠，为企业投标高效赋能，速抢...超级订阅限时8折特惠，为企业投标高效赋能，速抢...超级订阅限时8.....',
-          msgType: 1,
-          msgState: false, // 未读
-        },
-        {
-          id: 5,
-          msgTitle:
-            '尊敬的用户：为您申请的会员福利还未领取！尊敬的用户：为您申请的会员福利还未领取！',
-          msgContent:
-            '超级订阅限时8折特惠，为企业投标高效赋能，速抢...超级订阅限时8折特惠，为企业投标高效赋能，速抢...超级订阅限时8.....',
-          msgType: 1,
-          msgState: true, // 已读
-        },
-        {
-          id: 6,
-          msgTitle:
-            '尊敬的用户：为您申请的会员福利还未领取！尊敬的用户：为您申请的会员福利还未领取！',
-          msgContent:
-            '超级订阅限时8折特惠,超级订阅限时8折特惠，为企业投标高效赋能，速抢...超级订阅限时8.....',
-          msgType: 1,
-          msgState: true, // 已读
-        },
-        {
-          id: 7,
-          msgTitle: '产品更新 V 1.2.0 通知',
-          msgContent:
-            '版本更新啦，本次更新，解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。',
-          msgType: 0,
-          msgState: true, // 已读
-        },
-        {
-          id: 8,
-          msgTitle: '产品更新 V 1.2.0 通知',
-          msgContent:
-            '版本更新啦，本次更新，解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。版本更新啦，本次更新，解决了一些已知问题。',
-          msgType: 0,
-          msgState: false, // 未读
-        },
-      ],
+      msgList: dashboardMessageList,
     };
   },
   computed: {
@@ -226,9 +149,6 @@ export default {
 <style scoped lang="scss">
 .alreadyRead{
   color: var(--text-color3);
-}
-section{
-  padding: 34px 30px;
 }
 .totalCount{
   color: var(--text-color1);

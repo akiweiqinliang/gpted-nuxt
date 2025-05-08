@@ -106,6 +106,7 @@ export default {
 
 <style scoped lang="scss">
 .bidMoreBtn{
+  cursor: pointer;
   .collectedActive{
     color: var(--collected-color);
   }

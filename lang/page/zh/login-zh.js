@@ -1,0 +1,22 @@
+export default {
+  // login 登录
+  login: '登录',
+  login_error_msg: '我们找不到与您输入的用户名和密码匹配的帐户。请检查您的用户名和密码，然后重试。',
+  login_imgText: '免费试用 <span style="color: var(--primary-color); font-weight: bold;">GPTED</span>。<br/>无需信用卡，<br/>无需安装软件。',
+  login_welcomeMsg: '欢迎使用<span style="color: var(--primary-color); font-weight: bold;">GPTED</span>',
+  login_layout_newMsg: '是 GPTED 新手吗？',
+  login_layout_signUpFree: '免费注册',
+  login_agree_msg: '使用 Gpted，即表示您同意',
+  login_termsOfService: '服务条款',
+  login_privacyPolicy: '隐私政策',
+  login_staySignedIn: '保持登录状态',
+  login_forgotPwd: '忘记密码了吗？',
+  login_orSignInWith: '或使用以下方式登录',
+  login_forgotPwdTips: '输入您的 GPTED 账户电子邮件以接收验证码来重置您的密码。',
+  login_sendCode: '发送验证码',
+  login_resetPwd: '重置密码',
+  register_startMsg: '让我们开始吧',
+  register_error_msg: '有点小问题哦',
+  register_layout_newMsg: '已有账户？',
+  register_newUserTitle: '快速了解<span style="color: var(--primary-color)">新用户</span>的权限',
+}

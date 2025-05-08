@@ -224,20 +224,22 @@ import MyBackTop from "~/components/translate/MyBackTop.vue";
 import AiDialogBox from "~/components/translate/AiDialogBox.vue";
 import LanguageModal from "~/components/common/LanguageModal.vue";
 import MobileMenu from "~/components/common/MobileMenu.vue";
+import {tenderList} from "~/enums/mockData";
 export default {
   name: "Index",
   components: {MobileMenu, LanguageModal, AiDialogBox, MyBackTop},
   layout: 'translate',
-  async asyncData({route, $axios}) {
+  asyncData({route, $axios}) {
     // 获取文档内容
     const tenderId = Number(route.query.tenderId)
     const docId = Number(route.query.docId)
-    const res =await $axios.get(`/getTenderById`, {
-      params: {
-        tenderId
-      }
-    });
-    const docData = res.data.tender.docs.find(item => item.id === docId);
+    // const res =await $axios.get(`/getTenderById`, {
+    //   params: {
+    //     tenderId
+    //   }
+    // });
+    const tender = tenderList.find(item => item.id === tenderId)
+    const docData = tender.docs.find(item => item.id === docId)
     return{
       tenderId,
       docId,

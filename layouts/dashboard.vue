@@ -3,7 +3,7 @@
     <Layout>
       <LayoutMenu />
       <Content>
-        <Nuxt />
+        <SecondLayoutMenu :my-menu="myMenu" :show-user-center-entrance="true"/>
       </Content>
     </Layout>
   </div>
@@ -11,7 +11,6 @@
 
 <script>
 import pageCode from "~/enums/pageCodes";
-import {langList} from "~/lang/langList";
 import LayoutMenu from "~/components/common/LayoutMenu.vue";
 
 export default {
@@ -19,43 +18,69 @@ export default {
   components: {LayoutMenu},
   data() {
     return {
-      activeRouterName: this.$route.name !== 'index' ? this.$route.name : 'home',
-      lang: this.$i18n.defaultLocale,
-      langList,
-      mobileMenuDrawer: false,
-
-      isLoggedIn: false,
+      myMenu: [
+        {
+          subTitle: 'overview',
+          icon: 'ios-analytics',
+          pathName: pageCode.DASHBOARD, // menu的唯一标识name + 跳转路径name
+          children: []
+        },
+        {
+          subTitle: 'subscriptions',
+          icon: 'ios-analytics',
+          children: [
+            {
+              title: 'subscribe', // 国际化文本key
+              pathName: pageCode.DASHBOARD_SUBSCRIBE, // menu的唯一标识name + 跳转路径name
+            },
+            {
+              title: 'relatedSettings',
+              pathName: pageCode.DASHBOARD_SETTINGS,
+            },
+          ]
+        },
+        {
+          subTitle: 'favorites',
+          icon: 'ios-star-outline',
+          children: [
+            {
+              title: 'project',
+              pathName: pageCode.DASHBOARD_PROJECT, // menu的唯一标识name + 跳转路径name
+            },
+            {
+              title: 'resource',
+              pathName: pageCode.DASHBOARD_RESOURCE,
+            },
+          ]
+        },
+        {
+          subTitle: 'message',
+          icon: 'ios-analytics',
+          pathName: pageCode.DASHBOARD_MESSAGE, // menu的唯一标识name + 跳转路径name
+          children: []
+        },
+        {
+          subTitle: 'history',
+          icon: 'ios-star-outline',
+          children: [
+            {
+              title: 'Bid document',
+              pathName: pageCode.DASHBOARD_HISTORY, // menu的唯一标识name + 跳转路径name
+            },
+            {
+              title: 'Attachments',
+              pathName: pageCode.DASHBOARD_HISTORY_ATTACHMENT,
+            },
+          ]
+        },
+      ]
     }
   },
   computed: {
     pageCode() {
       return pageCode
     },
-    // isLoggedIn() {
-    // this.$store.dispatch("user/checkToken")
-    // return this.$store.getters["user/isLoggedIn"]
-    // return false
-    // }
   },
-  watch: {
-    $route(to, from) {
-      this.activeRouterName = to.name !== 'index' ? to.name : 'home';
-    },
-  },
-  methods: {
-    changeLanguage() {
-      this.$i18n.setLocale(this.lang)
-    },
-    signIn() {
-      this.$router.push({ name: 'login' })
-    },
-    signOut() {
-      this.$Message.info({
-        content: 'sign out!',
-        top: 150,
-      })
-    }
-  }
 }
 </script>
 <style scoped lang="scss">

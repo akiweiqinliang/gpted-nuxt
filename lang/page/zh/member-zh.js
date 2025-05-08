@@ -1,0 +1,41 @@
+export default {
+
+  // member page 会员页
+  member_salesPricing: '销售定价',
+  member_salesDesc: '每天实时更新各国招标信息',
+  member_viewDetailBtnText: '查看功能详细信息',
+  member_price: '¥ {price}',
+  member_freeToUse: '免费使用',
+  member_buyNow: '立即购买',
+
+  regular_title: '普通用户',
+  vip_title: 'VIP用户',
+  svip_title: 'SVIP用户',
+  regular_desc: '适合个人用户',
+  vip_desc: '适合小型企业',
+  svip_desc: '适合大型企业',
+  member_benefit1: '会员权益1',
+  member_benefit2: '会员权益2',
+  member_benefit3: '会员权益3',
+  member_benefit4: '会员权益4',
+  member_benefit5: '会员权益5',
+  member_benefit6: '会员权益6',
+  member_benefit7: '会员权益7',
+  member_benefit8: '会员权益8',
+  member_benefit9: '会员权益9',
+  member_benefit10: '会员权益10',
+
+  member_expandBtnText: '展开完整功能列表',
+  member_closeBtnText: '关闭完整功能列表',
+  member_functionalComparison: '功能比较',
+  member_freeVersion: '免费版',
+  member_standardVersion: '标准版',
+  member_professionalVersion: '专业版',
+  member_frequentlyAskedQuestions: '常见问题',
+  member_question1: '如何注册？',
+  member_question2: '如何联系我们？',
+  member_question3: '我们的数据从哪里来？',
+  member_question4: '所用平台上的账户是否通用？',
+  member_question5: '我还有其他问题吗？',
+
+}

@@ -349,7 +349,6 @@ export default {
   },
   methods: {
     scrollToDetail() {
-
     },
     changeShowFloatChoice() {
       this.showFloatChoice = window.scrollY + 76 > this.$refs.memberTable.offsetTop;
@@ -359,10 +358,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#memberPage{
-}
 .top{
-  margin: 46px 200px 0;
+  margin: 0 200px;
   h1{
     font-size: 48px;
     margin-top: 60px;

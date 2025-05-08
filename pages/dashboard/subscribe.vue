@@ -36,6 +36,7 @@ import EmptyPush from "~/components/dashboard/EmptyPush.vue";
 export default {
   name: "SubscribePage",
   components: {EmptyPush},
+  layout: 'dashboard',
   asyncData() {
     return{
       totalResultCount: 17004,
@@ -49,9 +50,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-section{
-  padding: 34px 30px;
-}
+
 .totalCount{
   color: var(--text-color1);
   font-size: 14px;

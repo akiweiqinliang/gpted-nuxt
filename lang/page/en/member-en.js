@@ -1,0 +1,41 @@
+export default {
+
+  // member page 会员页
+  member_salesPricing: 'Sales Pricing',
+  member_salesDesc: 'Real time updates of bidding information for various countries every day',
+  member_viewDetailBtnText: 'View feature details',
+  member_price: '$ {price}',
+  member_freeToUse: 'Free To Use',
+  member_buyNow: 'Buy Now',
+
+  regular_title: 'Regular users',
+  vip_title: 'VIP users',
+  svip_title: 'SVIP users',
+  regular_desc: 'Suitable for individual users',
+  vip_desc: 'Suitable for small businesses',
+  svip_desc: 'Suitable for large enterprises',
+  member_benefit1: 'member_benefit1',
+  member_benefit2: 'member_benefit2',
+  member_benefit3: 'member_benefit3',
+  member_benefit4: 'member_benefit4',
+  member_benefit5: 'member_benefit5',
+  member_benefit6: 'member_benefit6',
+  member_benefit7: 'member_benefit7',
+  member_benefit8: 'member_benefit8',
+  member_benefit9: 'member_benefit9',
+  member_benefit10: 'member_benefit10',
+
+  member_expandBtnText: 'Expand full list of features',
+  member_closeBtnText: 'Close full list of features',
+  member_functionalComparison: 'Functional comparison',
+  member_freeVersion: 'Free version',
+  member_standardVersion: 'Standard version',
+  member_professionalVersion: 'Professional version',
+  member_frequentlyAskedQuestions: 'Frequently asked questions',
+  member_question1: 'How to register?',
+  member_question2: 'How to contact us?',
+  member_question3: 'Where does our data come from?',
+  member_question4: 'Is the account universal on the platform used?',
+  member_question5: 'Do I have any other questions?',
+
+}

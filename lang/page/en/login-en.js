@@ -1,0 +1,22 @@
+export default {
+  // login 登录
+  login: 'Login',
+  login_error_msg: 'We couldn’t find an account matching the username and password you entered. Please check your username and password and try again.\n',
+  login_imgText: 'Try <span style="color: var(--primary-color); font-weight: bold;">GPTED</span> for free.<br/>No credit card required,<br/>no software to install.',
+  login_welcomeMsg: 'Welcome to use <span style="color: var(--primary-color); font-weight: bold;">GPTED</span>',
+  login_layout_newMsg: 'New to GPTED?',
+  login_layout_signUpFree: 'Sign Up Free',
+  login_agree_msg: 'By using Gpted, you agree to the',
+  login_termsOfService: 'Terms of Service',
+  login_privacyPolicy: 'Privacy Policy',
+  login_staySignedIn: 'Stay signed in',
+  login_forgotPwd: 'Forgot your password?',
+  login_orSignInWith: 'Or sign in with',
+  login_forgotPwdTips: 'Enter your GPTED account email to receive a verification code to reset your password.',
+  login_sendCode: 'Send verification code',
+  login_resetPwd: 'Reset password',
+  register_startMsg: 'Lets Get Started',
+  register_error_msg: 'error',
+  register_layout_newMsg: 'Already have an account?',
+  register_newUserTitle: 'Quickly understand the rights of <span style="color: var(--primary-color)">new users</span>',
+}

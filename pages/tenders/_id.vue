@@ -1,5 +1,6 @@
 <template>
 <section id="tenderDetailPage" class="detailPage">
+  <ClientOnly>
   <h2 class="topTenderTitle">
     {{bid.title}}
   </h2>
@@ -243,27 +244,6 @@
               </Col>
               <Radio v-show="selectDownload"></Radio>
               <checkbox v-show="selectDownload" @on-change="selectDocById(doc.id)"></checkbox>
-<!--              <Dropdown-->
-<!--                trigger="click"-->
-<!--                placement="bottom-end"-->
-<!--                class="docItemMore"-->
-<!--                >-->
-<!--                <Icon type="md-more" />-->
-<!--                <DropdownMenu slot="list">-->
-<!--                  <DropdownItem @click.native="translateFile(doc.id)">-->
-<!--                    <Row align="middle">-->
-<!--                      <img src="~assets/imgs/tenderDetail/translate-icon@2x.png" alt="translate">-->
-<!--                      <span>translate</span>-->
-<!--                    </Row>-->
-<!--                  </DropdownItem>-->
-<!--                  <DropdownItem @click.native="downloadFile(doc.id)">-->
-<!--                    <Row align="middle">-->
-<!--                      <img src="~assets/imgs/tenderDetail/download-icon@2x.png" alt="download">-->
-<!--                      <span>download</span>-->
-<!--                    </Row>-->
-<!--                  </DropdownItem>-->
-<!--                </DropdownMenu>-->
-<!--              </Dropdown>-->
             </Row>
             <Row class-name="translatedDocs">
               <ul>
@@ -390,6 +370,7 @@
       </template>
     </CommonCard>
   </Row>
+  </ClientOnly>
 </section>
 </template>
 
@@ -400,20 +381,24 @@ import UnlockedMask from "~/components/tenderDetail/UnlockedMask.vue";
 import CommonPromptModal from "~/components/tenderDetail/CommonPromptModal.vue";
 import LanguageModal from "~/components/common/LanguageModal.vue";
 import pageCode from "~/enums/pageCodes";
+import {tenderList} from "~/enums/mockData";
 
 import targetLanguageIcon from '~/assets/imgs/svg/targetLanguage.svg';
+
 export default {
   name: "TenderDetailPage",
   components: {CommonPromptModal, LanguageModal, UnlockedMask, CommonCard},
-  async asyncData({ $axios, params }) {
-    // 获取其他 seo
-    const res = await $axios.get(`/getTenderById`, {
-      params: {
-        tenderId: params.id,
-      }
-    });
-      const bid = res.data.tender;
-      return { bid };
+  asyncData({ $axios, params }) {
+    try {
+      const bid = tenderList.find(item => item.id === Number(params.id));
+      // 或者从API获取
+      // const res = await $axios.get(`/getTenderById`, { params: { tenderId: params.id } });
+      // const bid = res.data.tender;
+
+      return { bid: bid || {} }; // 确保返回的对象不为undefined
+    } catch (error) {
+      return { bid: {} };
+    }
   },
   data() {
     return {
@@ -438,7 +423,7 @@ export default {
         },
       ],
       activeItem: 0,
-      bid: {}, // 当前标讯
+      // bid: {}, // 当前标讯
       translateLang: '',
       translateLabel: 'language',
       langList,
@@ -461,6 +446,18 @@ export default {
         'cbad@qq.com',
         'dbb@qq.com',
       ],
+    }
+  },
+  head() {
+    return {
+      title: this.bid.title || this.$route.name,
+      meta: [
+        // { hid: 'description', name: 'description', content: this.blog.content.slice(0, 150) || 'Default description' },
+        { hid: 'keywords', name: 'keywords', content: this.bid.title ? `${this.bid.title}, Tendering, Business` : 'GPTED' },
+        { property: 'og:title', content: this.bid.title || 'Default Title' },
+        // { property: 'og:description', content: this.blog.content.slice(0, 150) || 'Default description' },
+        { property: 'og:type', content: 'article' }
+      ]
     }
   },
   computed: {
@@ -505,10 +502,10 @@ export default {
   },
   mounted() {
     // 避免普通用户在解锁文章后刷新页面时文章内容丢失
-    if (this.$store.getters["user/getToken"] !== null) {
-      this.getTenderById();
-    // todo  get user's email history
-    }
+    // if (this.$store.getters["user/getToken"] !== null) {
+    //   this.getTenderById();
+    // // todo  get user's email history
+    // }
     this.$store.dispatch('tender/nuxtClientInit');
     window.addEventListener('scroll', this.onScroll);
     this.onScroll();
@@ -545,13 +542,14 @@ export default {
       //   query: { tenderId, docId }
       // })
     },
-    async getTenderById() {
-      const res = await this.$axios.get(`/getTenderById`, {
-        params: {
-          tenderId: this.$route.params.id,
-        }
-      });
-      this.bid = res.data.tender;
+    getTenderById() {
+      // const res = await this.$axios.get(`/getTenderById`, {
+      //   params: {
+      //     tenderId: this.$route.params.id,
+      //   }
+      // });
+      // this.bid = res.data.tender;
+      this.bid = tenderList.find(item => item.id === Number(this.$route.params.id));
     },
 
     calcTimelineMaxHeight() {
