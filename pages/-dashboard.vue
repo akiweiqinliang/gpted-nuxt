@@ -1,53 +1,56 @@
 <template>
-  <Row class="dashboardPage">
-    <div class="left">
-      <Menu :active-name="activeRouterName" :open-names="openNames" class="menu" @on-open-change="handleSubmenuChange">
-        <div v-for="(item, index) in myMenu" :key="index">
-          <template v-if="item.children.length === 0">
-            <div class="notChildSubMenu">
-              <MenuItem
-                :name="item.pathName"
-                :to="{ name: item.pathName }"
-              >
-                <Icon :type="item.icon" />
-                <span class="sub">{{ $t(item.subTitle) }}</span>
-              </MenuItem>
-            </div>
+<!--  <Row class="dashboardPage">-->
+<!--    <div class="left">-->
+<!--      <Menu :active-name="activeRouterName" :open-names="openNames" class="menu" @on-open-change="handleSubmenuChange">-->
+<!--        <div v-for="(item, index) in myMenu" :key="index">-->
+<!--          <template v-if="item.children.length === 0">-->
+<!--            <div class="notChildSubMenu">-->
+<!--              <MenuItem-->
+<!--                :name="item.pathName"-->
+<!--                :to="{ name: item.pathName }"-->
+<!--              >-->
+<!--                <Icon :type="item.icon" />-->
+<!--                <span class="sub">{{ $t(item.subTitle) }}</span>-->
+<!--              </MenuItem>-->
+<!--            </div>-->
 
-          </template>
-          <template v-else>
-            <Submenu :name="item.subTitle" :class="{ 'active': isActiveSubmenu(item)}">
-              <template slot="title">
-                <Icon :type="item.icon" />
-                <span class="sub">{{ $t(item.subTitle) }}</span>
-              </template>
-              <div class="subMenuItem">
-                <MenuItem
-                  v-for="(subItem, subIndex) in item.children"
-                  :key="`${subItem.title}-${subIndex}`"
-                  :name="subItem.pathName"
-                  :to="{ name: subItem.pathName }"
-                >
-                  <span>{{ $t(subItem.title) }}</span>
-                </MenuItem>
-              </div>
-            </Submenu>
-          </template>
-        </div>
-      <div class="userCenter">
-        <MenuItem
-          name="userCenter">
-          <Icon type="md-person" />
-          <span class="sub">{{ $t('userCenter') }}</span>
-        </MenuItem>
-      </div>
-      </Menu>
-    </div>
-    <div class="right">
-      <NuxtChild/>
-<!--      <LayoutFooter class="footer"/>-->
-    </div>
-  </Row>
+<!--          </template>-->
+<!--          <template v-else>-->
+<!--            <Submenu :name="item.subTitle" :class="{ 'active': isActiveSubmenu(item)}">-->
+<!--              <template slot="title">-->
+<!--                <Icon :type="item.icon" />-->
+<!--                <span class="sub">{{ $t(item.subTitle) }}</span>-->
+<!--              </template>-->
+<!--              <div class="subMenuItem">-->
+<!--                <MenuItem-->
+<!--                  v-for="(subItem, subIndex) in item.children"-->
+<!--                  :key="`${subItem.title}-${subIndex}`"-->
+<!--                  :name="subItem.pathName"-->
+<!--                  :to="{ name: subItem.pathName }"-->
+<!--                >-->
+<!--                  <span>{{ $t(subItem.title) }}</span>-->
+<!--                </MenuItem>-->
+<!--              </div>-->
+<!--            </Submenu>-->
+<!--          </template>-->
+<!--        </div>-->
+<!--      <div class="userCenter">-->
+<!--        <MenuItem-->
+<!--          name="userCenter"-->
+<!--          :to="{ name: 'userCenter' }"-->
+<!--        >-->
+<!--          <Icon type="md-person" />-->
+<!--          <span class="sub">{{ $t('userCenter') }}</span>-->
+<!--        </MenuItem>-->
+<!--      </div>-->
+<!--      </Menu>-->
+<!--    </div>-->
+<!--    <div class="right">-->
+<!--      <NuxtChild/>-->
+<!--&lt;!&ndash;      <LayoutFooter class="footer"/>&ndash;&gt;-->
+<!--    </div>-->
+<!--  </Row>-->
+  <div>overview</div>
 </template>
 
 <script>

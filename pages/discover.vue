@@ -388,6 +388,9 @@ export default {
     }
   },
   mounted() {
+    if (this.$route.query.keywords) {
+      this.searchText = this.$route.query.keywords
+    }
     this.handleResize();
     window.addEventListener('resize', this.handleResize);
   },

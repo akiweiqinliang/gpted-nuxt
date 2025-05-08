@@ -5,61 +5,19 @@
       <Content>
         <Nuxt />
       </Content>
-<!--      <Footer>-->
-        <LayoutFooter />
-<!--      </Footer>-->
+      <LayoutFooter />
     </Layout>
   </div>
 </template>
 
 <script>
-import pageCode from "~/enums/pageCodes";
-import {langList} from "~/lang/langList";
+// import pageCode from "~/enums/pageCodes";
 import LayoutMenu from "~/components/common/LayoutMenu.vue";
 import LayoutFooter from "~/components/common/LayoutFooter.vue";
 
 export default {
   name: "Default",
   components: {LayoutFooter, LayoutMenu},
-  data() {
-    return {
-      activeRouterName: this.$route.name !== 'index' ? this.$route.name : 'home',
-      lang: this.$i18n.defaultLocale,
-      langList,
-      mobileMenuDrawer: false,
-
-      isLoggedIn: false,
-    }
-  },
-  computed: {
-    pageCode() {
-      return pageCode
-    },
-    // isLoggedIn() {
-      // this.$store.dispatch("user/checkToken")
-      // return this.$store.getters["user/isLoggedIn"]
-      // return false
-    // }
-  },
-  watch: {
-    $route(to, from) {
-      this.activeRouterName = to.name !== 'index' ? to.name : 'home';
-    },
-  },
-  methods: {
-    changeLanguage() {
-      this.$i18n.setLocale(this.lang)
-    },
-    signIn() {
-      this.$router.push({ name: 'login' })
-    },
-    signOut() {
-      this.$Message.info({
-        content: 'sign out!',
-        top: 150,
-      })
-    }
-  }
 }
 </script>
 <style scoped lang="scss">

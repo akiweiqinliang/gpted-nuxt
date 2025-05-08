@@ -25,6 +25,7 @@ import EmailPushSettings from "~/components/dashboard/settings/EmailPushSettings
 export default {
   name: "Settings",
   components: {EmailPushSettings, GroupEditor},
+  layout: 'dashboard',
   data() {
     return{
       activeTabIndex: 0,
@@ -34,9 +35,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-section{
-  padding: 34px 30px;
-}
 .tab{
   font-size: 16px;
   transition: all .3s;

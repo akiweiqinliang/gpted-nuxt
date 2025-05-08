@@ -1,5 +1,17 @@
+import country from '~/lang/country/zh-CN'
+import organization from '~/lang/organization/zh-CN';
+import homeZh from "~/lang/page/zh/home-zh";
+import loginZh from "~/lang/page/zh/login-zh";
+import discoverZh from "~/lang/page/zh/discover-zh";
+import dashboardZh from "~/lang/page/zh/dashboard-zh";
+import memberZh from "~/lang/page/zh/member-zh";
+import resourceZh from "~/lang/page/zh/resource-zh";
+import activityZh from "~/lang/page/zh/activity-zh";
+import billingZh from "~/lang/page/zh/billing-zh";
 export default {
   zh: '中文',
+  ...country,
+  ...organization,
 
   // common 操作
   add: '添加',
@@ -11,6 +23,9 @@ export default {
   cancel: '取消',
   confirm: '确定',
   resend: '重发',
+  ok: '确认',
+  yes: '确定',
+  no: '取消',
 
   // common 提示
   and: '和',
@@ -30,158 +45,13 @@ export default {
   placeholder_newPassword: '新密码',
   placeholder_verificationCode: '验证码',
   placeholder_signUpCode: '请输入注册码',
-  // login 登录
-  login: '登录',
-  login_error_msg: '我们找不到与您输入的用户名和密码匹配的帐户。请检查您的用户名和密码，然后重试。',
-  login_imgText: '免费试用 <span style="color: var(--primary-color); font-weight: bold;">GPTED</span>。<br/>无需信用卡，<br/>无需安装软件。',
-  login_welcomeMsg: '欢迎使用<span style="color: var(--primary-color); font-weight: bold;">GPTED</span>',
-  login_layout_newMsg: '是 GPTED 新手吗？',
-  login_layout_signUpFree: '免费注册',
-  login_agree_msg: '使用 Gpted，即表示您同意',
-  login_termsOfService: '服务条款',
-  login_privacyPolicy: '隐私政策',
-  login_staySignedIn: '保持登录状态',
-  login_forgotPwd: '忘记密码了吗？',
-  login_orSignInWith: '或使用以下方式登录',
-  login_forgotPwdTips: '输入您的 GPTED 账户电子邮件以接收验证码来重置您的密码。',
-  login_sendCode: '发送验证码',
-  login_resetPwd: '重置密码',
-  register_startMsg: '让我们开始吧',
-  register_error_msg: '有点小问题哦',
-  register_layout_newMsg: '已有账户？',
-  register_newUserTitle: '快速了解<span style="color: var(--primary-color)">新用户</span>的权限',
 
-  // home page 主页
-  home: '首页',
-  resources: '资源',
-  dashboard: '工作台',
-  member: '会员',
-  signIn: '登录',
-  signOut: '登出',
-  globalTender: '全球招标',
-  weChat: '微信公众号',
-  '首页大标题_home1': '全球招标',
-  '首页_home1_content': 'Gpted帮助您获取世界各国的招标信息及相关法律文件，Gpted帮助您获取世界各国的招标信息及相关法律文件。',
-  '首页大标题_home2': '国家覆盖全球',
-  '首页_home2_content': 'GPTED汇集世界各国、各机构、组织的相关招标信息，深入挖掘海外市场存在的巨大商机！',
-  '首页大标题_home3': '一键高效翻译',
-  '首页_home3_content': 'GPTED利用AI机器学习和后期编辑，精准翻译投标行业相关术语！',
-  '首页大标题_home4': '7x24小时全球监控',
-  '首页_home4_content': 'GPTED提供最新采购机会的实时更新，帮助您掌握项目信息前沿，把握绝对的市场先机！',
-  '首页大标题_home5': '智能项目匹配',
-  '首页_home5_content': 'GPTED基于AI数据分析，提供智能信息服务，实现一站式追踪全球采购机会！',
-  '首页大标题_home6': '众多强大功能',
-  '首页_home6_content': 'GPTED拥有最全面的功能模块供用户体验，让您的竞标过程变得轻松愉快',
-  '首页大标题_home7': '行业分布',
-  '首页_home7_content': 'GPTED提供最新采购机会的实时更新，帮助您掌握项目信息前沿，把握绝对的市场先机！',
-  '首页大标题_home8': '服务庞大的全球客户群',
-  '首页_home8_content': '全球有超过 13000 家公司正在使用 GPTED',
-  '首页大标题_home9': '常见问题',
-  '首页大标题_home10': '免费试用 <span style="color: var(--primary-color); font-weight: bold;">GPTED</span>。无需信用卡，无需安装软件。',
-
-  // discover page 搜索页
-  filters: '筛选器',
-  '保留搜索设置提示_SaveMsg': '保存此搜索',
-  '搜索框弹窗_history': '搜索历史',
-  '搜索框弹窗_filterGrouping': '筛选器分组',
-  '搜索建议_searchSuggestions': '搜索建议',
-  '搜索建议内容_searchSuggestionsContent': '搜索建议内容',
-  '发布_release': '发布',
-  '最后期限_deadline': '最后期限',
-  '新建分组对话窗_modalTitle': '新分组',
-
-  '搜索页左侧筛选栏标题_scope': '搜索范围',
-  '搜索页左侧筛选栏标题_announcementType': '搜索范围',
-  '搜索页左侧筛选栏标题_location': '地点',
-  '搜索页左侧筛选栏标题_organization': '组织',
-  '搜索页左侧筛选栏标题_Industry': '行业',
-  '搜索页左侧筛选栏标题_procurementMethod': '采购方式',
-  '搜索页左侧筛选栏标题_content': '内容',
-  '搜索页左侧筛选栏标题_priceRange': '价格范围',
-  '搜索页左侧筛选栏标题_releaseTime': '发布时间',
-  '搜索页左侧筛选栏标题_deadlineTime': '截止时间',
-
-  '搜索页左侧筛选栏内容列表_searchScope': ['全局', '标题'],
-  '搜索页左侧筛选栏内容列表_announcementType': ['中标', '招标', '招标公告', '投标结束', '放弃投标'],
-  '搜索页左侧筛选栏内容列表_content': ['全部', '正在进行的招标', '中标通知', '预测通知'],
-
-  // dashboard page 控制台
-  overview: '概览',
-  subscriptions: '订阅',
-  favorites: '收藏',
-  project: '项目',
-  resource: '资源',
-  message: '消息',
-  userCenter: '用户中心',
-
-  subscribe: '我的订阅',
-  recommend: '项目推荐',
-  collection: '我的收藏',
-  follow: '我的跟踪',
-  // message: '我的消息',
-  reward: '推广奖励',
-  memberCenter: '会员中心',
-  historyRecord: '历史记录',
-  personalCenter: '个人中心',
-
-  '普通用户推送 缺省title': '您需要更多新功能吗？',
-  '普通用户推送 缺省desc': '根据分组设置自动安排相关信息的推送',
-  upgradeAccount: '升级账户',
-  '会员用户推送 缺省title': '没有推送',
-  '会员用户推送 缺省desc': '您尚未设置推送',
-  goToSettings: '前往设置',
-
-  // member page 会员页
-  member_salesPricing: '销售定价',
-  member_salesDesc: '每天实时更新各国招标信息',
-  member_viewDetailBtnText: '查看功能详细信息',
-  member_price: '¥ {price}',
-  member_freeToUse: '免费使用',
-  member_buyNow: '立即购买',
-
-  regular_title: '普通用户',
-  vip_title: 'VIP用户',
-  svip_title: 'SVIP用户',
-  regular_desc: '适合个人用户',
-  vip_desc: '适合小型企业',
-  svip_desc: '适合大型企业',
-  member_benefit1: '会员权益1',
-  member_benefit2: '会员权益2',
-  member_benefit3: '会员权益3',
-  member_benefit4: '会员权益4',
-  member_benefit5: '会员权益5',
-  member_benefit6: '会员权益6',
-  member_benefit7: '会员权益7',
-  member_benefit8: '会员权益8',
-  member_benefit9: '会员权益9',
-  member_benefit10: '会员权益10',
-
-  member_expandBtnText: '展开完整功能列表',
-  member_closeBtnText: '关闭完整功能列表',
-  member_functionalComparison: '功能比较',
-  member_freeVersion: '免费版',
-  member_standardVersion: '标准版',
-  member_professionalVersion: '专业版',
-  member_frequentlyAskedQuestions: '常见问题',
-  member_question1: '如何注册？',
-  member_question2: '如何联系我们？',
-  member_question3: '我们的数据从哪里来？',
-  member_question4: '所用平台上的账户是否通用？',
-  member_question5: '我还有其他问题吗？',
-
-  // dashboard-subscribe-push page
-  forwardNews: ' 订阅推送',
-  pushSettings: '推送设置',
-  relatedSettings: '相关设置',
-  result: '结果',
-  subset: '子集',
-  screen: '筛选',
-  infoFound: '找到 <span style="color: var(--primary-color); font-weight: bold;">{count}</span> 条信息',
-
-  // dashboard-subscribe-settings page
-  subscriptionSettings:'订阅设置',
-  emailPushSettings: '电子邮件推送设置',
-  addGroup: '添加分组',
-  otherGroups: '其他分组',
-  goToBind: '前往绑定',
+  ...loginZh, // 登录
+  ...homeZh, // 首页
+  ...discoverZh, // 搜索页
+  ...dashboardZh, // 控制台
+  ...memberZh, // 充值 会员页
+  ...activityZh, // 活动页
+  ...resourceZh, // 资源页
+  ...billingZh, // 个人中心-账单页
 };
