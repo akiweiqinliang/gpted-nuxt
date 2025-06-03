@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <div>
     <Row justify="space-between" align="middle">
       <Row v-if="!listEmpty" class-name="totalCount">
         <span class="countNum">{{totalResultCount}}</span><span>{{$t('result')}}</span>
@@ -57,7 +57,7 @@
         />
       </Row>
     </Card>
-  </section>
+  </div>
 
 </template>
 

@@ -47,10 +47,10 @@ export default {
               title: 'project',
               pathName: pageCode.DASHBOARD_PROJECT, // menu的唯一标识name + 跳转路径name
             },
-            {
-              title: 'resource',
-              pathName: pageCode.DASHBOARD_RESOURCE,
-            },
+            // {
+            //   title: 'resource',
+            //   pathName: pageCode.DASHBOARD_RESOURCE,
+            // },
           ]
         },
         {
