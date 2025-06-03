@@ -93,7 +93,7 @@
           <Row class="contentBoxWithDecorate" align="middle"><span>Invite via link</span></Row>
           <span class="validityMsg">Link validity period: <span>14 days</span></span>
         </div>
-        <Button id="copyBtn" type="primary">Copy Link</Button>
+        <Button id="copyBtn" type="primary" @click="handleCopyLink">Copy Link</Button>
       </Row>
       <Row class="contentBoxWithDecorate accountBox" align="middle"><span>Invite via account</span></Row>
       <Input placeholder="Invite members to join the team via mobile phone or email"></Input>
@@ -141,6 +141,15 @@ export default {
     handleRemoveRole() {
       this.$Message.success('Remove team role success!')
       this.removeRoleModal = false
+    },
+    handleCopyLink() {
+      try {
+        const textToCopy = 'linkaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+        navigator.clipboard.writeText(textToCopy);
+        this.$Message.success('Copy Successfully')
+      } catch (err) {
+        this.$Message.error('copy success!')
+      }
     }
   }
 }

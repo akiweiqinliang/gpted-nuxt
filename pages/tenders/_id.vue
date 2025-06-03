@@ -177,11 +177,8 @@
               <div class="TA" :class="{'active' : translateStatus === 'TA' }" @click="changeTranslateStatus('TA')">T | A</div>
             </Row>
             <Row class="languageSelector" align="middle" :wrap="false">
-<!--              <img :src="targetLanguageIcon" alt="Target language">-->
               <Select v-model="translateLang" class="selector" @on-change="handleLangChange">
-                <span slot="prefix" class="imgBox">
-                <img :src="targetLanguageIcon" alt="Target language">
-                </span>
+                <img slot="prefix" :src="targetLanguageIcon" alt="Target language" class="imgBox">
                 <Option v-for="item in langList" :key="item.value" :value="item.value">{{ item.label }}</Option>
               </Select>
             </Row>
@@ -228,13 +225,17 @@
 <!--          <div class="actionBtn">download all</div>-->
           <div v-show="!selectDownload" class="actionBtn" @click="selectDownload = !selectDownload">Select Download</div>
           <Row v-show="selectDownload" align="middle">
-            <checkbox v-model="selectAllDocs">Select All</checkbox>
+            <Checkbox
+              :indeterminate="indeterminate"
+              :value="checkAll"
+              @click.prevent.native="handleCheckAll">Select All</Checkbox>
             <div class="actionBtn" @click="selectDownload = !selectDownload">Deselect</div>
           </Row>
         </Row>
       </template>
       <template slot="content">
         <ul class="docList">
+          <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
           <li v-for="doc in bid.docs" :key="`doc-${doc.id}-${doc.title}`" class="docItem">
             <Row align="top">
               <img :src="require(`~/assets/imgs/tenderDetail/${doc.type}-icon@2x.png`)" alt="" />
@@ -242,8 +243,7 @@
                 <p>{{ doc.title }}</p>
                 <span>{{ doc.size }}</span><span>{{ doc.date }}</span>
               </Col>
-              <Radio v-show="selectDownload"></Radio>
-              <checkbox v-show="selectDownload" @on-change="selectDocById(doc.id)"></checkbox>
+              <checkbox v-show="selectDownload" :label="doc.id"><span></span></checkbox>
             </Row>
             <Row class-name="translatedDocs">
               <ul>
@@ -270,10 +270,11 @@
               </ul>
             </Row>
           </li>
+          </CheckboxGroup>
         </ul>
         <Row v-show="selectDownload" class="fullWidth documentsBoxBtns" justify="end">
-          <Button class="cancelBtn">Cancel</Button>
-          <Button type="primary">Download</Button>
+          <Button class="cancelBtn" @click="handleCancelSelectedDocs">Cancel</Button>
+          <Button type="primary" @click="handleDownloadSelectedDocs">Download</Button>
         </Row>
 <!--        全部翻译弹窗-->
         <LanguageModal
@@ -402,10 +403,14 @@ export default {
   },
   data() {
     return {
+      indeterminate: false,
+      checkAll: false,
+      checkAllGroup: [],
+
+
       translateStatus: 'A',
       swap: false,
       selectDownload: false,
-      selectAllDocs: false,
 
       targetLanguageIcon,
       nav: [
@@ -521,10 +526,40 @@ export default {
     window.removeEventListener('scroll', this.onScroll);
   },
   methods: {
-    // 单选框选择文档 下载
-    selectDocById(docId) {
-
+    handleCancelSelectedDocs() {
+      this.selectDownload = false
     },
+    handleDownloadSelectedDocs() {
+      this.$Message.success('Download selected documents successfully! 文档id' + this.checkAllGroup);
+    },
+    // 多选框选择文档 下载
+    handleCheckAll () {
+      if (this.indeterminate) {
+        this.checkAll = false;
+      } else {
+        this.checkAll = !this.checkAll;
+      }
+      this.indeterminate = false;
+
+      if (this.checkAll) {
+        this.checkAllGroup = this.bid.docs.map(item => (item.id));
+      } else {
+        this.checkAllGroup = [];
+      }
+    },
+    checkAllGroupChange (data) {
+      if (data.length === this.bid.docs.length) {
+        this.indeterminate = false;
+        this.checkAll = true;
+      } else if (data.length > 0) {
+        this.indeterminate = true;
+        this.checkAll = false;
+      } else {
+        this.indeterminate = false;
+        this.checkAll = false;
+      }
+    },
+
     // 修改文档语言显示状态 A/T/TA
     changeTranslateStatus(newStatus) {
       if (newStatus !== 'A' && this.targetLang === '') this.$refs.languageModal.open();
@@ -1295,14 +1330,13 @@ export default {
   .selector{
     margin-left: 14px;
     width: 180px;
+    position: relative;
     .imgBox{
       display: flex;
-      img{
-        width: 16px;
-        height: 16px;
-        margin-right: 4px;
-        margin-left: 8px;
-      }
+      width: 28px;
+      height: 28px;
+      margin-right: 4px;
+      margin-left: 8px;
     }
   }
 }

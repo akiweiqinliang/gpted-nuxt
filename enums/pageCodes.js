@@ -31,6 +31,7 @@ const pageCode = {
 
   USERCENTER: 'userCenter',
   USERCENTER_BILLING: 'userCenter-billing',
+  USERCENTER_BILLING_ID: 'userCenter-billing-id',
   USERCENTER_TEAM: 'userCenter-team',
 
   RESOURCE: 'resource',

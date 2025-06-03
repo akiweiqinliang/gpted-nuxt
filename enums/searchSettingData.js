@@ -92,4 +92,49 @@ export const searchSettingData = {
     ]
   }
 ],
+  categories: [
+    {
+      id: 0,
+      label: 'All',
+      children: [
+        {
+          id: 100,
+          label: 'Category1',
+          children:  [
+            {
+              id: 1,
+              label: 'Category1-1',
+              ISO: 'af'
+            },
+            {
+              id: 2,
+              label: 'Category1-2',
+              ISO: 'ax'
+            },
+            {
+              id: 3,
+              label: 'Category1-3',
+              ISO: 'al'
+            },
+          ]
+        },
+        {
+          id: 200,
+          label: 'Category2',
+          children:  [
+            {
+              id: 4,
+              label: 'Category2-1',
+              ISO: 'as'
+            },
+            {
+              id: 5,
+              label: 'Category2-2',
+              ISO: 'ad'
+            },
+          ]
+        }
+      ]
+    }
+  ]
 }

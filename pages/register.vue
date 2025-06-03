@@ -71,6 +71,12 @@ export default {
         })
         return
       }
+      localStorage.setItem('staySignedIn', this.staySignedIn ? 'true' : 'false');
+      localStorage.setItem('token', this.emailAddress)
+      this.$Message.success( {
+        content: 'register success',
+        duration: 5
+      })
       this.$router.push('/')
     }
   }

@@ -29,7 +29,7 @@
       <MenuItem :name="pageCode.DISCOVER" :to="{ name: pageCode.DISCOVER }">
         {{ $t('search') }}
       </MenuItem>
-      <MenuItem :name="pageCode.PROMOTE" :to="{ name: pageCode.PROMOTE }">
+      <MenuItem :name="pageCode.RESOURCE" :to="{ name: pageCode.RESOURCE_BLOG }">
         {{ $t('resources') }}
       </MenuItem>
       <MenuItem

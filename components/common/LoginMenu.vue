@@ -114,7 +114,7 @@ export default {
   left: 0;
   right: 0;
   top: 0;
-  z-index: 20;
+  z-index: 1000;
   .langSelector{
     width: 100px;
     margin-right: 24px;

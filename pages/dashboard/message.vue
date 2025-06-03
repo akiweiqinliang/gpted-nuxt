@@ -75,7 +75,7 @@ export default {
     return {
       //   分页器
       total: 0,
-      pageSize: 5,
+      pageSize: 10,
       currentPage: 1,
       // 列表加载样式
       msgLoading: false,

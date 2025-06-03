@@ -14,7 +14,7 @@ export default {
   '搜索页左侧筛选栏标题_announcementType': '搜索范围',
   '搜索页左侧筛选栏标题_location': '地点',
   '搜索页左侧筛选栏标题_organization': '组织',
-  '搜索页左侧筛选栏标题_Industry': '行业',
+  '搜索页左侧筛选栏标题_industry': '行业',
   '搜索页左侧筛选栏标题_procurementMethod': '采购方式',
   '搜索页左侧筛选栏标题_content': '内容',
   '搜索页左侧筛选栏标题_priceRange': '价格范围',
