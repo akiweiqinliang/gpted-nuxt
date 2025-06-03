@@ -5,8 +5,9 @@
         <div class="decBox"></div>
         <span>{{ title }}</span>
       </Row>
-      <div class="action">
-        <slot name="action"></slot>
+      <div v-if="showAction" class="action">
+        <Icon v-if="showContent" type="ios-arrow-down" @click="handleAction"/>
+        <Icon v-if="!showContent" type="ios-arrow-up" @click="handleAction"/>
       </div>
     </Row>
     <Row class-name="content">
@@ -25,6 +26,21 @@ export default {
       default() {
         return ''
       }
+    },
+    showAction: {
+      type: Boolean,
+      default: false
+    },
+  },
+  data() {
+    return {
+      showContent: true
+    }
+  },
+  methods: {
+    handleAction() {
+      this.showContent = !this.showContent
+      this.$emit('action', this.showContent)
     }
   }
 }

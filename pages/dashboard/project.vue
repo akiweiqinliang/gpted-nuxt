@@ -8,8 +8,9 @@
         <span v-dompurify-html="$t('infoFound', { count: 0 })"></span>
       </Row>
       <Row>
-        <Button icon="ios-browsers" class="actionBtn">{{$t('clear history')}}</Button>
-        <Button icon="ios-funnel" class="actionBtn">{{$t('screen')}}</Button>
+<!--        <Button icon="ios-browsers" class="actionBtn">{{$t('clear history')}}</Button>-->
+<!--        <Button icon="ios-funnel" class="actionBtn">{{$t('screen')}}</Button>-->
+        <FloatScreen />
       </Row>
     </Row>
     <Card class="attachmentBox" :dis-hover="true" :padding="30">
@@ -37,9 +38,10 @@
 import SpinLoad from "~/components/common/SpinLoad.vue";
 import { tenderList } from "~/enums/tenderList";
 import docIcon from '~/assets/imgs/svg/docx.svg';
+import FloatScreen from "~/components/dashboard/FloatScreen.vue";
 export default {
   name: 'Project',
-  components: {SpinLoad},
+  components: {FloatScreen, SpinLoad},
   layout: 'dashboard',
   asyncData({ $axios }) {
     //   axios获取消息列表

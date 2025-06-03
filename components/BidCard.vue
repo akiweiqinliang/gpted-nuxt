@@ -7,7 +7,7 @@
           <p>This type of content will be recommended less</p>
         </Col>
         <Col flex="none">
-          <div class="revocationBtn" @click="hideMask = true">
+          <div class="revocationBtn" @click="handleRevocation">
             <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g id="Frame">
                 <g id="Group 6870">
@@ -25,16 +25,16 @@
     </div>
     <Row align="middle" justify="space-between" class-name="bidTopClassification" :class="[tender.type === 0 ? 'bidAward' : tender.type === 1 ? 'bidCall' : tender.type === 2 ? 'bidOnGo' : 'bidAbandoned']">
       <span>{{ tender.type === 0 ? 'Award notice' :tender.type === 1 ? 'Call for projects' : tender.type === 2 ? 'Ongoing tenders' : 'Abandoned Tenders' }}</span>
-      <Dropdown trigger="click" placement="bottom-end" class="bidMoreBtn">
-        <Icon type="md-more" />
+      <Dropdown trigger="custom" placement="bottom-end" class="bidMoreBtn" :visible="actionDropdownVisible" @on-clickoutside="actionDropdownVisible = false">
+        <Icon type="md-more" @click="actionDropdownVisible = !actionDropdownVisible"/>
         <DropdownMenu slot="list">
-          <div class="bidPopBtn" :class="{'collectedActive' : tender.hadCollected}">
+          <div class="bidPopBtn" :class="{'collectedActive' : tender.hadCollected}" @click="handleChangeTenderCollectFlag">
             <Icon v-if="!tender.hadCollected" type="ios-star-outline" />
             <Icon v-else type="ios-star" color="var(--collected-color)"/>
             <span>Collect</span>
           </div>
           <div class="bidPopBtnDivider"></div>
-          <div class="bidPopBtn" @click="hideMask = false">
+          <div class="bidPopBtn" @click="handleUninterested">
             <Icon type="ios-close-circle-outline" /><span>Uninterested</span>
           </div>
         </DropdownMenu>
@@ -94,13 +94,31 @@ export default {
   data() {
     return {
       hideMask: true,
+      actionDropdownVisible: false,
     }
   },
   computed: {
     pageCode() {
       return pageCode
     }
-  }
+  },
+  methods: {
+    handleRevocation() {
+      this.hideMask = true
+      this.$emit('revocation')
+    },
+    handleUninterested() {
+      this.hideMask = false
+      this.actionDropdownVisible = false
+      this.$emit('uninterested')
+    },
+    handleChangeTenderCollectFlag() {
+      const tenderId = this.tender.id
+      // todo axios 改变收藏状态
+      this.$Message.success('Collection status changed successfully')
+      this.$emit('changeTenderCollectFlag', tenderId)
+    }
+  },
 }
 </script>
 

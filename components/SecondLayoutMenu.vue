@@ -48,7 +48,7 @@
                 <MenuItem
                   v-if="showQuestionCenterEntrance"
                   name="questionCenter"
-                  :to="{ name: pageCode.ACTIVITY }"
+                  :to="{ name: pageCode.RESOURCE_HELPCENTER }"
                 >
                   <Icon type="ios-help-circle-outline" />
                   <span class="sub">{{ $t('questionCenter') }}</span>

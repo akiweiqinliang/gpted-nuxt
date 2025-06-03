@@ -10,7 +10,7 @@
       @on-cancel="cancel"
     >
       <Row :wrap="false" align="middle">
-        <span class="nameInputLabel">Name:</span>
+        <span>Name:</span>
         <Input placeholder="Please enter"/>
       </Row>
       <div class="modalTextBox">
@@ -107,9 +107,43 @@
               </CheckboxGroup>
             </template>
           </SingleSetting>
-          <TreeFilter field="location" :title="$t('搜索页左侧筛选栏标题_location')" :tag-list="searchSetting.location" :tree-data="searchSettingData.locations" @handleSearchSettingUpdate="handleSearchSettingUpdate"/>
-          <TreeFilter field="organization" :title="$t('搜索页左侧筛选栏标题_organization')" :tag-list="searchSetting.organization" :tree-data="searchSettingData.categories" @handleSearchSettingUpdate="handleSearchSettingUpdate"/>
-          <TreeFilter field="industry" :title="$t('搜索页左侧筛选栏标题_industry')" :tag-list="searchSetting.industry" :tree-data="searchSettingData.categories" @handleSearchSettingUpdate="handleSearchSettingUpdate"/>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_location')" class="LocationSetting">
+            <template slot="action">
+              <Icon type="ios-arrow-down" @click="showLocation = !showLocation"/>
+            </template>
+            <template slot="content">
+              <div class="selectedTags">
+                <tag
+                  v-for="(item,idx) in searchSetting.location"
+                  :key="idx"
+                  class="selectedTag"
+                  closable
+                  @on-close="removeLocation(item)">
+                <span>
+                  <span v-show="item.ISO" :class="['fi', `fi-${item.ISO}`, 'flag']"></span>
+                  {{item.label}}</span>
+                </tag>
+              </div>
+              <client-only>
+                <CustomTree
+                  v-show="showLocation"
+                  ref="locationTree"
+                  :class="{ 'locationTree': searchSetting.location.length > 0}"
+                  :tree-data="searchSettingData.locations"
+                  @on-select="handleLocationSelect" />
+              </client-only>
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_organization')">
+            <template slot="action">
+              <Icon type="ios-arrow-down" />
+            </template>
+          </SingleSetting>
+          <SingleSetting :title="$t('搜索页左侧筛选栏标题_industry')">
+            <template slot="action">
+              <Icon type="ios-arrow-down" />
+            </template>
+          </SingleSetting>
           <SingleSetting :title="$t('搜索页左侧筛选栏标题_procurementMethod')">
             <template slot="content">
               <CheckboxGroup v-model="searchSetting.method" class="commonCheckBox fullWidth">
@@ -245,18 +279,15 @@
 <script>
 import { tenderList } from "~/enums/tenderList";
 import SingleSetting from "~/components/discover/SingleSetting.vue";
-// import CustomTree from "~/components/discover/CustomTree.vue";
+import CustomTree from "~/components/discover/CustomTree.vue";
 import {searchSettingData} from "~/enums/searchSettingData";
 import GroupSettingModal from "~/components/common/GroupSettingModal.vue";
-import TreeFilter from "~/components/discover/TreeFilter.vue";
-import { previousSetting } from "~/enums/mockData";
 
 export default {
   name: "DiscoverPage",
   components: {
-    TreeFilter,
     GroupSettingModal,
-    // CustomTree,
+    CustomTree,
     SingleSetting},
   data () {
     return {
@@ -265,6 +296,7 @@ export default {
       saveModal: false,
       agree: false,
       showSaveSettingBtn: false,
+      showLocation: false,
       timeOption: {
         shortcuts: [
           {
@@ -311,11 +343,44 @@ export default {
       searchText: '',
       selectPreviousSettingID: '',
       showDropdown: false,
-      history: ['Search1', 'fewdvdfarefdfefdwerfd', 'Search2', 'Search3', 'Key companies and organization sssssss', 'fewdvdfrefdfefdwerfd'],
 
-      // 虚拟数据
-      previousSetting,
+      history: ['Search1', 'fewdvdfarefdfefdwerfd', 'Search2', 'Search3', 'Key companies and organization sssssss', 'fewdvdfrefdfefdwerfd'],
+      previousSetting: [
+        {
+          id: 1,
+          label: 'Key companies and organizations that require '
+        },
+        {
+          id: 2,
+          label: 'Key companies  organizations that  attention'
+        },
+        {
+          id: 3,
+          label: 'Key companies and organizations that require attention'
+        },
+        {
+          id: 4,
+          label: 'Key companies and  that require attention'
+        },
+        {
+          id: 5,
+          label: 'Key companies'
+        },
+        {
+          id: 6,
+          label: 'Key companies and organizations that require attention'
+        },
+        {
+          id: 7,
+          label: 'KKey companies and organizations that require attentionKey companies and organizations that require attentioney companies and organizations that require attention'
+        },
+        {
+          id: 8,
+          label: 'Key companies and organizations that require attention'
+        },
+      ],
       tenderList,
+      // 虚拟数据
       searchSettingData,
 
       //   mobile
@@ -333,11 +398,6 @@ export default {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
-    handleSearchSettingUpdate({ field, value }) {
-      if (field === 'location') this.searchSetting.location = value
-      if (field === 'organization') this.searchSetting.organization = value
-      if (field === 'industry') this.searchSetting.industry = value
-    },
     handleResize() {
       this.showFilter = window.innerWidth > 768;
       this.isPC = window.innerWidth > 768;
@@ -353,7 +413,7 @@ export default {
     editSetting(id) {
       this.selectPreviousSettingID = id;
       this.$refs.commonGroupModal.showModal = true
-      // this.$refs.commonGroupModal.settings = this.searchSetting
+      this.$refs.commonGroupModal.settings = this.searchSetting
     },
     deletePreviousSetting() {
       this.previousSetting = this.previousSetting.filter(item => item.id !== this.selectPreviousSettingID)
@@ -433,12 +493,12 @@ section{
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-base);
   padding: 20px 24px 30px;
-  //.selectorTree{
-  //  max-height: 480px;
-  //  overflow-y: scroll;
-  //  padding-right: 24px;
-  //  padding-left: 24px;
-  //}
+  .selectorTree{
+    max-height: 480px;
+    overflow-y: scroll;
+    padding-right: 24px;
+    padding-left: 24px;
+  }
   .priceContent{
     .priceDivider{
       margin: 0 10px;
@@ -660,10 +720,6 @@ section{
     z-index: 10;
     width: 100%;
   }
-}
-
-.nameInputLabel{
-  margin-right: 16px;
 }
 
 </style>

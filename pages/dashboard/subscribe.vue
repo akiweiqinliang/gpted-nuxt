@@ -8,12 +8,16 @@
       <span v-dompurify-html="$t('infoFound', { count: 0 })"></span>
     </Row>
     <Row>
-      <Button icon="ios-browsers" class="actionBtn">{{$t('subset')}}</Button>
-      <Button icon="ios-funnel" class="actionBtn">{{$t('screen')}}</Button>
+      <DashboardFloatSubset
+        @confirm="handleConfirmSubset"
+        @restoreDefaults="handleRestoreDefaults"
+      />
+      <FloatScreen @confirm="handleConfirmScreen"/>
     </Row>
   </Row>
-  <Card class="wrapper-mini" :dis-hover="true" :padding="20">
-    <template v-if="!listEmpty" >
+  <Card class="wrapper-mini card" :dis-hover="true" :padding="20">
+    <SpinLoad ref="spin"/>
+    <template v-if="!listEmpty && !loading" >
       <Divider plain :dashed="true" class="dividerText">{{refreshTime}} {{$t('update')}}</Divider>
       <ul class="wrapper-mini">
         <li v-for="tender in tenderList" :key="`${tender.id}-card`">
@@ -33,9 +37,11 @@
 <script>
 import { tenderList } from "~/enums/tenderList";
 import EmptyPush from "~/components/dashboard/EmptyPush.vue";
+import FloatScreen from "~/components/dashboard/FloatScreen.vue";
+import SpinLoad from "~/components/common/SpinLoad.vue";
 export default {
   name: "SubscribePage",
-  components: {EmptyPush},
+  components: {SpinLoad, FloatScreen, EmptyPush},
   layout: 'dashboard',
   asyncData() {
     return{
@@ -45,12 +51,52 @@ export default {
       listEmpty: false, // false / true
       userType: 'member', // 'member' / 'normal'
     }
+  },
+  data() {
+    return {
+      loading: false, // false / true
+    }
+  },
+  methods: {
+    handleRestoreDefaults() {
+    //   todo 恢复默认列表
+      this.loading = true
+      // todo 模拟加载
+      this.$refs.spin.start()
+      setTimeout(() => {
+        this.loading = false
+        this.$refs.spin.finish()
+      }, 2000)
+    },
+    handleConfirmSubset({ label }) {
+      this.loading = true
+      // todo 模拟加载
+      this.$refs.spin.start()
+      setTimeout(() => {
+        this.loading = false
+        this.$refs.spin.finish()
+      }, 2000)
+    },
+    handleConfirmScreen(settings) {
+      // console.log('settings', settings)
+      // todo 模拟加载
+      this.loading = true
+      this.$refs.spin.start()
+      setTimeout(() => {
+        this.loading = false
+        this.$refs.spin.finish()
+      }, 2000)
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
-
+@media screen and (min-width: 768px) {
+  .card{
+    min-height: 258px;
+  }
+}
 .totalCount{
   color: var(--text-color1);
   font-size: 14px;
@@ -63,6 +109,7 @@ export default {
 .actionBtn{
   margin-left: 10px;
   color: var(--text-color3);
+  position: relative;
 }
 .dividerText{
   font-size: 12px;

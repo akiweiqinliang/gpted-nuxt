@@ -68,4 +68,6 @@ export default {
   userCenter_changePwdSuccess: 'Password changed successfully',
   modify: 'modify',
 
+//   地图模块
+  '采购数量': 'Purchase Quantity ',
 }

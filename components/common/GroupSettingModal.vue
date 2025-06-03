@@ -1,10 +1,16 @@
 <template>
   <div>
-    <Modal v-model="showModal" class-name="groupSettingModal" width="1124" :title="title">
+    <Modal v-model="showModal" class-name="groupSettingModal" :fullscreen="fullscreen" width="78%" :title="title">
       <template #footer>
         <Row justify="center">
-          <Button class="footerBtn" @click="showModal = false">Cancel</Button>
-          <Button type="primary" class="footerBtn" @click="showModal = false">Confirm</Button>
+          <div class="footerBtn" @click="showModal = false">
+            {{ $t('cancel') }}
+          </div>
+          <div class="footerBtn confirmBtn" @click="showModal = false">
+            {{ $t('confirm') }}
+          </div>
+          <!--          <Button class="footerBtn" @click="showModal = false">Cancel</Button>-->
+          <!--          <Button type="primary" class="footerBtn" @click="showModal = false">Confirm</Button>-->
         </Row>
       </template>
       <Row justify="space-between" class-name="groupNameContainer">
@@ -100,6 +106,7 @@ export default {
   },
   data() {
     return {
+      fullscreen: false,
       showModal: false,
       groupName: 'Wdalibocai Information Technology Co. Ltd',
       keywords: ['Engineering', 'Medical devices', 'Engineering', 'Traffic and road conditions materials'],
@@ -116,11 +123,21 @@ export default {
       deadlineTime: [],
     }
   },
+  mounted() {
+    this.updateModalWidth()
+    window.addEventListener('resize', this.updateModalWidth);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateModalWidth);
+  },
   methods: {
     deleteGroup() {
       this.$emit('delete')
       this.showModal = false
       this.$Message.success(this.$t('deleteSuccess'))
+    },
+    updateModalWidth() {
+      this.fullscreen = window.innerWidth < 768;
     }
   }
 }
@@ -134,8 +151,26 @@ export default {
 .footerBtn{
   padding: 12px;
   width: 120px;
-  height: auto;
+  height: 42px;
   margin: 0 5px;
+  background: var(--text-bg-color1);
+  //border: 1px solid var(--border-color3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.confirmBtn{
+  background: var(--primary-color);
+  color: white;
+}
+@media screen and (max-width: 768px) {
+  .footerBtn{
+    padding: 4px;
+    width: 90px;
+    height: 33px;
+  }
 }
 .settingHead{
   padding: 6px 14px 14px 8px;
@@ -191,5 +226,8 @@ export default {
 .priceInput{
   width: 155px;
   margin: 0 10px;
+}
+.ivu-modal-footer{
+  background: white;
 }
 </style>

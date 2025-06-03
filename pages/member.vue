@@ -1,5 +1,18 @@
 <template>
 <div id="memberPage">
+  <div v-show="popWindowVisible" class="popWindow">
+    <Icon type="md-close" class="closeBtn" @click="closePopWindow"/>
+    <div class="left">
+      <h1>{{ $t(selectPlan.title) }}</h1>
+      <p>{{ $t(selectPlan.desc) }}</p>
+      <div class="benefitList">
+        <p v-for="(benefit, idx) in selectPlan.benefits" :key="`user-benefit-${idx}`"><Icon type="md-checkmark" color="var(--success-color)"/>{{$t(benefit)}}</p>
+      </div>
+    </div>
+    <div class="right">
+      <PlanPriceSelector @change="handleChoicePlanTime" />
+    </div>
+  </div>
     <Row class="top" justify="space-between">
       <Col flex="2">
         <h1>{{$t('member_salesPricing')}}</h1>
@@ -12,7 +25,7 @@
     </Row>
     <Row class="wrapper-mini">
       <ul class="salesPlanList">
-        <li v-for="plan in salesPlans" :key="`sales-plan-${plan.id}`" class="salesPlanItem">
+        <li v-for="plan in planList" :key="`sales-plan-${plan.id}`" class="salesPlanItem">
           <h1>{{$t(plan.title)}}</h1>
           <p>{{$t(plan.desc)}}</p>
           <Divider />
@@ -22,8 +35,8 @@
           <div class="benefitList">
             <p v-for="(benefit, idx) in plan.benefits" :key="`user-benefit-${idx}`"><Icon type="md-checkmark" color="var(--success-color)"/>{{$t(benefit)}}</p>
           </div>
-          <Button v-if="plan.id === 0" long size="large" class="wrapper-default freeToUseBtn">{{$t('member_freeToUse')}}</Button>
-          <Button v-else long size="large" class="wrapper-default vipBuyNowBtn" type="primary" ghost>{{$t('member_buyNow')}}</Button>
+          <Button v-if="plan.id === 0" long size="large" class="wrapper-default freeToUseBtn" @click="toDiscover">{{$t('member_freeToUse')}}</Button>
+          <Button v-else long size="large" class="wrapper-default vipBuyNowBtn" type="primary" ghost @click="setSelectPlan(plan)">{{$t('member_buyNow')}}</Button>
         </li>
       </ul>
     </Row>
@@ -34,24 +47,15 @@
       <div v-show="checkTable" class="topTitles" :class="!showFloatChoice ? '' : 'topTitlesFloat'">
         <div class="topTitleBox">
           <div class="functionalComparison">{{$t('member_functionalComparison')}}</div>
-          <div>
-            <span>{{$t('member_freeVersion')}}</span>
-            <p>{{$t('member_price', {price: 0})}} {{$t('year')}}</p>
-            <Button v-show="showFloatChoice" class="wrapper-mini" long size="large">{{$t('member_freeToUse')}}</Button>
-          </div>
-          <div>
-            <span>{{$t('member_standardVersion')}}</span>
-            <p>{{$t('member_price', {price: 29999})}} {{$t('year')}}</p>
-            <Button v-show="showFloatChoice" class="wrapper-mini" long size="large" type="primary" ghost>{{$t('member_buyNow')}}</Button>
-          </div>
-          <div>
-            <span>{{$t('member_professionalVersion')}}</span>
-            <p>{{$t('member_price', {price: 49999})}} {{$t('year')}}</p>
-            <Button v-show="showFloatChoice" class="wrapper-mini" long size="large" type="primary" ghost>{{$t('member_buyNow')}}</Button>
+          <div v-for="plan in planList" :key="`salePlans-${plan.id}`">
+            <span>{{$t(plan.tableTitleKey)}}</span>
+            <p>{{$t('member_price', { price: plan.price })}} {{$t('year')}}</p>
+            <Button v-if="plan.id === 0" class="wrapper-mini" long size="large" @click="toDiscover">{{$t('member_freeToUse')}}</Button>
+            <Button v-else class="wrapper-mini" long size="large" type="primary" ghost @click="setSelectPlan(plan)">{{$t('member_buyNow')}}</Button>
           </div>
         </div>
       </div>
-      <div v-show="checkTable" class=" tableContainer">
+      <div v-show="checkTable" class="tableContainer">
         <table>
           <tbody>
           <tr class="tableSecondTitle">
@@ -145,27 +149,34 @@
 </template>
 
 <script>
+import PlanPriceSelector from "~/components/member/PlanPriceSelector.vue";
+import pageCode from "~/enums/pageCodes";
+
 export default {
   name: "MemberPage",
+  components: {PlanPriceSelector},
   data() {
     return {
-      salesPlans: [
-        {
+      popWindowVisible: false,
+      salesPlans: {
+        regular: {
           id: 0,
           title: 'regular_title',
           desc: 'regular_desc',
           price: 0,
+          tableTitleKey: 'member_freeVersion',
           benefits: [
             'member_benefit1',
             'member_benefit2',
             'member_benefit3',
           ]
         },
-        {
+        vip: {
           id: 1,
           title: 'vip_title',
           desc: 'vip_desc',
           price: 29999,
+          tableTitleKey: 'member_standardVersion',
           benefits: [
             'member_benefit1',
             'member_benefit2',
@@ -177,11 +188,12 @@ export default {
             'member_benefit8',
           ]
         },
-        {
+        svip: {
           id: 2,
           title: 'svip_title',
           desc: 'svip_desc',
           price: 49999,
+          tableTitleKey: 'member_professionalVersion',
           benefits: [
             'member_benefit1',
             'member_benefit2',
@@ -194,8 +206,10 @@ export default {
             'member_benefit9',
             'member_benefit10',
           ]
-        },
-      ],
+        }
+        ,
+      },
+      selectPlan: {}, // 用户当前选择的计划
       //   table
       checkTable: false,
       showFloatChoice: false,
@@ -341,6 +355,15 @@ export default {
       ],
     }
   },
+  computed: {
+    planList() {
+      return [
+        this.salesPlans.regular,
+        this.salesPlans.vip,
+        this.salesPlans.svip
+      ]
+    },
+  },
   mounted() {
     window.addEventListener('scroll', this.changeShowFloatChoice);
   },
@@ -349,9 +372,30 @@ export default {
   },
   methods: {
     scrollToDetail() {
+      const scrollThreshold = 200; // 滚动距离阈值（单位：像素）
+      this.checkTable = true;
+      window.scrollTo({
+        top: this.$refs.memberTable.offsetTop - scrollThreshold,
+        behavior: 'smooth'
+      })
     },
     changeShowFloatChoice() {
       this.showFloatChoice = window.scrollY + 76 > this.$refs.memberTable.offsetTop;
+    },
+    toDiscover() {
+      this.$router.push({ name: pageCode.DISCOVER})
+    },
+    setSelectPlan(plan) {
+      this.selectPlan = plan;
+      this.popWindowVisible = true;
+    },
+    closePopWindow() {
+      this.popWindowVisible = false;
+      this.selectPlan = {};
+    },
+    handleChoicePlanTime(val) {
+      this.selectPlan.type = val;
+      this.$Message.success('你选择了'+ (val === 'monthly' ? '月付' : '年付') + '计划');
     },
   }
 }
@@ -577,6 +621,62 @@ export default {
   }
   .ivu-collapse-content-box{
     padding: 0;
+  }
+}
+
+.popWindow{
+  position: fixed;
+  width: 58%;
+  min-height: 648px;
+  top: 18%;
+  left: 21%;
+  background: var(--bg-color1);
+  box-shadow: 0 0 19px 0 rgba(0,0,0,0.1);
+  border-radius: 10px;
+  z-index: 19;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: nowrap;
+  .closeBtn{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 30px;
+    color: var(--text-color3);
+    cursor: pointer;
+  }
+  .left{
+    border-right: 1px solid var(--border-color);
+    padding: 34px 40px;
+    width: 36%;
+    background: #FBFBFB;
+    h1{
+      font-size: 26px;
+    }
+    p{
+      color: var(--text-color2);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    .benefitList{
+      flex-grow: 1;
+      p{
+        margin-bottom: 28px;
+        color: var(--text-color5);
+        i{
+          font-size: 20px;
+          font-weight: bold;
+          margin-right: 12px;
+        }
+        &:last-child{
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+  .right{
+    width: 64%;
+    padding: 38px 22px 26px;
   }
 }
 </style>

@@ -68,4 +68,7 @@ export default {
   userCenter_confirmPwdPlaceholder: '请确认密码',
   userCenter_changePwdSuccess: '密码修改成功',
   modify: '修改',
+
+//  地图模块
+  '采购数量': '采购数量 ',
 }

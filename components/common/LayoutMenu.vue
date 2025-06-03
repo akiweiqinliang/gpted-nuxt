@@ -48,8 +48,8 @@
             <Row align="middle">
               <div class="avatarBox"></div>
               <div>
-                <span>Christopher</span>
-                <div class="level">Basic</div>
+                <span>{{ userData.userName }}</span>
+                <div class="level">{{ userData.userLevel }}</div>
               </div>
             </Row>
           </DropdownItem>
@@ -120,8 +120,11 @@ import MobileMenu from "~/components/common/MobileMenu.vue";
 export default {
   name: "LayoutMenu",
   components: {MobileMenu},
+
   data() {
     return {
+      userData: {},
+
       activeRouterName: this.$route.name === 'index'
         ? 'home'
         : this.$route.name.includes('dashboard')
@@ -154,11 +157,20 @@ export default {
   },
   mounted() {
     this.fetchLoginToken();
+    this.fetchUserData()
   },
   methods: {
+    fetchUserData() {
+      this.userData = {
+        // todo fetch userData
+        userName: localStorage.getItem('token') || 'Christopher',
+        userAvatar: '',
+        userLevel: 'Basic',
+      }
+    },
     fetchLoginToken() {
       // todo 记得修改
-      this.isLoggedIn = localStorage.getItem('token') === 'a'
+      this.isLoggedIn = !!localStorage.getItem('token')
     },
     changeLanguage() {
       this.$i18n.setLocale(this.lang)
@@ -168,10 +180,12 @@ export default {
     },
     signIn() {
       // todo
-      // this.$router.push({ name: 'login' })
-      this.isLoggedIn = !this.isLoggedIn
+      this.$router.push({ name: 'login' })
+      // this.isLoggedIn = !this.isLoggedIn
     },
     signOut() {
+      this.isLoggedIn = false
+      localStorage.removeItem('token')
       this.$Message.info({
         content: 'sign out!',
         top: 150,
@@ -215,7 +229,7 @@ export default {
   left: 0;
   right: 0;
   top: 0;
-  z-index: 20;
+  z-index: 1000;
   .langSelector{
     width: 100px;
     margin-right: 24px;
@@ -296,7 +310,7 @@ export default {
   padding: 30px 144px;
   transform: translateY(-100%);
   transition: all .3s ease-out;
-  z-index: 19;
+  z-index: 902;
   box-shadow: 0 1px 10px 0 rgba(0,0,0,0.08);
   ul{
     display: flex;
@@ -326,6 +340,9 @@ export default {
 }
 @media screen and (max-width: 768px){
   .floatMainMenu{
+    display: none;
+  }
+  .resourceSelections{
     display: none;
   }
 }
