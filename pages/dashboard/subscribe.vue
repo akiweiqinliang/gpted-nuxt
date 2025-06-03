@@ -1,5 +1,5 @@
 <template>
-<section>
+<div>
   <Row v-if="userType === 'member'" justify="space-between" align="middle">
     <Row v-if="!listEmpty" class-name="totalCount">
     <span class="countNum">{{totalResultCount}}</span><span>{{$t('result')}}</span>
@@ -31,7 +31,7 @@
     <EmptyPush v-if="listEmpty" :user-type="userType" />
   </Card>
 
-</section>
+</div>
 </template>
 
 <script>

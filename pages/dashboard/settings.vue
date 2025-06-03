@@ -1,5 +1,5 @@
 <template>
-<section>
+<div>
   <Card :dis-hover="true" :padding="20">
     <Row align="middle" justify="space-around">
       <div class="tab" :class="{'tabActive': activeTabIndex === 0}" @click="activeTabIndex = 0">{{$t('subscriptionSettings')}}</div>
@@ -15,7 +15,7 @@
       <EmailPushSettings v-show="activeTabIndex === 1"/>
     </transition>
   </Card>
-</section>
+</div>
 </template>
 
 <script>
