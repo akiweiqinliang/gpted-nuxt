@@ -35,8 +35,9 @@ export default {
   year: '/ year',
   // 可遍历列表
   daysOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-  tenderContent: ['All', 'Ongoing tenders', 'Award notice', 'Forecast notice', 'Ongoing tenders', 'Award notice', 'Forecast notice'],
-  announcementType: ['All', 'Ongoing tenders', 'Award notice', 'Forecast notice'],
+  tenderContent: ['Ongoing tenders', 'Award notice', 'Forecast notice', 'Ongoing tenders', 'Award notice', 'Forecast notice'],
+  announcementType: ['Ongoing tenders', 'Award notice', 'Forecast notice'],
+  all: 'All',
 
   // placeholder
   placeholder_email: 'Please enter your email address',

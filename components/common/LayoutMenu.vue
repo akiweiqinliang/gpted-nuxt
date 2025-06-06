@@ -132,7 +132,8 @@ export default {
           : this.$route.name.includes('resource')
             ? 'resource'
             : this.$route.name,
-      lang: this.$i18n.defaultLocale,
+      // lang: this.$i18n.defaultLocale,
+      lang: this.$i18n.locale,
       langList,
       isLoggedIn: false,
 

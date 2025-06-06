@@ -23,7 +23,7 @@
     </div>
     <div class="setting">
       <SettingHead title="Email binding" />
-      <span class="textBtn editTimezoneBtn">{{$t('goToBind')}}</span>
+      <span class="textBtn editTimezoneBtn emailBindText" @click="goToBindEmail">{{$t('goToBind')}}</span>
     </div>
   </div>
 </div>
@@ -61,6 +61,9 @@ export default {
     change(e) {
       // console.log(e)
     },
+    goToBindEmail() {
+      this.$Message.info('Redirecting to email binding page...')
+    }
   }
 }
 </script>
@@ -146,5 +149,7 @@ export default {
 .bindBtn{
   color: var(--primary-color);
 }
-
+.emailBindText{
+  cursor: pointer;
+}
 </style>
