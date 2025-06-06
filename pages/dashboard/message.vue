@@ -1,5 +1,5 @@
 <template>
-  <section id="dashboardMessage" >
+  <div id="dashboardMessage" >
     <Row justify="space-between" align="middle">
       <Row v-if="!listEmpty" class-name="totalCount">
         <span class="countNum">{{totalResultCount}}</span><span>{{$t('result')}}</span>
@@ -8,11 +8,17 @@
         <span v-dompurify-html="$t('infoFound', { count: 0 })"></span>
       </Row>
       <Row>
-        <Button icon="ios-browsers" class="actionBtn">{{$t('subset')}}</Button>
-        <Button icon="ios-funnel" class="actionBtn">{{$t('screen')}}</Button>
+        <Button class="actionBtn">
+          <Checkbox v-model="viewOnlyUnread" @change="loadMsgData">{{$t('only unread')}}</Checkbox>
+          </Button>
+        <Button icon="ios-funnel" class="actionBtn" @click="clearUnread">{{$t('clear unread')}}</Button>
       </Row>
     </Row>
     <Card class="wrapper-mini" :dis-hover="true" :padding="0">
+      <template v-if="listEmpty">
+        <DefaultPageDashboardMessage />
+      </template>
+      <template v-else>
       <List :border="false" :loading="msgLoading" class="messageList">
         <ListItem
           v-for="msg in viewOnlyUnread ? unReadMsgList : msgList"
@@ -22,13 +28,10 @@
         >
           <Row type="flex" align="middle" class="fullWidth">
             <Col class="left" flex="1">
-              <Row type="flex" align="top">
+              <Row type="flex" align="middle">
                 <Badge dot :count="msg.msgState ? 0 : 1">
-                  <div v-if="msg.msgType === 0">
-                    <Icon type="md-notifications" />
-                  </div>
-                  <div v-if="msg.msgType === 1">
-                    <Icon type="logo-octocat" />
+                  <div class="msgIcon" :class="msgTypeMap[msg.msgType].className">
+                    <Icon :type="msgTypeMap[msg.msgType].icon" alt="" />
                   </div>
                 </Badge>
                 <Col flex="1" class="center">
@@ -51,8 +54,9 @@
           @on-change="changePage"
         />
       </Row>
+      </template>
     </Card>
-  </section>
+  </div>
 
 </template>
 
@@ -68,7 +72,17 @@ export default {
     //   axios获取消息列表
     return{
       totalResultCount: 17004,
-      listEmpty: false, // false / true
+      listEmpty: false, // false / true,
+      msgTypeMap: {
+        0: {
+          className: 'typeStyle1',
+          icon: 'md-notifications',
+        },
+        1: {
+          className: 'typeStyle2',
+          icon: 'logo-octocat',
+        },
+      },
     }
   },
   data() {
@@ -102,7 +116,7 @@ export default {
         return item;
       });
     },
-    cleanUnread() {
+    clearUnread() {
       // axios
       this.msgList = this.msgList.map((item) => {
         if (!item.msgState) {
@@ -147,6 +161,25 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.msgIcon{
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  i{
+    font-size: 20px;
+  }
+}
+.typeStyle1{
+  background: rgba(120, 72, 221, 0.06);
+  color: #7848DD;
+}
+.typeStyle2{
+  background: rgba(255, 160, 40, 0.06);
+  color: #FFA028;
+}
 .alreadyRead{
   color: var(--text-color3);
 }
@@ -165,10 +198,10 @@ export default {
 }
 .msgPageHeader {
   padding: 16px 20px;
-  .cleanUnreadText {
+  .clearUnreadText {
     cursor: pointer;
   }
-  .cleanUnreadText:hover {
+  .clearUnreadText:hover {
     color: var(--primary-color);
   }
 }
@@ -201,7 +234,7 @@ export default {
       margin: 0 16px;
       span {
         //color: #000;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 600;
       }
       p {
@@ -215,10 +248,15 @@ export default {
         -webkit-box-orient: vertical;
       }
     }
+    .right{
+      color: var(--text-color3);
+      font-size: 12px;
+      text-align: right;
+    }
   }
 }
 .listPagination {
-  margin: 24px 0 8px;
+  margin: 24px 0;
 }
 </style>
 <style lang="scss">

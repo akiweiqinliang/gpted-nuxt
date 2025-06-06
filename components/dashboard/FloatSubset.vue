@@ -171,7 +171,7 @@ export default {
 }
 @media screen and (min-width: 1740px){
   .floatStyle{
-    margin-right: calc(50vw - 720px - 120px - 30px);
+    //margin-right: calc(50vw - 720px - 120px - 30px);
   }
 }
 </style>

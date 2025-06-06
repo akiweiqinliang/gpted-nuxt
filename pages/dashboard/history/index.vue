@@ -9,7 +9,8 @@
       </Row>
       <Row>
 <!--        <Button icon="ios-browsers" class="actionBtn">{{$t('clear history')}}</Button>-->
-        <FloatScreen />
+        <FloatClearHistory @clear="handleClearHistory" />
+        <FloatScreen @restoreDefaults="loadData" @confirm="handleConfirmScreen"/>
       </Row>
     </Row>
     <Card class="attachmentBox" :dis-hover="true" :padding="30">
@@ -38,9 +39,10 @@ import SpinLoad from "~/components/common/SpinLoad.vue";
 import { tenderList } from "~/enums/tenderList";
 import docIcon from '~/assets/imgs/svg/docx.svg';
 import FloatScreen from "~/components/dashboard/FloatScreen.vue";
+import FloatClearHistory from "~/components/dashboard/settings/FloatClearHistory.vue";
 export default {
   name: 'History',
-  components: {FloatScreen, SpinLoad},
+  components: {FloatClearHistory, FloatScreen, SpinLoad},
   layout: 'dashboard',
   asyncData({ $axios }) {
     //   axios获取消息列表
@@ -79,6 +81,22 @@ export default {
       this.currentPage = i;
       this.$refs.loading.start();
       this.loadData();
+      setTimeout(() => {
+        this.$refs.loading.finish();
+      }, 1000);
+    },
+    handleConfirmScreen(settings) {
+      // todo 模拟加载
+      this.$refs.loading.start();
+      setTimeout(() => {
+        this.$refs.loading.finish();
+      }, 2000);
+    },
+    handleClearHistory() {
+      this.showData = [];
+      this.total = 0;
+      this.currentPage = 1;
+      this.$refs.loading.start();
       setTimeout(() => {
         this.$refs.loading.finish();
       }, 1000);
