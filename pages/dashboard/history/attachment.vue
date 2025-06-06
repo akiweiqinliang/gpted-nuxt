@@ -8,11 +8,16 @@
         <span v-dompurify-html="$t('infoFound', { count: 0 })"></span>
       </Row>
       <Row>
-        <Button icon="ios-browsers" class="actionBtn">{{$t('clear history')}}</Button>
-        <Button icon="ios-funnel" class="actionBtn">{{$t('screen')}}</Button>
+        <FloatClearHistory @clear="handleClearHistory" />
+        <FloatScreen @restoreDefaults="loadData" @confirm="handleConfirmScreen"/>
+<!--        <Button icon="ios-funnel" class="actionBtn">{{$t('screen')}}</Button>-->
       </Row>
     </Row>
     <Card class="attachmentBox" :dis-hover="true" :padding="30">
+      <template v-if="showData.length === 0">
+        <DefaultPageDashboardHistory />
+      </template>
+      <template v-if="showData.length > 0">
       <ul>
         <li v-for="doc in showData" :key="`history-attachment-${doc.id}`" class="attachmentItem">
           <Row align="middle">
@@ -56,6 +61,7 @@
           @on-change="changePage"
         />
       </Row>
+      </template>
     </Card>
   </div>
 
@@ -65,9 +71,11 @@
 import SpinLoad from "~/components/common/SpinLoad.vue";
 import {historyAttachmentData} from "~/enums/mockData";
 import docIcon from '~/assets/imgs/svg/docx.svg';
+import FloatClearHistory from "~/components/dashboard/settings/FloatClearHistory.vue";
+import FloatScreen from "~/components/dashboard/FloatScreen.vue";
 export default {
   name: 'Attachment',
-  components: {SpinLoad},
+  components: {FloatScreen, FloatClearHistory, SpinLoad},
   layout: 'dashboard',
   asyncData({ $axios }) {
     //   axios获取消息列表
@@ -95,6 +103,16 @@ export default {
     this.loadData();
   },
   methods: {
+    handleConfirmScreen(settings) {
+      // console.log('settings', settings)
+      // todo 模拟加载
+      this.loading = true
+      this.$refs.spin.start()
+      setTimeout(() => {
+        this.loading = false
+        this.$refs.spin.finish()
+      }, 2000)
+    },
     loadData() {
       this.showData = this.historyAttachmentData.slice(
         (this.currentPage - 1) * this.pageSize,
@@ -110,6 +128,15 @@ export default {
         this.$refs.loading.finish();
       }, 1000);
     },
+    handleClearHistory() {
+    //   todo: 清除历史记录
+      this.$refs.loading.start();
+      this.showData = [];
+      this.total = 0;
+      this.currentPage = 1;
+      this.$refs.loading.finish();
+      this.listEmpty = true; // 设置列表为空
+    }
   },
 };
 </script>
