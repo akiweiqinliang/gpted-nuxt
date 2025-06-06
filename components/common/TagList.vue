@@ -1,6 +1,6 @@
 <template>
   <Row>
-    <SettingHead :title="headerTitle" :tag-num="newTags.length" @on-refresh="resetKeywords" />
+    <SettingHead v-if="!hideHeader" :title="headerTitle" :tag-num="newTags.length" @on-refresh="resetKeywords"/>
     <Row align="middle" class-name="contentContainer">
       <Button v-show="!showTagInput" class="addBtn" @click="openTagInput">
         <Icon type="ios-add" />
@@ -49,6 +49,13 @@ export default {
   name: "TagList",
   components: {SettingHead},
   props: {
+    hideHeader: {
+      required: false,
+      type: Boolean,
+      default() {
+        return false
+      }
+    },
     useTimePeriod: {
       required: false,
       type: Boolean,
@@ -57,7 +64,7 @@ export default {
       }
     },
     headerTitle: {
-      required: true,
+      required: false,
       type: String,
       default() {
         return ''

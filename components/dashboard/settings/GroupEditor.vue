@@ -1,6 +1,11 @@
 <template>
   <div>
     <transition name="fade">
+      <div v-if="pageStatus === 'empty'">
+        <DefaultPageDashboardSubscriptionSettings @change="pageStatus = 'add'"/>
+      </div>
+    </transition>
+    <transition name="fade">
       <div v-if="pageStatus === 'default'">
         <Button long type="primary" ghost class="addGroupBtn" @click="pageStatus = 'add'">
           <Icon type="md-add" />
@@ -32,10 +37,9 @@
     </transition>
     <transition name="fade">
       <div v-if="pageStatus === 'add'">
-        <Row justify="space-between">
-          <Button @click="pageStatus = 'default'"><Icon type="ios-arrow-back" />{{$t('otherGroups')}}</Button>
-        </Row>
-        <SettingList class="wrapper-mini" />
+        <AddSettingCard
+          @confirm="addGroup"
+          @cancel="previousSetting.length > 0 ? pageStatus = 'default' : pageStatus = 'empty'"/>
       </div>
     </transition>
     <transition name="fade">
@@ -56,15 +60,22 @@
 <script>
 import { previousSetting } from "~/enums/mockData";
 import SettingList from "~/components/common/SetttingList.vue";
+import AddSettingCard from "~/components/dashboard/settings/AddSettingCard.vue";
 
 export default {
   name: "GroupEditor",
-  components: {SettingList},
+  components: {AddSettingCard, SettingList},
   data() {
     return{
       previousSetting,
       editID: '',
-      pageStatus: 'default', // edit / add
+      pageStatus: 'default', // edit / add /empty
+    }
+  },
+  mounted() {
+    // 如果previousSetting为空，显示empty状态
+    if(this.previousSetting.length === 0) {
+      this.pageStatus = 'empty';
     }
   },
   methods: {
@@ -77,8 +88,18 @@ export default {
       this.$Message.success(this.$t('deleteSuccess'));
       // edit状态 删除当前分组
       if(this.pageStatus === 'edit') this.pageStatus = 'default';
+      if(this.previousSetting.length === 0) this.pageStatus = 'empty';
     },
-    addGroup() {}
+    addGroup() {
+      this.$Message.success(this.$t('addSuccess'));
+      this.pageStatus = 'default';
+      // 模拟添加分组
+      const newGroup = {
+        id: Date.now(),
+        label: `New Group ${this.previousSetting.length + 1}`
+      };
+      this.previousSetting.push(newGroup);
+    },
   }
 }
 </script>

@@ -12,9 +12,10 @@
   <div class="setting">
     <SettingHead title="Announcement type" />
     <div class="contentContainer">
-      <CheckboxGroup v-model="announcementType">
-        <Checkbox v-for="(item, idx) in $t('announcementType')" :key="`announcement-type-${idx}`" :label="idx">{{item}}</Checkbox>
-      </CheckboxGroup>
+    <SettingCheckboxGroup
+      :model-value="announcementType"
+      :options="$t('announcementType')"
+      @on-change="announcementType = $event" />
     </div>
   </div>
   <div class="setting">
@@ -29,9 +30,7 @@
   <div class="setting">
     <SettingHead title="Content" />
     <div class="contentContainer">
-      <CheckboxGroup v-model="content">
-        <Checkbox v-for="(item, idx) in $t('tenderContent')" :key="`tender-content-${idx}`" :label="idx">{{item}}</Checkbox>
-      </CheckboxGroup>
+      <setting-checkbox-group :model-value="content" :options="$t('tenderContent')" @on-change="content = $event" />
     </div>
   </div>
   <div class="setting">
@@ -56,17 +55,18 @@
 <script>
 import TagList from "~/components/common/TagList.vue";
 import SettingHead from "~/components/common/SettingHead.vue";
+import SettingCheckboxGroup from "~/components/dashboard/settings/settingCheckboxGroup.vue";
 
 export default {
   name: "SettingList",
-  components: {SettingHead, TagList},
+  components: {SettingCheckboxGroup, SettingHead, TagList},
   data() {
     return {
       groupName: 'Wdalibocai Information Technology Co. Ltd',
       keywords: ['Engineering', 'Medical devices', 'Engineering', 'Traffic and road conditions materials'],
       originKeywords: ['Engineering', 'Medical devices', 'Engineering', 'Traffic and road conditions materials'],
 
-      announcementType: [0],
+      announcementType: [1],
       scope: 'title',
       location: [],
       organization: [],
@@ -83,6 +83,12 @@ export default {
     },
     confirm() {
       this.$emit('confirm')
+    },
+    handleTypeChange(value) {
+      this.announcementType = value;
+    },
+    handleContentChange(value) {
+      this.content = value;
     }
   }
 }
@@ -100,7 +106,7 @@ export default {
   margin: 0 5px;
 }
 .contentContainer{
-  padding: 0 20px;
+  padding: 0 10px;
 }
 .groupNameContainer{
   margin-bottom: 50px;
