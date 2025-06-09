@@ -40,7 +40,12 @@
         </li>
       </ul>
     </Row>
-    <Row justify="center">
+    <Row justify="center" class="expandBtnBox">
+      <div class="background-blobs">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+      </div>
       <Button class="expandBtn" shape="circle" @click="checkTable = !checkTable"><Icon :type="checkTable ? 'md-remove' : 'md-add'" />{{ checkTable ?  $t('member_closeBtnText') : $t('member_expandBtnText')}}</Button>
     </Row>
     <div ref="memberTable">
@@ -431,6 +436,7 @@ export default {
   }
 }
 .salesPlanList{
+  z-index: 1;
   margin: 0 200px;
   display: flex;
   width: 100%;
@@ -465,8 +471,10 @@ export default {
   }
 }
 .expandBtn{
-  background: rgba(255,255,255,0.5);
+  //background: rgba(255,255,255,0.5);
+  background: var(--light-color);
   border: 1px solid var(--primary-color);
+  z-index: 1;
   margin-top: 92px;
   i{
     font-size: 16px;
@@ -578,7 +586,42 @@ export default {
     box-shadow: inset 10px 0 17px -20px rgba(0, 0, 0, 0.3);
   }
 }
-
+.expandBtnBox{
+  position: relative;
+  .background-blobs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 允许点击穿透 */
+    z-index: 0;
+  }
+  .blob {
+    position: absolute;
+    filter: blur(40px);
+    &:nth-child(1) {
+      width: 170px;
+      height: 65px;
+      background: rgba(246, 138, 37, 0.15);
+      bottom: -5%;
+      left: calc(40% - 40px);
+    }
+    &:nth-child(2) {
+      width: 120px;
+      height: 50px;
+      background: rgba(255, 100, 150, 0.15);
+      bottom: -45%;
+      left: 47%;
+    }
+    &:nth-child(3) {
+      width: 150px;
+      height: 55px;
+      bottom: -20%;
+      left: 55%; background: rgba(100, 149, 255, 0.15);
+    }
+  }
+}
 .commonProblem{
   margin: 90px 156px;
   .titleContainer{
@@ -627,8 +670,8 @@ export default {
 .popWindow{
   position: fixed;
   width: 58%;
-  min-height: 648px;
-  top: 18%;
+  //min-height: 648px;
+  top: 12%;
   left: 21%;
   background: var(--bg-color1);
   box-shadow: 0 0 19px 0 rgba(0,0,0,0.1);
