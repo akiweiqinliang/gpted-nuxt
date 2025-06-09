@@ -65,19 +65,19 @@
       </ul>
     </div>
     <div class="rightContent">
-      <Row>
-        <Col :span="8">
+      <Row class="contentList">
+        <Col :span="24" :sm="24" :md="8">
           <h3>Member</h3>
           <p>Super subscription</p>
           <p>member</p>
         </Col>
-        <Col :span="8">
+        <Col :span="24" :sm="24" :md="8">
           <h3>Contact us</h3>
           <p>Come to know GPTED</p>
           <p>Business cooperation</p>
           <p>Advertising services</p>
         </Col>
-        <Col :span="8">
+        <Col :span="24" :sm="24" :md="8">
           <h3>Date</h3>
           <p>Self export</p>
           <p>Customized services</p>
@@ -158,7 +158,61 @@ export default {
 }
 @media screen and (max-width: 768px){
   .footer .leftContent .logoBox{
-    width: 40%;
+    width: 60%;
+    margin-bottom: 17px;
+  }
+  .footer{
+    padding: 27px 40px 0;
+    .leftContent{
+      margin-right: 0;
+    }
+    .leftContent .externalLinks{
+      justify-content: flex-start;
+      li{
+        width: 30px;
+        height: 30px;
+        margin: 0 5px;
+      }
+      li svg{
+        width: 30px;
+        height: 30px;
+      }
+    }
+    .contentList {
+      margin-top: 26px;
+      //border-top: 1px solid var(--border-color);
+      padding-top: 30px;
+      position: relative;
+      &:before{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -20px;
+        right: -20px;
+        height: 1px;
+        width: calc(100% + 40px);
+        background-color: var(--light-color);
+        opacity: 0.2;
+      }
+      h3{
+        margin-bottom: 20px;
+        font-size: 12px;
+      }
+      p{
+        margin-bottom: 16px;
+        font-size: 12px;
+        &:last-child{
+          margin-bottom: 40px;
+        }
+      }
+    }
+  }
+  .copyright{
+    padding: 15px 20px;
+    text-align: center;
+    p{
+      font-size: 12px;
+    }
   }
 }
 </style>
