@@ -11,12 +11,15 @@
     width="60%"
     :mask-style="{'backgroundColor': 'transparent'}"
     :closable="false">
-    <Row align="middle" justify="space-between">
+    <Row align="middle" justify="space-between" :wrap="false">
       <Select v-model="lang" class="langSelector" :transfer="true" @on-change="changeLanguage">
         <Icon slot="prefix" type="ios-globe-outline" />
-        <Option v-for="item in langList" :key="item.value" :value="item.value">{{ item.label }}</Option>
+          <Option v-for="item in langList" :key="item.value" :value="item.value">{{ item.label }}</Option>
       </Select>
-      <div>
+      <div style="width: 50%; display: flex;flex-wrap: nowrap; align-items: center;">
+        <Badge dot class="messageIcon">
+          <Icon type="ios-notifications-outline" />
+        </Badge>
         <Button v-show="!isLoggedIn" type="primary" ghost @click="isLoggedIn = !isLoggedIn">{{ $t('signIn') }}</Button>
         <Avatar v-show="isLoggedIn" class="avatarBox">G</Avatar>
       </div>
@@ -41,8 +44,11 @@
       <MenuItem :name="pageCode.MEMBER" :to="{ name: pageCode.MEMBER }">
         {{ $t('member') }}
       </MenuItem>
+      <MenuItem :name="pageCode.ACTIVITY" :to="{ name: pageCode.ACTIVITY }">
+        {{ $t('activity') }}
+      </MenuItem>
     </Menu>
-    <Button v-if="isLoggedIn" class="signOutBtn">{{$t('signOut')}}</Button>
+    <Button v-if="isLoggedIn" class="signOutBtn" @click="signOut">{{$t('signOut')}}</Button>
   </Drawer>
 </div>
 </template>
@@ -56,7 +62,7 @@ export default {
   data() {
     return {
       activeRouterName: this.$route.name !== 'index' ? this.$route.name : 'home',
-      lang: this.$i18n.defaultLocale,
+      lang: this.$i18n.locale,
       langList,
       mobileMenuDrawer: false,
 
@@ -82,11 +88,13 @@ export default {
       this.$router.push({ name: 'login' })
     },
     signOut() {
+      // todo 这里需要调用后端接口进行登出操作
+      this.isLoggedIn = false;
       this.$Message.info({
         content: 'sign out!',
         top: 150,
       })
-    }
+    },
   }
 }
 </script>
@@ -116,6 +124,9 @@ export default {
   }
 }
 
+.messageIcon{
+  margin-right: 10px;
+}
 @media screen and (max-width: 768px){
   .mobile{
     display: block;
@@ -138,5 +149,6 @@ export default {
     }
   }
 }
+
 </style>
 

@@ -224,11 +224,22 @@
           </Poptip>
           <h4 v-else>345461 {{$t('result')}}</h4>
           <Row class-name="filterActions">
-            <span>{{$t('发布_release')}}</span>
-            <span>{{$t('最后期限_deadline')}}</span>
+            <span
+              :class="{'sortActive': releaseSortFlag}"
+              @click="handleReleaseSort">
+              {{$t('发布_release')}}
+              <Icon v-if="releaseSortFlag" type="ios-arrow-up"/>
+            </span>
+            <span
+              :class="{ 'sortActive': deadlineSortFlag }"
+              @click="handleDeadlineSort">
+              {{$t('最后期限_deadline')}}
+              <Icon v-if="deadlineSortFlag" type="ios-arrow-up"/>
+            </span>
           </Row>
         </Row>
-        <ul>
+        <ul class="tenderListBox">
+          <SpinLoad ref="spin"/>
           <li v-for="tender in tenderList" :key="`${tender.id}-card`">
             <BidCard :tender="tender"/>
           </li>
@@ -245,21 +256,26 @@
 <script>
 import { tenderList } from "~/enums/tenderList";
 import SingleSetting from "~/components/discover/SingleSetting.vue";
-// import CustomTree from "~/components/discover/CustomTree.vue";
 import {searchSettingData} from "~/enums/searchSettingData";
 import GroupSettingModal from "~/components/common/GroupSettingModal.vue";
 import TreeFilter from "~/components/discover/TreeFilter.vue";
 import { previousSetting } from "~/enums/mockData";
+import SpinLoad from "~/components/common/SpinLoad.vue";
 
 export default {
   name: "DiscoverPage",
   components: {
+    SpinLoad,
     TreeFilter,
     GroupSettingModal,
     // CustomTree,
     SingleSetting},
   data () {
     return {
+      releaseSortFlag: false,
+      deadlineSortFlag: false,
+      loading: false,
+
       isPC: true,
       showFilter: false,
       saveModal: false,
@@ -333,6 +349,26 @@ export default {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
+    handleReleaseSort() {
+      this.releaseSortFlag = !this.releaseSortFlag;
+      // todo 模拟加载
+      this.$refs.spin.start();
+      this.loading = true;
+      setTimeout(() => {
+        this.$refs.spin.finish()
+        this.loading = false;
+      }, 2000)
+    },
+    handleDeadlineSort() {
+      this.deadlineSortFlag = !this.deadlineSortFlag;
+      // todo 模拟加载
+      this.$refs.spin.start();
+      this.loading = true;
+      setTimeout(() => {
+        this.$refs.spin.finish()
+        this.loading = false;
+      }, 2000)
+    },
     handleSearchSettingUpdate({ field, value }) {
       if (field === 'location') this.searchSetting.location = value
       if (field === 'organization') this.searchSetting.organization = value
@@ -398,6 +434,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.sortActive{
+  color: var(--primary-color);
+}
 section{
   padding-left: 100px;
   padding-right: 100px;
@@ -615,6 +654,9 @@ section{
       cursor: pointer;
     }
   }
+}
+.tenderListBox{
+  position: relative;
 }
 // mobile -------------
 @media screen and (max-width: 768px){

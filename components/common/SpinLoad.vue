@@ -26,4 +26,13 @@ export default {
 .spinBlur {
   backdrop-filter: blur(5px);
 }
+
+</style>
+<style lang="scss">
+#discoverPage .tenderListBox{
+
+.ivu-spin-fix .ivu-spin-main{
+  top: 20%;
+}
+}
 </style>
