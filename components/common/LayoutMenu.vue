@@ -36,12 +36,15 @@
     </Row>
     <div class="divider"></div>
     <Row align="middle" :wrap="false">
+      <Badge :count="0" class="notificationBadge">
+      <Icon type="ios-notifications-outline" class="notificationIcon" @click="jumpRoutingByName(pageCode.DASHBOARD_MESSAGE)"/>
+      </Badge>
       <Select v-model="lang" class="langSelector" @on-change="changeLanguage">
         <Icon slot="prefix" type="ios-globe-outline" :size="20" />
         <Option v-for="item in langList" :key="item.value" :value="item.value">{{ item.label }}</Option>
       </Select>
       <Button v-show="!isLoggedIn" type="primary" ghost @click="signIn">{{ $t('signIn') }}</Button>
-      <Dropdown placement="bottom-end" trigger="click">
+      <Dropdown placement="bottom-end" trigger="hover" class="userBox">
         <div v-show="isLoggedIn" class="avatarBox"></div>
         <DropdownMenu slot="list">
           <DropdownItem class="userBasicText">
@@ -235,6 +238,9 @@ export default {
     width: 100px;
     margin-right: 24px;
   }
+  .userBox{
+    cursor: pointer;
+  }
   .avatarBox{
     width: 42px;
     height: 42px;
@@ -338,6 +344,13 @@ export default {
 .resourceActive{
   transform: translateY(0%);
   transition: all .3s ease-out;
+}
+
+.notificationIcon{
+  font-size: 20px;
+  color: var(--text-color3);
+  cursor: pointer;
+  margin-right: 20px;
 }
 @media screen and (max-width: 768px){
   .floatMainMenu{

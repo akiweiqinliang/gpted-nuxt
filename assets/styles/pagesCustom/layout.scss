@@ -8,6 +8,10 @@
       .ivu-select-selection{
         border: 0;
       }
+      .ivu-select-selection>div{
+        display: flex;
+        align-items: center;
+      }
     }
     .signBtn{
       //padding: 6px 20px;
