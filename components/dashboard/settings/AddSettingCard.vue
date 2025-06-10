@@ -61,7 +61,7 @@
 
 <script>
 import TagList from "~/components/common/TagList.vue";
-import SettingCheckboxGroup from "~/components/dashboard/settings/settingCheckboxGroup.vue";
+import SettingCheckboxGroup from "~/components/dashboard/settings/SettingCheckboxGroup.vue";
 
 export default {
   name: "AddSettingCard",

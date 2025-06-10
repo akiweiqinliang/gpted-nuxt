@@ -195,4 +195,9 @@ export default {
   margin-right: 10px;
 }
 
+@media screen and (max-width: 768px) {
+  .contentContainer{
+    padding: 0 12px;
+  }
+}
 </style>

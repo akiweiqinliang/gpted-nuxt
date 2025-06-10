@@ -4,7 +4,7 @@
       <div class="decBox"></div>
       <span>{{title}}<span v-if="tagNum > 0" class="keywordNum">{{ tagNum }}</span></span>
     </div>
-    <Icon type="md-refresh" size="20" @click="handleRefresh"/>
+    <Icon type="md-refresh" @click="handleRefresh"/>
   </Row>
 </template>
 

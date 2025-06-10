@@ -51,7 +51,7 @@
       <Row class-name="bidContent" align="middle">
         <Col :xs="24" :sm="24" :md="24" :lg="19" class="bidContentLeft">
           <span v-dompurify-html="tender.title" class="bidTitle" />
-          <span v-dompurify-html="tender.detail" class="bidDetail" />
+          <span v-dompurify-html="tender.detail.origin" class="bidDetail" />
           <Row class-name="bidFlags">
             <span :class="['fi', `fi-${tender.countryISO}`, 'countryFlag']"></span><span>Anguilla</span>
             <div class="flagDivider"></div>
