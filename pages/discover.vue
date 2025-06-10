@@ -450,6 +450,7 @@ section{
   margin-bottom: 20px;
   span{
     font-weight: bold;
+    margin-right: 10px;
   }
 }
 .saveSettingBtn{
