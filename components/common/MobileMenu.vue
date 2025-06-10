@@ -1,7 +1,9 @@
 <template>
 <div>
   <Row :xs="24" :sm="24" :md="24" :lg="0" align="middle" justify="space-between" class-name="mobileMenu">
-    <div class="mobileLogo"></div>
+    <div class="mobileLogo">
+      <img src="~assets/imgs/logo/gpted_logo@2x.png" alt="GPTED_logo">
+    </div>
     <Icon v-show="!mobileMenuDrawer" type="ios-menu" @click="mobileMenuDrawer = !mobileMenuDrawer"/>
     <Icon v-show="mobileMenuDrawer" type="md-close" @click="mobileMenuDrawer = !mobileMenuDrawer"/>
   </Row>
