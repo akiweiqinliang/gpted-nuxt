@@ -1,6 +1,6 @@
 <template>
 <div>
-  <Row :xs="24" :sm="24" :md="24" :lg="0" align="middle" justify="space-between" class-name="mobileMenu">
+  <Row align="middle" justify="space-between" class-name="mobileMenu">
     <div class="mobileLogo">
 <!--      <img src="~assets/imgs/logo/gpted_logo@2x.png" alt="GPTED_logo">-->
     </div>
@@ -132,12 +132,14 @@ export default {
 .messageIcon{
   margin-right: 10px;
 }
-@media screen and (max-width: 768px){
+
+@media screen and (max-width: 992px){
   .mobile{
     display: block;
   }
   .mobileMenu{
     display: flex;
+    height: 50px;
   }
   .mobileDrawer{
     position: relative;

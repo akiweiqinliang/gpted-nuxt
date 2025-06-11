@@ -52,7 +52,7 @@
       <div v-show="checkTable" class="topTitles" :class="!showFloatChoice ? '' : 'topTitlesFloat'">
         <div class="topTitleBox">
           <div class="functionalComparison">{{$t('member_functionalComparison')}}</div>
-          <div v-for="plan in planList" :key="`salePlans-${plan.id}`">
+          <div v-for="plan in planList" :key="`salePlans-${plan.id}`" class="planItemStyle">
             <span>{{$t(plan.tableTitleKey)}}</span>
             <p>{{$t('member_price', { price: plan.price })}} {{$t('year')}}</p>
             <Button v-if="plan.id === 0" class="wrapper-mini" long size="large" @click="toDiscover">{{$t('member_freeToUse')}}</Button>
@@ -494,6 +494,13 @@ export default {
   border: 1px solid var(--border-color);
   border-bottom: 0;
   transition: all .5s;
+  .planItemStyle{
+    display: flex;
+    flex-direction: column;
+    p{
+      flex-grow: 1;
+    }
+  }
   .functionalComparison{
     font-weight: bold;
     font-size: 20px;
@@ -720,6 +727,23 @@ export default {
   .right{
     width: 64%;
     padding: 38px 22px 26px;
+  }
+}
+@media screen and (max-width: 1200px){
+  #memberPage .topTitlesFloat{
+    padding: 0 150px;
+  }
+}
+
+@media screen and (max-width: 1060px){
+  #memberPage .topTitlesFloat{
+    padding: 0 130px;
+  }
+}
+@media screen and (max-width: 992px){
+  #memberPage .topTitlesFloat{
+    top: 50px;
+    padding: 0 80px;
   }
 }
 </style>

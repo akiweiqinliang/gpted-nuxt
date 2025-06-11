@@ -27,9 +27,10 @@ export default {
   //right: 30px;
   right: 140px;
 }
-@media screen and (min-width: 1740px){
+@media screen and (max-width: 992px){
   .floatStyle{
-    //margin-right: calc(50vw - 720px - 120px - 30px);
+    top: 80px;
   }
 }
+
 </style>
