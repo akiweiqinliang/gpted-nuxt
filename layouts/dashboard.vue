@@ -95,6 +95,7 @@ export default {
 .ivu-layout-footer{
   padding: 0;
 }
+
 @media (max-width: 768px) {
   .ivu-layout-content{
     padding: 25px;

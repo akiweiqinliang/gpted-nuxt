@@ -211,6 +211,12 @@ export default {
   z-index: 901;
   right: 30px;
 }
+
+@media screen and (max-width: 992px){
+  .floatStyle{
+    top: 80px;
+  }
+}
 @media screen and (min-width: 1740px){
   .floatStyle{
     //margin-right: calc(50vw - 720px - 120px - 30px);
