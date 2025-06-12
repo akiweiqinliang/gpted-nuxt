@@ -7,10 +7,11 @@
         <Avatar size="66" src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
         <div class="topInfoBox">
           <span class="username">{{ userInfo.name }}</span>
-          <span class="userLevel">{{ userInfo.level }}</span>
+          <span class="userLevel" :class="{ 'basic': userInfo.level === 0 }" >{{ userInfo.levelName }}</span>
           <div class="bottom">
-            <span class="userValidity">{{ userInfo.validity }}</span>
-            <span class="renewalBtn">{{ $t('renewal') }}</span>
+            <span v-if="userInfo.level !== 0" class="userValidity">{{ userInfo.validity }}</span>
+            <span v-if="userInfo.level !== 0" class="renewalBtn">{{ $t('renewal') }}</span>
+            <span v-else class="renewalBtn">Members enjoy more benefits</span>
           </div>
         </div>
       </Row>
@@ -154,6 +155,11 @@ export default {
     border-radius: 40px;
     color: #57C22D;
     padding: 4px 10px;
+  }
+  .basic{
+    color: #6982AF;
+    border: 1px solid #AEC2E8;
+    background: #F0F3F7;
   }
   .bottom{
     margin-top: 10px;

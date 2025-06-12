@@ -28,7 +28,7 @@
         </Row>
       </ul>
     </template>
-    <EmptyPush v-if="listEmpty" :user-type="userType" />
+    <DashboardSubscription v-if="listEmpty" :user-type="userType" />
   </Card>
 
 </div>
@@ -36,12 +36,12 @@
 
 <script>
 import { tenderList } from "~/enums/tenderList";
-import EmptyPush from "~/components/dashboard/EmptyPush.vue";
+import DashboardSubscription from "~/components/defaultPage/DashboardSubscription.vue";
 import FloatScreen from "~/components/dashboard/FloatScreen.vue";
 import SpinLoad from "~/components/common/SpinLoad.vue";
 export default {
   name: "SubscribePage",
-  components: {SpinLoad, FloatScreen, EmptyPush},
+  components: {SpinLoad, FloatScreen, DashboardSubscription},
   layout: 'dashboard',
   asyncData() {
     return{
