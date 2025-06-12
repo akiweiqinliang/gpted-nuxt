@@ -42,11 +42,12 @@ export default {
         {
           subTitle: 'favorites',
           icon: 'ios-star-outline',
+          pathName: pageCode.DASHBOARD_PROJECT,
           children: [
-            {
-              title: 'project',
-              pathName: pageCode.DASHBOARD_PROJECT, // menu的唯一标识name + 跳转路径name
-            },
+            // {
+            //   title: 'project',
+            //   pathName: pageCode.DASHBOARD_PROJECT, // menu的唯一标识name + 跳转路径name
+            // },
             // {
             //   title: 'resource',
             //   pathName: pageCode.DASHBOARD_RESOURCE,

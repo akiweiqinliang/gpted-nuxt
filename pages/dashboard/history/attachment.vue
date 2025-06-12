@@ -10,10 +10,10 @@
       <Row>
         <FloatClearHistory @clear="handleClearHistory" />
         <FloatScreen @restoreDefaults="loadData" @confirm="handleConfirmScreen"/>
-<!--        <Button icon="ios-funnel" class="actionBtn">{{$t('screen')}}</Button>-->
       </Row>
     </Row>
     <Card class="attachmentBox" :dis-hover="true" :padding="30">
+      <SpinLoad ref="loading" />
       <template v-if="showData.length === 0">
         <DefaultPageDashboardHistory />
       </template>
@@ -51,7 +51,6 @@
           </Row>
         </li>
       </ul>
-      <SpinLoad ref="loading" />
       <Row type="flex" justify="center" class="listPagination">
         <Page
           :current="currentPage"
@@ -103,15 +102,18 @@ export default {
     this.loadData();
   },
   methods: {
+    mockLoading() {
+      this.$refs.loading.start();
+      this.loadData();
+      setTimeout(() => {
+        this.$refs.loading.finish();
+      }, 1000);
+    },
     handleConfirmScreen(settings) {
       // console.log('settings', settings)
+      if(this.listEmpty) return
       // todo 模拟加载
-      this.loading = true
-      this.$refs.spin.start()
-      setTimeout(() => {
-        this.loading = false
-        this.$refs.spin.finish()
-      }, 2000)
+      this.mockLoading();
     },
     loadData() {
       this.showData = this.historyAttachmentData.slice(
@@ -122,13 +124,10 @@ export default {
     // 改变当前页
     changePage(i) {
       this.currentPage = i;
-      this.$refs.loading.start();
-      this.loadData();
-      setTimeout(() => {
-        this.$refs.loading.finish();
-      }, 1000);
+      this.mockLoading()
     },
     handleClearHistory() {
+      if(this.listEmpty) return
     //   todo: 清除历史记录
       this.$refs.loading.start();
       this.showData = [];

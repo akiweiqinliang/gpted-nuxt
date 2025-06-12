@@ -560,11 +560,15 @@ const billData = [
   {id: 4, ...billItem},
 
 ]
-const memberInfo = {
+const userLevelMap = {
+  0: 'Basic',
+  1: 'Premium',
+};
+let memberInfo = {
   userId: 0,
   validity: 'Valid until June 12, 2025',
   name: 'Evelyn',
-  level: 'Premium',
+  level: 1, // 1: Premium ; 0: Basic
   isMasterAccount: true,
   company: 'WD Ali Gaming Information Technology Co. Ltd',
   industry: '',
@@ -572,6 +576,7 @@ const memberInfo = {
   phone: '1142534571',
   password: '',
 }
+memberInfo = { ...memberInfo, levelName: userLevelMap[memberInfo.level] }
 const userInfo = {
   ...memberInfo,
   id: 0,
