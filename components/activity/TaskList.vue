@@ -1,5 +1,5 @@
 <template>
-<div>
+<div id="taskList">
   <Row class="pageMiddle">
     <div class="partTitle">Task List</div>
     <Row class="equityList">
@@ -441,7 +441,9 @@ export default {
   .partTitle {
     position: absolute;
     width: 40%;
-    left: 30%;
+    max-width: 450px;
+    left: 50%;
+    transform: translateX(-50%);
     top: -30px;
     color: #fff;
     background: var(--primary-color);
@@ -497,9 +499,15 @@ export default {
       }
     }
   }
+
   .equityItemStyle:nth-child(odd) {
     margin-right: 15px;
     margin-left: 0;
   }
+}
+</style>
+<style>
+#taskList .progressStyle .ivu-progress-inner{
+  background: #fff;
 }
 </style>

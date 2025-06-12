@@ -243,7 +243,7 @@
                 <p>{{ doc.title }}</p>
                 <span>{{ doc.size }}</span><span>{{ doc.date }}</span>
               </Col>
-              <checkbox v-show="selectDownload" :label="doc.id"><span></span></checkbox>
+              <checkbox v-show="selectDownload" :label="doc.id" class="checkboxSpan"><span></span></checkbox>
             </Row>
             <Row class-name="translatedDocs">
               <ul>
@@ -1496,18 +1496,26 @@ export default {
         width: 116px;
         height: 21px;
         .imgBox{
-          display: flex;
-          img{
             width: 12px;
             height: 12px;
             margin-right: 2px;
             margin-left: 2px;
-          }
         }
       }
     }
   }
   .documentsBox{
+    .documentsBoxBtns{
+      position: sticky;
+      bottom: 60px;
+      margin-left: 10px;
+      margin-right: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+      .cancelBtn{
+        margin-right: 20px;
+      }
+    }
     .docList{
       padding: 0 15px 15px;
       .docItem{
@@ -1540,11 +1548,26 @@ export default {
               span{
                 font-size: 11px;
               }
+
             }
           }
         }
       }
     }
   }
+}
+</style>
+
+<style lang="scss">
+#tenderDetailPage {
+  //.ivu-checkbox-wrapper, .ivu-checkbox-group-item{
+  //  margin-right: 0;
+  //}
+  .checkboxSpan{
+  margin: 0;
+  span{
+    margin: 0;
+  }
+}
 }
 </style>
