@@ -144,7 +144,8 @@ position: absolute;
     position: relative;
     min-height: 300px;
     .imgBox{
-      width: 26%;
+      //width: 26%;
+      width: 300px;
       aspect-ratio: 1 / 1;
       background: var(--primary-bg-color2);
       z-index: 3;
@@ -158,7 +159,8 @@ position: absolute;
       flex-direction: column;
       justify-content: center;
       h3{
-        padding-left: calc(26% + 30px);
+        //padding-left: calc(26% + 30px);
+        padding-left: calc(300px + 30px);
         font-size: 20px;
         margin-bottom: 20px;
         color: #000;
@@ -171,7 +173,8 @@ position: absolute;
         border-radius: 10px;
         position: relative;
         bottom: 0;
-        padding-left: calc(26% + 30px);
+        //padding-left: calc(26% + 30px);
+        padding-left: calc(300px + 30px);
         font-size: 20px;
       }
     }
@@ -184,12 +187,12 @@ position: absolute;
       .content {
         h3{
           text-align: right;
-          padding-right: calc(26% + 30px);
+          padding-right: calc(300px + 30px);
           padding-left: 0;
         }
         span{
           text-align: right;
-          padding-right: calc(26% + 30px);
+          padding-right: calc(300px + 30px);
           padding-left: 0;
         }
       }

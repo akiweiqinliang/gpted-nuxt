@@ -23,8 +23,10 @@ export default {
   bottom: 76px;
   background: var(--primary-color);
   border-radius: 45px 45px 45px 45px;
-  width: 50vw;
-  left: 25vw;
+  width: 50%;
+  max-width: 774px;
+  left: 50%;
+  transform: translateX(-50%);
   aspect-ratio: 774 / 90;
   z-index: 5;
   margin-top: 50px;

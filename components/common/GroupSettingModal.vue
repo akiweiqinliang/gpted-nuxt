@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal v-model="showModal" class-name="groupSettingModal" :fullscreen="fullscreen" width="78%" :title="title">
+    <Modal id="groupSettingModal" v-model="showModal" class-name="groupSettingModal" :fullscreen="fullscreen" width="78%" :title="title">
       <template #footer>
         <Row justify="center">
           <div class="footerBtn" @click="showModal = false">
@@ -30,13 +30,13 @@
         </div>
       </div>
       <div class="setting">
-        <TagList header-title="Location" :show-tag-flag="true" :tags.sync="groupSettings.keywords" :origin-tags="groupSettings.originKeywords" />
+        <TagList header-title="Location" :show-tag-flag="true" :tags.sync="groupSettings.location" :origin-tags="groupSettings.originLocations" />
       </div>
       <div class="setting">
-        <TagList header-title="International organization" :show-tag-flag="true" :tags.sync="groupSettings.keywords" :origin-tags="groupSettings.originKeywords" />
+        <TagList header-title="International organization" :show-tag-flag="true" :tags.sync="groupSettings.organization" :origin-tags="groupSettings.originOrganizations" />
       </div>
       <div class="setting">
-        <TagList header-title="Industry" :tags.sync="groupSettings.keywords" :origin-tags="groupSettings.originKeywords" />
+        <TagList header-title="Industry" :tags.sync="groupSettings.industry" :origin-tags="groupSettings.originIndustry" />
       </div>
       <div class="setting">
         <SettingHead title="Content" @on-refresh="handleRefresh" />
@@ -90,13 +90,16 @@ export default {
         keywords: ['Engineering', 'Medical devices', 'Engineering', 'Traffic and road conditions materials'],
         originKeywords: ['Engineering', 'Medical devices', 'Engineering', 'Traffic and road conditions materials'],
 
-        announcementType: ['1'],
+        announcementType: [1],
         scope: 'title',
-        location: [],
-        organization: [],
-        industry: [],
+        location: ['China', 'United States', 'Germany', 'Japan', 'United Kingdom'],
+        originLocations: ['China', 'United States', 'Germany', 'Japan', 'United Kingdom'],
+        organization: ['World Bank', 'Asian Development Bank', 'United Nations'],
+        originOrganizations: ['World Bank', 'Asian Development Bank', 'United Nations'],
+        industry: ['Construction', 'Healthcare', 'Technology', 'Transportation'],
+        originIndustry: ['Construction', 'Healthcare', 'Technology', 'Transportation'],
         method: [],
-        content: ['1'],
+        content: [1],
         releaseTime: [],
         deadlineTime: [],
       },
@@ -237,5 +240,18 @@ export default {
     padding: 0 12px;
   }
 
+}
+</style>
+<style>
+#groupSettingModal .ivu-modal-body{
+  max-height: 60vh;
+  overflow-y: scroll;
+}
+
+@media screen and (max-width: 768px){
+  #groupSettingModal .ivu-modal-body{
+    max-height: initial;
+    overflow-y: initial;
+  }
 }
 </style>
