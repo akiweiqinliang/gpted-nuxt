@@ -1,5 +1,5 @@
 <template>
-<div>
+<div id="taskList">
   <Row class="pageMiddle">
     <div class="partTitle">Task List</div>
     <Row class="equityList">
@@ -501,5 +501,10 @@ export default {
     margin-right: 15px;
     margin-left: 0;
   }
+}
+</style>
+<style>
+#taskList .progressStyle .ivu-progress-inner{
+  background: #fff;
 }
 </style>
