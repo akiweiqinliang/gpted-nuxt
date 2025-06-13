@@ -1,4 +1,4 @@
-import { Notice } from "view-design";
+import {  Message } from "view-design";
 export default {
   bind(el, binding) {
     const { value } = binding;
@@ -6,23 +6,9 @@ export default {
       try {
         const textToCopy = value || el.innerText;
         await navigator.clipboard.writeText(textToCopy);
-        // Message.success({
-        //   content: 'copy success!',
-        //   duration: 2
-        // })
-        Notice.success({
-          title: 'copy success!',
-          duration: 2
-        })
+        Message.success('copy success!')
       } catch (err) {
-        // Message.error({
-        //   content: 'copy failed!',
-        //   duration: 2
-        // })
-        Notice.error({
-          title: 'copy success!',
-          duration: 2
-        })
+        Message.error('copy failed!')
       }
     };
 
