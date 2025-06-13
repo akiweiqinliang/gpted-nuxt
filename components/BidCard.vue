@@ -49,9 +49,9 @@
 
     >
       <Row class-name="bidContent" align="middle">
-        <Col :xs="24" :sm="24" :md="24" :lg="19" class="bidContentLeft">
+        <Col class="bidContentLeft">
           <span v-dompurify-html="tender.title" class="bidTitle" />
-          <span v-dompurify-html="tender.detail" class="bidDetail" />
+          <span v-dompurify-html="tender.detail.origin" class="bidDetail" />
           <Row class-name="bidFlags">
             <span :class="['fi', `fi-${tender.countryISO}`, 'countryFlag']"></span><span>Anguilla</span>
             <div class="flagDivider"></div>
@@ -61,7 +61,7 @@
           </Row>
           <span class="bidCpv">{{ tender.cpv }}</span>
         </Col>
-        <Col :xs="24" :sm="24" :md="24" :lg="5" class="bidContentRight">
+        <Col class="bidContentRight">
           <Row class-name="bidTimes" justify="space-between" align="middle">
             <Row justify="space-between" class-name="fullWidth release">
               <span>Release</span>
@@ -216,8 +216,12 @@ export default {
   }
   .bidContent{
     padding: 24px 30px;
+    flex-wrap: nowrap;
+    width: 100%;
+    display: flex;
     .bidContentLeft{
       padding-right: 30px;
+      width: 80%;
       .bidTitle, .bidDetail{
         display: inline-block;
         line-height: 1.3;
@@ -257,6 +261,7 @@ export default {
       }
     }
     .bidContentRight{
+      width: 20%;
       .bidTimes{
         position: relative;
         padding-left: 18px;
@@ -353,4 +358,19 @@ export default {
   }
 }
 
+@media screen and (max-width: 768px){
+  .tenderCard{
+    .bidContent{
+      flex-wrap: wrap;
+      .bidContentLeft{
+        width: 100%;
+      }
+      .bidContentRight{
+        width: 100%;
+      }
+    }
+
+  }
+
+}
 </style>

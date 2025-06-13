@@ -1,5 +1,6 @@
 <template>
   <div>
+<!--    控制台侧边栏菜单-->
         <!--        <Nuxt />-->
         <Row class="dashboardPage">
           <div class="left">
@@ -137,6 +138,7 @@ export default {
   height: 100vh;
   background: var(--light-color);
   width: 240px;
+  z-index: 10;
   .menu{
     width: 100%;
     height: 100%;

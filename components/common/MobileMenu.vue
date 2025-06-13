@@ -1,8 +1,8 @@
 <template>
 <div>
-  <Row :xs="24" :sm="24" :md="24" :lg="0" align="middle" justify="space-between" class-name="mobileMenu">
+  <Row align="middle" justify="space-between" class-name="mobileMenu">
     <div class="mobileLogo">
-      <img src="~assets/imgs/logo/gpted_logo@2x.png" alt="GPTED_logo">
+<!--      <img src="~assets/imgs/logo/gpted_logo@2x.png" alt="GPTED_logo">-->
     </div>
     <Icon v-show="!mobileMenuDrawer" type="ios-menu" @click="mobileMenuDrawer = !mobileMenuDrawer"/>
     <Icon v-show="mobileMenuDrawer" type="md-close" @click="mobileMenuDrawer = !mobileMenuDrawer"/>
@@ -18,7 +18,7 @@
         <Icon slot="prefix" type="ios-globe-outline" />
           <Option v-for="item in langList" :key="item.value" :value="item.value">{{ item.label }}</Option>
       </Select>
-      <div style="width: 50%; display: flex;flex-wrap: nowrap; align-items: center;">
+      <div class="userBox" >
         <Badge dot class="messageIcon">
           <Icon type="ios-notifications-outline" />
         </Badge>
@@ -119,22 +119,27 @@ export default {
   .mobileLogo{
     width: 88px;
     height: 22px;
-    background-color: #666666;
+    background-image: url("@/assets/imgs/svg/GPTED.svg");
+    background-repeat: round;
   }
   i{
     font-size: 22px;
   }
 }
-
+.userBox{
+  width: 50%; display: flex;flex-wrap: nowrap; align-items: center; justify-content: flex-end;
+}
 .messageIcon{
   margin-right: 10px;
 }
-@media screen and (max-width: 768px){
+
+@media screen and (max-width: 992px){
   .mobile{
     display: block;
   }
   .mobileMenu{
     display: flex;
+    height: 50px;
   }
   .mobileDrawer{
     position: relative;

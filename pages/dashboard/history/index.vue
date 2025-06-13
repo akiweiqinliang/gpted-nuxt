@@ -14,12 +14,17 @@
       </Row>
     </Row>
     <Card class="attachmentBox" :dis-hover="true" :padding="30">
+      <SpinLoad ref="loading" />
+      <template v-if="showData.length === 0">
+        <DefaultPageDashboardHistory />
+      </template>
+      <template v-else>
+
       <ul>
         <li v-for="tender in showData" :key="`${tender.id}-card`">
           <BidCard :tender="tender"/>
         </li>
       </ul>
-      <SpinLoad ref="loading" />
       <Row type="flex" justify="center" class="listPagination">
         <Page
           :current="currentPage"
@@ -29,6 +34,7 @@
           @on-change="changePage"
         />
       </Row>
+      </template>
     </Card>
   </div>
 
@@ -70,6 +76,13 @@ export default {
     this.loadData();
   },
   methods: {
+    mockLoading() {
+      this.$refs.loading.start();
+      this.loadData();
+      setTimeout(() => {
+        this.$refs.loading.finish();
+      }, 1000);
+    },
     loadData() {
       this.showData = this.tenderList.slice(
         (this.currentPage - 1) * this.pageSize,
@@ -86,20 +99,20 @@ export default {
       }, 1000);
     },
     handleConfirmScreen(settings) {
+      // console.log('settings', settings)
+      if(this.listEmpty) return
       // todo 模拟加载
-      this.$refs.loading.start();
-      setTimeout(() => {
-        this.$refs.loading.finish();
-      }, 2000);
+      this.mockLoading();
     },
     handleClearHistory() {
+      if(this.listEmpty) return
+      //   todo: 清除历史记录
+      this.$refs.loading.start();
       this.showData = [];
       this.total = 0;
       this.currentPage = 1;
-      this.$refs.loading.start();
-      setTimeout(() => {
-        this.$refs.loading.finish();
-      }, 1000);
+      this.$refs.loading.finish();
+      this.listEmpty = true; // 设置列表为空
     },
   },
 };
