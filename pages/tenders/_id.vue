@@ -1,9 +1,14 @@
 <template>
 <section id="tenderDetailPage" class="detailPage">
   <ClientOnly>
-  <h2 class="topTenderTitle">
-    {{bid.title}}
-  </h2>
+    <Card :padding="0" class="topTenderTitleCard" :dis-hover="true">
+      <Row class-name="bidTopClassification" :class="[tender.type === 0 ? 'bidAward' : tender.type === 1 ? 'bidCall' : tender.type === 2 ? 'bidOnGo' : 'bidAbandoned']">
+        <span>{{ tender.type === 0 ? 'Award notice' :tender.type === 1 ? 'Call for projects' : tender.type === 2 ? 'Ongoing tenders' : 'Abandoned Tenders' }}</span>
+      </Row>
+      <h2 class="topTenderTitle">
+        {{bid.title}}
+      </h2>
+    </Card>
   <div class="navBox">
     <Row class-name="navAnchor" :wrap="false">
       <span
@@ -38,7 +43,7 @@
     </Row>
   </div>
   <Row id="description" :gutter="20" class-name="navScrollContent descriptionBox">
-    <Col :xs="24" :sm="24" :md="24" :lg="17" class="descriptionLeftContent">
+    <Col flex="1" class="descriptionLeftContent">
       <ul>
         <li>
           <div class="contentLabel">
@@ -113,79 +118,79 @@
             <span>People's Government of Hoboksar Mongol Autonomous County and Shitoluogai TownPeople's Government of Hoboksar Mongol Autonomous County and Shitoluogai Town</span>
           </div>
           <div v-else class="contentDetail">
-            <UnlockedMask v-if="showUnlockedMask" :bg-text="false" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
+            <UnlockedMask v-if="showUnlockedMask" :is-pc="isPc" :short-text="true" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
           </div>
         </li>
       </ul>
     </Col>
-    <Col :xs="24" :sm="24" :md="24" :lg="7" class="descriptionRightContent">
-      <div class="stateCard" :class="[bid.type === 0 ? 'bidAward' : bid.type === 1 ? 'bidCall' : bid.type === 2 ? 'bidOnGo' : 'bidAbandoned']">
-        <div class="topTextBox">
-          <span>{{ bid.type === 0 ? 'Award notice' : bid.type === 1 ? 'Call for projects' : bid.type === 2 ? 'Ongoing Tenders' : 'Abandoned Tenders' }}</span>
-        </div>
-        <div class="bottomProgressBox">
-          <span>The bidding has ended</span>
-          <Progress
-            :percent="25"
-            hide-info
-            :stroke-color="bid.type === 0 ? 'var(--bid-award-color)' : bid.type === 1 ? 'var(--bid-call-color)' : bid.type === 2 ? 'var(--bid-ongo-color)' : 'var(--bid-abandoned-color)'"/>
-        </div>
-      </div>
-      <CommonCard class="timelineCard">
-        <template slot="title">
-          Progress
-        </template>
-        <template slot="content">
-          <Timeline class="timelineList">
-            <TimelineItem class="timelineItem">
-              <div slot="dot" class="timelineDot"></div>
-              <p class="content">Tendering</p>
-              <p class="time">April 23, 2024</p>
-            </TimelineItem>
-            <TimelineItem class="timelineItem">
-              <div slot="dot" class="timelineDot"></div>
-              <p class="content">Change announcement</p>
-              <p class="time">April 23, 2024</p>
-            </TimelineItem>
-            <TimelineItem class="timelineItem">
-              <div slot="dot" class="timelineDot"></div>
-              <p class="content">Winning bid result</p>
-              <p class="time">April 23, 2024</p>
-            </TimelineItem>
+<!--    <Col :xs="24" :sm="24" :md="24" :lg="7" class="descriptionRightContent">-->
+<!--      <div class="stateCard" :class="[bid.type === 0 ? 'bidAward' : bid.type === 1 ? 'bidCall' : bid.type === 2 ? 'bidOnGo' : 'bidAbandoned']">-->
+<!--        <div class="topTextBox">-->
+<!--          <span>{{ bid.type === 0 ? 'Award notice' : bid.type === 1 ? 'Call for projects' : bid.type === 2 ? 'Ongoing Tenders' : 'Abandoned Tenders' }}</span>-->
+<!--        </div>-->
+<!--        <div class="bottomProgressBox">-->
+<!--          <span>The bidding has ended</span>-->
+<!--          <Progress-->
+<!--            :percent="25"-->
+<!--            hide-info-->
+<!--            :stroke-color="bid.type === 0 ? 'var(&#45;&#45;bid-award-color)' : bid.type === 1 ? 'var(&#45;&#45;bid-call-color)' : bid.type === 2 ? 'var(&#45;&#45;bid-ongo-color)' : 'var(&#45;&#45;bid-abandoned-color)'"/>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <CommonCard class="timelineCard">-->
+<!--        <template slot="title">-->
+<!--          Progress-->
+<!--        </template>-->
+<!--        <template slot="content">-->
+<!--          <Timeline class="timelineList">-->
+<!--            <TimelineItem class="timelineItem">-->
+<!--              <div slot="dot" class="timelineDot"></div>-->
+<!--              <p class="content">Tendering</p>-->
+<!--              <p class="time">April 23, 2024</p>-->
+<!--            </TimelineItem>-->
+<!--            <TimelineItem class="timelineItem">-->
+<!--              <div slot="dot" class="timelineDot"></div>-->
+<!--              <p class="content">Change announcement</p>-->
+<!--              <p class="time">April 23, 2024</p>-->
+<!--            </TimelineItem>-->
+<!--            <TimelineItem class="timelineItem">-->
+<!--              <div slot="dot" class="timelineDot"></div>-->
+<!--              <p class="content">Winning bid result</p>-->
+<!--              <p class="time">April 23, 2024</p>-->
+<!--            </TimelineItem>-->
 
-            <TimelineItem class="timelineItem">
-              <div slot="dot" class="timelineDot"></div>
-              <p class="content">Winning bid result</p>
-              <p class="time">April 23, 2024</p>
-            </TimelineItem>
-          </Timeline>
-        </template>
-      </CommonCard>
-    </Col>
+<!--            <TimelineItem class="timelineItem">-->
+<!--              <div slot="dot" class="timelineDot"></div>-->
+<!--              <p class="content">Winning bid result</p>-->
+<!--              <p class="time">April 23, 2024</p>-->
+<!--            </TimelineItem>-->
+<!--          </Timeline>-->
+<!--        </template>-->
+<!--      </CommonCard>-->
+<!--    </Col>-->
   </Row>
   <Row id="announcement" class-name="navScrollContent announcementBox">
     <CommonCard>
         <span slot="title">
           Announcement
         </span>
-      <template slot="action">
-        <Row>
-          <Row align="middle">
-            <Row class="TABtnGroup" :wrap="false">
-              <div class="A" :class="{'active' : translateStatus === 'A' }" @click="changeTranslateStatus('A')">A</div>
-              <div class="T" :class="{'active' : translateStatus === 'T' }" @click="changeTranslateStatus('T')">T</div>
-              <div class="TA" :class="{'active' : translateStatus === 'TA' }" @click="changeTranslateStatus('TA')">T | A</div>
-            </Row>
-            <Row class="languageSelector" align="middle" :wrap="false">
-              <Select v-model="translateLang" class="selector" @on-change="handleLangChange">
-                <img slot="prefix" :src="targetLanguageIcon" alt="Target language" class="imgBox">
-                <Option v-for="item in langList" :key="item.value" :value="item.value">{{ item.label }}</Option>
-              </Select>
-            </Row>
-          </Row>
+<!--      <template slot="action">-->
+<!--        <Row>-->
+<!--          <Row align="middle">-->
+<!--            <Row class="TABtnGroup" :wrap="false">-->
+<!--              <div class="A" :class="{'active' : translateStatus === 'A' }" @click="changeTranslateStatus('A')">A</div>-->
+<!--              <div class="T" :class="{'active' : translateStatus === 'T' }" @click="changeTranslateStatus('T')">T</div>-->
+<!--              <div class="TA" :class="{'active' : translateStatus === 'TA' }" @click="changeTranslateStatus('TA')">T | A</div>-->
+<!--            </Row>-->
+<!--            <Row class="languageSelector" align="middle" :wrap="false">-->
+<!--              <Select v-model="translateLang" class="selector" @on-change="handleLangChange">-->
+<!--                <img slot="prefix" :src="targetLanguageIcon" alt="Target language" class="imgBox">-->
+<!--                <Option v-for="item in langList" :key="item.value" :value="item.value">{{ item.label }}</Option>-->
+<!--              </Select>-->
+<!--            </Row>-->
+<!--          </Row>-->
 
-        </Row>
-      </template>
+<!--        </Row>-->
+<!--      </template>-->
       <div slot="content">
         <Row v-if="!showUnlockedMask"  class-name="fullWidth tenderDetail" :class="{'swap': swap}">
           <Col v-show="translateStatus === 'A' || translateStatus === 'TA'" flex="1">
@@ -210,7 +215,7 @@
               </pre>
           </Col>
         </Row>
-        <UnlockedMask v-if="showUnlockedMask" :bg-text="true" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
+        <UnlockedMask v-if="showUnlockedMask" :is-pc="isPc" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
       </div>
     </CommonCard>
   </Row>
@@ -221,8 +226,6 @@
       </template>
       <template slot="action">
         <Row>
-<!--          <div class="actionBtn" @click="openTranslateAllModal">translate all</div>-->
-<!--          <div class="actionBtn">download all</div>-->
           <div v-show="!selectDownload" class="actionBtn" @click="selectDownload = !selectDownload">Select Download</div>
           <Row v-show="selectDownload" align="middle">
             <Checkbox
@@ -243,7 +246,7 @@
                 <p>{{ doc.title }}</p>
                 <span>{{ doc.size }}</span><span>{{ doc.date }}</span>
               </Col>
-              <checkbox v-show="selectDownload" :label="doc.id"><span></span></checkbox>
+              <checkbox v-show="selectDownload" :label="doc.id" class="checkboxSpan"><span></span></checkbox>
             </Row>
             <Row class-name="translatedDocs">
               <ul>
@@ -362,7 +365,7 @@
                 </Input>
               </FormItem>
             </Form>
-            <Row justify="center">
+            <Row justify="center" class-name="footerBox">
               <Button class="loginPromptBtn" @click="handleMailModalCancel">Cancel</Button>
               <Button type="primary" class="loginPromptBtn" @click="handleMailModalConfirm">Confirm</Button>
             </Row>
@@ -396,9 +399,15 @@ export default {
       // const res = await $axios.get(`/getTenderById`, { params: { tenderId: params.id } });
       // const bid = res.data.tender;
 
-      return { bid: bid || {} }; // 确保返回的对象不为undefined
+      const emptyBid = {...bid, detail: '', winner: ''}
+      return {
+        // bid: bid || {},
+        bid: emptyBid || {},
+        // tender: bid || {},
+        tender: emptyBid || {},
+      }; // 确保返回的对象不为undefined
     } catch (error) {
-      return { bid: {} };
+      return { bid: {}, tender: {} };
     }
   },
   data() {
@@ -406,7 +415,7 @@ export default {
       indeterminate: false,
       checkAll: false,
       checkAllGroup: [],
-
+      isPc: true,
 
       translateStatus: 'A',
       swap: false,
@@ -511,18 +520,18 @@ export default {
     //   this.getTenderById();
     // // todo  get user's email history
     // }
+    this.isPc = window.innerWidth > 768;
     this.$store.dispatch('tender/nuxtClientInit');
     window.addEventListener('scroll', this.onScroll);
     this.onScroll();
-    window.addEventListener('resize', this.calcTimelineMaxHeight);
-    this.$nextTick(() => {
-      this.calcTimelineMaxHeight()
-    })
+    // window.addEventListener('resize', this.calcTimelineMaxHeight);
+    // this.$nextTick(() => {
+    //   this.calcTimelineMaxHeight()
+    // })
 
-    // this.checkUnlock()
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.calcTimelineMaxHeight)
+    // window.removeEventListener('resize', this.calcTimelineMaxHeight)
     window.removeEventListener('scroll', this.onScroll);
   },
   methods: {
@@ -587,22 +596,22 @@ export default {
       this.bid = tenderList.find(item => item.id === Number(this.$route.params.id));
     },
 
-    calcTimelineMaxHeight() {
-      const leftBox = document.querySelector('.descriptionLeftContent ul');
-      const stateCard = document.querySelector('.stateCard');
-      const timelineHeaderHeight = document.querySelector('.timelineCard .header').clientHeight;
-      const targetHeight = leftBox.clientHeight - stateCard.clientHeight - timelineHeaderHeight - 20;
-      const targetEl = document.querySelector('.timelineCard .timelineList');
-
-      if (window.innerWidth <= 768) {
-        targetEl.style.height = `auto`;
-        targetEl.scrollTop = 0;
-        targetEl.scrollLeft = targetEl.scrollWidth
-        return
-      }
-      targetEl.style.height = `${targetHeight}px`;
-      targetEl.scrollTop = targetEl.scrollHeight
-    },
+    // calcTimelineMaxHeight() {
+    //   const leftBox = document.querySelector('.descriptionLeftContent ul');
+    //   const stateCard = document.querySelector('.stateCard');
+    //   const timelineHeaderHeight = document.querySelector('.timelineCard .header').clientHeight;
+    //   const targetHeight = leftBox.clientHeight - stateCard.clientHeight - timelineHeaderHeight - 20;
+    //   const targetEl = document.querySelector('.timelineCard .timelineList');
+    //
+    //   if (window.innerWidth <= 768) {
+    //     targetEl.style.height = `auto`;
+    //     targetEl.scrollTop = 0;
+    //     targetEl.scrollLeft = targetEl.scrollWidth
+    //     return
+    //   }
+    //   targetEl.style.height = `${targetHeight}px`;
+    //   targetEl.scrollTop = targetEl.scrollHeight
+    // },
     onScroll() {
       // 获取所有锚点元素
       const navContents = document.querySelectorAll('.navScrollContent')
@@ -645,7 +654,7 @@ export default {
     },
 
     copyMailLink() {
-      this.$Message.success('Copy link successfully');
+      // this.$Message.success('Copy link successfully');
     },
     handleCollection() {
       this.checkIsLogin()
@@ -838,12 +847,42 @@ export default {
   padding-right: 100px;
   position: relative;
 }
+.bidAward{
+  color: var(--bid-award-color);
+  background: linear-gradient(to right, var(--bid-award-bg-color), var(--bg-color1));
+}
+.bidCall{
+  color: var(--bid-call-color);
+  background: linear-gradient(to right, var(--bid-call-bg-color), var(--bg-color1));
+}
+.bidOnGo{
+  color: var(--bid-ongo-color);
+  background: linear-gradient(to right, var(--bid-ongo-bg-color), var(--bg-color1));
+}
+.bidAbandoned{
+  color: var(--bid-abandoned-color);
+  background: linear-gradient(to right, var(--bid-abandoned-bg-color), var(--bg-color1));
+}
+.bidTopClassification{
+  height: 56px;
+  font-size: 15px;
+  padding: 0 22px 0 30px;
+  justify-content: space-between;
+  align-items: center;
+  i{
+    color: var(--icon-color2);
+    font-size: 20px;
+  }
+}
 .active{
   color: var(--primary-color);
 }
-
-.topTenderTitle{
-  margin-bottom: 52px;
+.topTenderTitleCard{
+  overflow: hidden;
+  margin-bottom: 20px;
+  .topTenderTitle{
+    padding: 16px 30px;
+  }
 }
 .navBox{
   position: sticky;
@@ -897,7 +936,7 @@ export default {
 .descriptionBox{
   .descriptionLeftContent{
     ul{
-      padding: 16px 50px;
+      padding: 40px 50px;
       background-color: var(--bg-color1);
       border-radius: var(--border-radius-base);
       border: 1px solid var(--border-color1);
@@ -908,8 +947,12 @@ export default {
         flex-wrap: nowrap;
         border-bottom: 1px solid var(--border-color2);
         font-size: 14px;
+        &:nth-child(1) {
+          padding-top: 0;
+        }
         &:nth-last-child(1) {
           border-bottom: 0;
+          padding-bottom: 0;
         }
         .contentLabel{
           width: 27%;
@@ -1205,6 +1248,9 @@ export default {
   p{
     margin-bottom: 35px;
   }
+  .footerBox{
+    margin-top: 30px;
+  }
   .loginPromptBtn{
     padding: 12px 65px;
     height: auto;
@@ -1496,18 +1542,26 @@ export default {
         width: 116px;
         height: 21px;
         .imgBox{
-          display: flex;
-          img{
             width: 12px;
             height: 12px;
             margin-right: 2px;
             margin-left: 2px;
-          }
         }
       }
     }
   }
   .documentsBox{
+    .documentsBoxBtns{
+      position: sticky;
+      bottom: 60px;
+      margin-left: 10px;
+      margin-right: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+      .cancelBtn{
+        margin-right: 20px;
+      }
+    }
     .docList{
       padding: 0 15px 15px;
       .docItem{
@@ -1540,11 +1594,26 @@ export default {
               span{
                 font-size: 11px;
               }
+
             }
           }
         }
       }
     }
   }
+}
+</style>
+
+<style lang="scss">
+#tenderDetailPage {
+  //.ivu-checkbox-wrapper, .ivu-checkbox-group-item{
+  //  margin-right: 0;
+  //}
+  .checkboxSpan{
+  margin: 0;
+  span{
+    margin: 0;
+  }
+}
 }
 </style>

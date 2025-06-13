@@ -15,7 +15,8 @@
       </Row>
     </Row>
     <Card class="wrapper-mini" :dis-hover="true" :padding="0">
-      <template v-if="listEmpty">
+      <SpinLoad ref="loading" />
+      <template v-if="listEmpty || (unReadMsgList.length === 0 && viewOnlyUnread)">
         <DefaultPageDashboardMessage />
       </template>
       <template v-else>
@@ -44,7 +45,6 @@
           </Row>
         </ListItem>
       </List>
-      <SpinLoad ref="loading" />
       <Row type="flex" justify="center" class="listPagination">
         <Page
           :current="currentPage"

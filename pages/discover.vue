@@ -26,7 +26,7 @@
           <template slot="suffix">
             <Row>
               <Icon v-show="searchText !== ''" class="closeIcon" type="md-close" @click="searchText = ''"/>
-              <Icon class="searchIcon" :class="searchText !== '' ? 'inputHasText' : ''" type="ios-search" />
+              <Icon class="searchIcon" :class="searchText !== '' ? 'inputHasText' : ''" type="ios-search" @click="handleClickSearchBtn"/>
             </Row>
           </template>
         </Input>
@@ -38,7 +38,7 @@
                 <template slot="suffix">
                   <Row>
                     <Icon v-show="searchText !== ''" class="closeIcon" type="md-close" @click="searchText = ''"/>
-                    <Icon class="searchIcon" :class="searchText !== '' ? 'inputHasText' : ''" type="ios-search" />
+                    <Icon class="searchIcon" :class="searchText !== '' ? 'inputHasText' : ''" type="ios-search" @click="handleClickSearchBtn"/>
                   </Row>
                 </template>
               </Input>
@@ -177,12 +177,12 @@
       <Col :xs="24" :sm="24" :md="17" :lg="17">
         <Col :xs="0" :sm="0" :md="24" :lg="24">
 <!--          pc端搜索框-->
-          <div v-click-outside="handleClickOutside" class="topInputBox">
+          <div v-click-outside="closeInputDropdown" class="topInputBox">
             <Input v-model.trim="searchText" class="discoverSearchInput" :class="showDropdown ? 'inputWithDropdownEffect' : ''" @on-focus="showDropdown = true">
               <template slot="suffix">
                 <Row>
                   <Icon v-show="searchText !== ''" class="closeIcon" type="md-close" @click="searchText = ''"/>
-                  <Icon class="searchIcon" :class="searchText !== '' ? 'inputHasText' : ''" type="ios-search" />
+                  <Icon class="searchIcon" :class="searchText !== '' ? 'inputHasText' : ''" type="ios-search" @click="handleClickSearchBtn"/>
                 </Row>
               </template>
             </Input>
@@ -349,8 +349,7 @@ export default {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
-    handleReleaseSort() {
-      this.releaseSortFlag = !this.releaseSortFlag;
+    mockLoading() {
       // todo 模拟加载
       this.$refs.spin.start();
       this.loading = true;
@@ -359,15 +358,25 @@ export default {
         this.loading = false;
       }, 2000)
     },
+    handleClickSearchBtn() {
+      this.closeInputDropdown()
+      if(!this.searchText.trim()){
+        this.$Message.info('Please enter search keywords');
+        return;
+      }
+      this.$Message.info('Clicked search button');
+      // todo 模拟加载
+      this.mockLoading()
+    },
+    handleReleaseSort() {
+      this.releaseSortFlag = !this.releaseSortFlag;
+      // todo 模拟加载
+      this.mockLoading()
+    },
     handleDeadlineSort() {
       this.deadlineSortFlag = !this.deadlineSortFlag;
       // todo 模拟加载
-      this.$refs.spin.start();
-      this.loading = true;
-      setTimeout(() => {
-        this.$refs.spin.finish()
-        this.loading = false;
-      }, 2000)
+      this.mockLoading()
     },
     handleSearchSettingUpdate({ field, value }) {
       if (field === 'location') this.searchSetting.location = value
@@ -389,7 +398,6 @@ export default {
     editSetting(id) {
       this.selectPreviousSettingID = id;
       this.$refs.commonGroupModal.showModal = true
-      // this.$refs.commonGroupModal.settings = this.searchSetting
     },
     deletePreviousSetting() {
       this.previousSetting = this.previousSetting.filter(item => item.id !== this.selectPreviousSettingID)
@@ -416,7 +424,7 @@ export default {
       // this.showSaveSettingBtn = false;
     },
     // --- pc端右侧顶部搜索框
-    handleClickOutside() {
+    closeInputDropdown() {
       this.showDropdown = false
     },
     selectHistoryItem(item) {
@@ -450,6 +458,7 @@ section{
   margin-bottom: 20px;
   span{
     font-weight: bold;
+    margin-right: 10px;
   }
 }
 .saveSettingBtn{

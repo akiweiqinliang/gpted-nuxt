@@ -8,18 +8,20 @@
         <span v-dompurify-html="$t('infoFound', { count: 0 })"></span>
       </Row>
       <Row>
-<!--        <Button icon="ios-browsers" class="actionBtn">{{$t('clear history')}}</Button>-->
-<!--        <Button icon="ios-funnel" class="actionBtn">{{$t('screen')}}</Button>-->
-        <FloatScreen />
+        <FloatScreen @restoreDefaults="loadData" @confirm="handleConfirmScreen"/>
       </Row>
     </Row>
     <Card class="attachmentBox" :dis-hover="true" :padding="30">
+      <SpinLoad ref="loading" />
+      <template v-if="showData.length === 0">
+        <DefaultPageDashboardFavorites />
+      </template>
+      <template v-if="showData.length > 0">
       <ul>
         <li v-for="tender in showData" :key="`${tender.id}-card`">
           <BidCard :tender="tender"/>
         </li>
       </ul>
-      <SpinLoad ref="loading" />
       <Row type="flex" justify="center" class="listPagination">
         <Page
           :current="currentPage"
@@ -29,6 +31,7 @@
           @on-change="changePage"
         />
       </Row>
+      </template>
     </Card>
   </div>
 
@@ -69,6 +72,19 @@ export default {
     this.loadData();
   },
   methods: {
+    mockLoading() {
+      this.$refs.loading.start();
+      this.loadData();
+      setTimeout(() => {
+        this.$refs.loading.finish();
+      }, 1000);
+    },
+    handleConfirmScreen(settings) {
+      // console.log('settings', settings)
+      if(this.listEmpty) return
+      // todo 模拟加载
+      this.mockLoading();
+    },
     loadData() {
       this.showData = this.tenderList.slice(
         (this.currentPage - 1) * this.pageSize,

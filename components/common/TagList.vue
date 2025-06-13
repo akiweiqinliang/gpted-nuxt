@@ -6,26 +6,41 @@
         <Icon type="ios-add" />
         <span>{{$t('add')}}</span>
       </Button>
-      <TimePicker
-        v-show="showTagInput && useTimePeriod"
+      <component
+        :is="useTimePeriod ? 'TimePicker' : 'Input'"
+        v-show="showTagInput"
+        ref="tagInput"
         v-model="newTagText"
-        confirm
-        :steps="[1, 15, 15]"
-        placeholder="Select time"
-        class="timePeriodPicker"
+        class="addInput"
+        :placeholder="useTimePeriod ? 'Select time' : '按回车保存'"
+        :confirm="useTimePeriod || undefined"
+        :steps="useTimePeriod ? [1, 15, 15] : undefined"
+        clearable
         @on-ok="handleAddTag"
         @on-open-change="handleTimePickerChange"
-      ></TimePicker>
-      <Input
-        v-show="showTagInput && !useTimePeriod"
-        ref="tagInput"
-        v-model.trim="newTagText"
-        clearable
-        placeholder="按回车保存"
-        class="addInput"
         @on-blur="handleAddTag"
         @keyup.native.enter="handleAddTag"
       />
+<!--      <TimePicker-->
+<!--        v-show="showTagInput && useTimePeriod"-->
+<!--        v-model="newTagText"-->
+<!--        confirm-->
+<!--        :steps="[1, 15, 15]"-->
+<!--        placeholder="Select time"-->
+<!--        class="timePeriodPicker"-->
+<!--        @on-ok="handleAddTag"-->
+<!--        @on-open-change="handleTimePickerChange"-->
+<!--      ></TimePicker>-->
+<!--      <Input-->
+<!--        v-show="showTagInput && !useTimePeriod"-->
+<!--        ref="tagInput"-->
+<!--        v-model.trim="newTagText"-->
+<!--        clearable-->
+<!--        placeholder="按回车保存"-->
+<!--        class="addInput"-->
+<!--        @on-blur="handleAddTag"-->
+<!--        @keyup.native.enter="handleAddTag"-->
+<!--      />-->
       <tag
         v-for="(tag, index) in newTags"
         :key="`${tag}-${index}`"
@@ -195,4 +210,9 @@ export default {
   margin-right: 10px;
 }
 
+@media screen and (max-width: 768px) {
+  .contentContainer{
+    padding: 0 12px;
+  }
+}
 </style>

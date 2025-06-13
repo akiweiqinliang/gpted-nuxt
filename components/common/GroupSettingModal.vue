@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal v-model="showModal" class-name="groupSettingModal" :fullscreen="fullscreen" width="78%" :title="title">
+    <Modal id="groupSettingModal" v-model="showModal" class-name="groupSettingModal" :fullscreen="fullscreen" width="78%" :title="title">
       <template #footer>
         <Row justify="center">
           <div class="footerBtn" @click="showModal = false">
@@ -9,73 +9,46 @@
           <div class="footerBtn confirmBtn" @click="showModal = false">
             {{ $t('confirm') }}
           </div>
-          <!--          <Button class="footerBtn" @click="showModal = false">Cancel</Button>-->
-          <!--          <Button type="primary" class="footerBtn" @click="showModal = false">Confirm</Button>-->
         </Row>
       </template>
       <Row justify="space-between" class-name="groupNameContainer">
         <Row align="middle">
-          <span>Name:</span><Input v-model="groupName" class="nameBox" />
+          <span>Name:</span><Input v-model="groupSettings.groupName" class="nameBox" />
         </Row>
         <Button type="error" ghost @click="deleteGroup"><Icon type="ios-close-circle-outline" />delete</Button>
       </Row>
       <div class="setting">
-        <TagList header-title="Subscription keywords" :tags.sync="keywords" :origin-tags="originKeywords" />
+        <TagList header-title="Subscription keywords" :tags.sync="groupSettings.keywords" :origin-tags="groupSettings.originKeywords" />
       </div>
       <div class="setting">
-        <Row justify="space-between" class-name="settingHead fullWidth">
-          <div class="headerBox">
-            <div class="decBox"></div>
-            <span>Announcement type</span>
-          </div>
-          <Icon type="md-refresh" size="20"/>
-        </Row>
+        <SettingHead title="Announcement type" @on-refresh="updateModalWidth" />
         <div class="contentContainer">
-          <CheckboxGroup v-model="announcementType">
-            <Checkbox label="0">All</Checkbox>
-            <Checkbox label="1">Ongoing tenders</Checkbox>
-            <Checkbox label="2">Award notice</Checkbox>
-            <Checkbox label="3">Forecast notice</Checkbox>
-          </CheckboxGroup>
+        <SettingCheckboxGroup
+          :model-value="groupSettings.announcementType"
+          :options="$t('announcementType')"
+          @on-change="groupSettings.announcementType = $event" />
         </div>
       </div>
       <div class="setting">
-        <TagList header-title="Location" :show-tag-flag="true" :tags.sync="keywords" :origin-tags="originKeywords" />
+        <TagList header-title="Location" :show-tag-flag="true" :tags.sync="groupSettings.location" :origin-tags="groupSettings.originLocations" />
       </div>
       <div class="setting">
-        <TagList header-title="International organization" :show-tag-flag="true" :tags.sync="keywords" :origin-tags="originKeywords" />
+        <TagList header-title="International organization" :show-tag-flag="true" :tags.sync="groupSettings.organization" :origin-tags="groupSettings.originOrganizations" />
       </div>
       <div class="setting">
-        <TagList header-title="Industry" :tags.sync="keywords" :origin-tags="originKeywords" />
+        <TagList header-title="Industry" :tags.sync="groupSettings.industry" :origin-tags="groupSettings.originIndustry" />
       </div>
       <div class="setting">
-        <Row justify="space-between" class-name="settingHead fullWidth">
-          <div class="headerBox">
-            <div class="decBox"></div>
-            <span>Content</span>
-          </div>
-          <Icon type="md-refresh" size="20"/>
-        </Row>
+        <SettingHead title="Content" @on-refresh="handleRefresh" />
         <div class="contentContainer">
-          <CheckboxGroup v-model="content">
-            <Checkbox label="0">All</Checkbox>
-            <Checkbox label="1">Ongoing tenders</Checkbox>
-            <Checkbox label="2">Award notice</Checkbox>
-            <Checkbox label="3">Forecast notice</Checkbox>
-            <Checkbox label="4">Ongoing tenders</Checkbox>
-            <Checkbox label="5">Award notice</Checkbox>
-            <Checkbox label="6">Forecast notice</Checkbox>
-          </CheckboxGroup>
+          <SettingCheckboxGroup
+            :model-value="groupSettings.content"
+            :options="$t('tenderContent')"
+            @on-change="groupSettings.content = $event" />
         </div>
       </div>
       <div class="setting">
-        <Row justify="space-between" class-name="settingHead fullWidth">
-          <div class="headerBox">
-            <div class="decBox"></div>
-            <span>Price range</span>
-          </div>
-          <Icon type="md-refresh" size="20"/>
-        </Row>
+        <SettingHead title="Price range" @on-refresh="handleRefresh" />
         <Row :wrap="false" align="middle">
           <span class="priceInput">
            <Input placeholder="Price From"/>
@@ -92,9 +65,12 @@
 
 <script>
 import TagList from "~/components/common/TagList.vue";
+// import SettingHead from "~/components/common/SettingHead.vue";
+import SettingCheckboxGroup from "~/components/dashboard/settings/SettingCheckboxGroup.vue";
+import SettingHead from "~/components/common/SettingHead.vue";
 export default {
   name: "GroupSettingModal",
-  components: {TagList},
+  components: {SettingHead, SettingCheckboxGroup, TagList},
   props: {
     title: {
       type: String,
@@ -108,19 +84,25 @@ export default {
     return {
       fullscreen: false,
       showModal: false,
-      groupName: 'Wdalibocai Information Technology Co. Ltd',
-      keywords: ['Engineering', 'Medical devices', 'Engineering', 'Traffic and road conditions materials'],
-      originKeywords: ['Engineering', 'Medical devices', 'Engineering', 'Traffic and road conditions materials'],
 
-      announcementType: ['0'],
-      scope: 'title',
-      location: [],
-      organization: [],
-      industry: [],
-      method: [],
-      content: ['0'],
-      releaseTime: [],
-      deadlineTime: [],
+      groupSettings: {
+        groupName: 'Wdalibocai Information Technology Co. Ltd',
+        keywords: ['Engineering', 'Medical devices', 'Engineering', 'Traffic and road conditions materials'],
+        originKeywords: ['Engineering', 'Medical devices', 'Engineering', 'Traffic and road conditions materials'],
+
+        announcementType: [1],
+        scope: 'title',
+        location: ['China', 'United States', 'Germany', 'Japan', 'United Kingdom'],
+        originLocations: ['China', 'United States', 'Germany', 'Japan', 'United Kingdom'],
+        organization: ['World Bank', 'Asian Development Bank', 'United Nations'],
+        originOrganizations: ['World Bank', 'Asian Development Bank', 'United Nations'],
+        industry: ['Construction', 'Healthcare', 'Technology', 'Transportation'],
+        originIndustry: ['Construction', 'Healthcare', 'Technology', 'Transportation'],
+        method: [],
+        content: [1],
+        releaseTime: [],
+        deadlineTime: [],
+      },
     }
   },
   mounted() {
@@ -138,6 +120,9 @@ export default {
     },
     updateModalWidth() {
       this.fullscreen = window.innerWidth < 768;
+    },
+    handleRefresh() {
+      this.$emit('on-refresh');
     }
   }
 }
@@ -165,13 +150,7 @@ export default {
   background: var(--primary-color);
   color: white;
 }
-@media screen and (max-width: 768px) {
-  .footerBtn{
-    padding: 4px;
-    width: 90px;
-    height: 33px;
-  }
-}
+
 .settingHead{
   padding: 6px 14px 14px 8px;
   margin-bottom: 20px;
@@ -229,5 +208,50 @@ export default {
 }
 .ivu-modal-footer{
   background: white;
+}
+</style>
+
+<style lang="scss" scoped>
+// Responsive styles
+@media screen and (max-width: 768px) {
+  .setting{
+    margin-bottom: 35px;
+  }
+  .footerBtn{
+    padding: 4px;
+    width: 90px;
+    height: 33px;
+  }
+  .groupNameContainer {
+    margin-bottom: 35px;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    span{
+      font-size: 13px;
+    }
+    .nameBox{
+      display: inline-block;
+      width: auto;
+
+    }
+  }
+  .contentContainer{
+    padding: 0 12px;
+  }
+
+}
+</style>
+<style>
+#groupSettingModal .ivu-modal-body{
+  max-height: 60vh;
+  overflow-y: scroll;
+}
+
+@media screen and (max-width: 768px){
+  #groupSettingModal .ivu-modal-body{
+    max-height: initial;
+    overflow-y: initial;
+  }
 }
 </style>

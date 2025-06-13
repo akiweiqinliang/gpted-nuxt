@@ -51,6 +51,7 @@ export default {
   }
   .cardContent{
     width: 100%;
+    justify-content: center;
   }
 }
 
