@@ -1,5 +1,5 @@
 <template>
-<div class="unlockedMask">
+<div id="unlockedMask" class="unlockedMask">
   <Row align="middle" class="signInCard">
     <span>
     <Icon type="ios-lock-outline" color="var(--primary-color)" />
@@ -8,9 +8,13 @@
     <Button v-if="!isLoggedIn" type="primary" @click="toLogin">Sign In</Button>
     <Button v-else type="primary" @click="unlock">Unlock</Button>
   </Row>
-  <div v-if="bgText" class="mockText">
-    <img src="~assets/imgs/tenderDetail/pc-blurBg.png" alt="pc" class="pc">
-    <img src="~assets/imgs/tenderDetail/mobile-blurBg.png" alt="mobile" class="mobile">
+  <div v-if="isPc" class="mockText">
+    <img v-if="shortText" src="~assets/imgs/tenderDetail/mobile-blurBg.png" alt="mobile">
+    <img v-else src="~assets/imgs/tenderDetail/pc-blurBg.png" alt="pc">
+  </div>
+  <div v-else class="mockText">
+    <img v-if="shortText" src="~assets/imgs/tenderDetail/mobile-blurBg.png" alt="mobile">
+    <img v-else src="~assets/imgs/tenderDetail/mobile-blurBg2.png" alt="mobile">
   </div>
 <!--  有无浏览次数-->
   <CommonPromptModal ref="unlockQueryModal" :closeable="false">
@@ -91,11 +95,18 @@ export default {
         return 0
       }
     },
-    bgText: {
+    isPc: {
       type: Boolean,
       required: false,
       default() {
         return true
+      }
+    },
+    shortText: {
+      type: Boolean,
+      required: false,
+      default() {
+        return false
       }
     }
   },
@@ -171,7 +182,7 @@ export default {
 .unlockedMask{
   position: relative;
   width: 100%;
-  padding: 20px;
+  //padding: 20px;
   .signInCard{
     padding: 12px;
     border-radius: 6px;
@@ -293,6 +304,19 @@ export default {
       height: auto;
       margin-top: 9px;
     }
+  }
+}
+</style>
+<style lang="scss">
+@media screen and (max-width: 768px) {
+  .descriptionLeftContent{
+  #unlockedMask .signInCard{
+    border: 0;
+    padding: 0;
+    button{
+      margin-top: 4px;
+    }
+  }
   }
 }
 </style>

@@ -118,7 +118,7 @@
             <span>People's Government of Hoboksar Mongol Autonomous County and Shitoluogai TownPeople's Government of Hoboksar Mongol Autonomous County and Shitoluogai Town</span>
           </div>
           <div v-else class="contentDetail">
-            <UnlockedMask v-if="showUnlockedMask" :bg-text="false" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
+            <UnlockedMask v-if="showUnlockedMask" :is-pc="isPc" :short-text="true" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
           </div>
         </li>
       </ul>
@@ -215,7 +215,7 @@
               </pre>
           </Col>
         </Row>
-        <UnlockedMask v-if="showUnlockedMask" :bg-text="true" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
+        <UnlockedMask v-if="showUnlockedMask" :is-pc="isPc" :tender-id="bid.id" @updateTender="handleUpdateTender"/>
       </div>
     </CommonCard>
   </Row>
@@ -365,7 +365,7 @@
                 </Input>
               </FormItem>
             </Form>
-            <Row justify="center">
+            <Row justify="center" class-name="footerBox">
               <Button class="loginPromptBtn" @click="handleMailModalCancel">Cancel</Button>
               <Button type="primary" class="loginPromptBtn" @click="handleMailModalConfirm">Confirm</Button>
             </Row>
@@ -415,7 +415,7 @@ export default {
       indeterminate: false,
       checkAll: false,
       checkAllGroup: [],
-
+      isPc: true,
 
       translateStatus: 'A',
       swap: false,
@@ -520,6 +520,7 @@ export default {
     //   this.getTenderById();
     // // todo  get user's email history
     // }
+    this.isPc = window.innerWidth > 768;
     this.$store.dispatch('tender/nuxtClientInit');
     window.addEventListener('scroll', this.onScroll);
     this.onScroll();
@@ -935,7 +936,7 @@ export default {
 .descriptionBox{
   .descriptionLeftContent{
     ul{
-      padding: 16px 50px;
+      padding: 40px 50px;
       background-color: var(--bg-color1);
       border-radius: var(--border-radius-base);
       border: 1px solid var(--border-color1);
@@ -946,8 +947,12 @@ export default {
         flex-wrap: nowrap;
         border-bottom: 1px solid var(--border-color2);
         font-size: 14px;
+        &:nth-child(1) {
+          padding-top: 0;
+        }
         &:nth-last-child(1) {
           border-bottom: 0;
+          padding-bottom: 0;
         }
         .contentLabel{
           width: 27%;
@@ -1242,6 +1247,9 @@ export default {
 .commonPromptModal{
   p{
     margin-bottom: 35px;
+  }
+  .footerBox{
+    margin-top: 30px;
   }
   .loginPromptBtn{
     padding: 12px 65px;
